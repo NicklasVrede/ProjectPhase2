@@ -2,11 +2,27 @@
 Config Module
 """
 import random
+from graph_forrest import generate_edges
 
 line =  "\n"*3 + "-" * 40 + "\n"*3
 menu_strings = {
+    "welcome" : line + """
+Welcome to the Forest Fire Simulation Program!
+
+In this simulation, you will explore the dynamic evolution of a population 
+of automata in a simulated forest environment. The fate of the landscape 
+is in your hands as you influence the growth of trees, the movement of firefighters, 
+and the spread of wildfires.
+
+Press [Enter] to embark on this exciting journey and configure the simulation parameters.
+""",
+
     "gen_method" : line + """
-Please pick a generation method of the graph
+Please pick a generation method of the graph.
+
+1. From file
+
+r. Random
     """,
 
     "ini_land_pattern" : line + """
@@ -16,7 +32,7 @@ Choose an option for the initial landscape pattern:
 
 2. All rocks
 
-3. Random (e.g. 80 % wood)
+r. Random (e.g. 80 % wood)
     """,
 
     "firefigter_num" : line + """
@@ -55,20 +71,22 @@ Which option would you like to change?
     
     }
 
+def welcome():
+    print (menu_strings.get("welcome"))
+    input()
+
+    return gen_method()
+
 def gen_method(options:dict=dict()):
     print(menu_strings.get("gen_method"))
     while True:
-        user_input = input('Enter "1", "2", "3" or press back: ')
+        user_input = input('Enter "1" or "r": ')
 
         if user_input == "1":
             choice = "read"
             break
 
-        elif user_input == "2":
-            choice = "standard"
-            break
-
-        elif user_input == "3":
+        elif user_input == "r":
             choice = "random"
             break
 
@@ -216,7 +234,7 @@ Iteration steps: {options.get("iter_num")}
 
 How would you like to proceed?
 
-1. Start simulation.
+1. Proceed with graph generation
 
 2. Change a setting.
 """)
@@ -225,11 +243,10 @@ How would you like to proceed?
         user_input = input('Enter "1" or "2": ')
 
         if user_input == "1":
-            print("placeholder")
-            break
+            generate_edges(options)
 
         elif user_input == "2":
             return change_setting(options)
    
 
-gen_method()
+welcome()
