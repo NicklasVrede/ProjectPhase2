@@ -1,5 +1,5 @@
-import visualiser_random_forest_graph as vr
-import graph_helper as gh
+import visualiser_random_forest_graph
+import graph_helper
 import random
 
 def read_edges_from_file(file_path:str) -> list[set]:
@@ -63,21 +63,44 @@ def generate_edges(options):
                 user_input = int(input("Enter a number: "))
                 break
                 
-            except ValueError("Must be a whole number"):
+            except ValueError:
                 print("Input must be a number")
 
         
-        edges, pos = gh.voronoi_to_edges(300)
-        print(gh.edges_planar(edges))
-        mvr=vr.Visualiser(edges,pos_nodes=pos,node_size=50)
-        cmap= {i:random.randint(0,265) for i in random.sample(list(pos.keys()),int(0.8*len(pos)))}
-        mvr.update_node_colours(cmap)
-        nodes_edges=random.sample(list(pos.keys()),0)
-        mvr.update_node_edges(nodes_edges)
+        edges, positions = graph_helper.voronoi_to_edges(user_input)
 
-        mvr.wait_close()
+        while not graph_helper.edges_planar(edges):  #Potential endless loop?
+            print("Edges not planar, trying agian..")
+            edges, positions = graph_helper.voronoi_to_edges(user_input)
+
+        color_map = {i:random.randint(0,265) for i in random.sample(list(positions.keys()),int(0.8*len(positions)))}   #Notice 0.8 ratio 
+        graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=200, vis_labels=True)
+        graph_object._replot()
+
+        #Fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
+        #graph_object.update_node_edges(Fire_fighter_position)
+        
+
+        # graph_object.update_node_colours(cmap)  #use this to update colors
+        # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
+        
+
+        print(f'Edges = {edges}')
+        print(f'pos = {positions}')
+        print(f'color_map = {color_map}')
+        
+
+        graph_object.wait_close()
 
 
+if __name__ == "__main__":
+    options = {"gen_method" : "random",
+               "ini_land_pattern" : "wood",
+               "firefighter_num" : 5,
+               "firefighter_level" : "low",
+               "iter_num" : 5
+               }
+    generate_edges(options)
 
 
 

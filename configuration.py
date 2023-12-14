@@ -141,11 +141,11 @@ def firefighter_num(options:dict):
             choice = int(user_input)
             break
 
-        except ValueError("Enter a whole number"):
+        except ValueError:
             print("Enter a whole number")
 
     
-    options.update({"firefigter_num" : choice})
+    options.update({"firefighter_num" : choice})
 
     if len(options) == 5:
         return main(options)
@@ -165,11 +165,11 @@ def firefighter_level(options:dict):
             choice = int(user_input)
             break
 
-        except ValueError("Enter a whole number"):
+        except ValueError:
             print("Enter a whole number")
 
     print(choice)
-    options.update({"firefigter_level" : choice})
+    options.update({"firefighter_level" : choice})
 
     if len(options) == 5:
         return main(options)
@@ -189,7 +189,7 @@ def iter_num(options:dict):
             choice = int(user_input)
             break
 
-        except ValueError("Enter a whole number"):
+        except ValueError:
             print("Enter a whole number")
             
     options.update({"iter_num" : choice})
@@ -228,8 +228,8 @@ Current options:
 
 Generation Method: {options.get("gen_method")}
 Initial landscape: {options.get("ini_land_pattern")}
-Firefighter number: {options.get("firefigter_num")}
-Firefighter skill level: {options.get("firefigter_level")}
+Firefighter number: {options.get("firefighter_num")}
+Firefighter skill level: {options.get("firefighter_level")}
 Iteration steps: {options.get("iter_num")}
 
 How would you like to proceed?
@@ -249,4 +249,6 @@ How would you like to proceed?
             return change_setting(options)
    
 
-welcome()
+
+if __name__ == "__main__":
+    welcome()
