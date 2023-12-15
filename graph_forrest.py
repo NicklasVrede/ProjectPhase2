@@ -104,7 +104,7 @@ def generate_edges(options):
     print(f'num_fires = {num_fires}')
     print(f'fire_nodes = {fire_nodes}')
     
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=200, vis_labels=True)
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object._replot()
 
 
