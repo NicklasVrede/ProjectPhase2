@@ -46,7 +46,7 @@ def voronoi_to_edges(minpoints:int,npoints:Optional[int]=0)->Tuple[List[Tuple[in
      npoints=minpoints
   points=np.random.rand(npoints,2)
 # we get the voronoi diagram
-  vor = Voronoi(points)
+  vor = Voronoi(points)    
 # storage variable
   res=[]
   map={}

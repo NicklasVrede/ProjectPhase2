@@ -41,13 +41,14 @@ def generate_edges(options):
     if options.get("gen_method") == "read":
         while True:
             try:
-                user_input = input('Enter file path or "back" to start over: ')
+                user_input = input('Enter file path to read edges from or type "back": ')
 
                 if user_input == "back":
                     from configuration import main
                     return main(options)
                 
                 edges = read_edges_from_file(user_input)
+                positions = None
 
                 if len(edges) == 0:
                     print("Could not generate edges from file, please try an other file.")
@@ -69,28 +70,57 @@ def generate_edges(options):
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)
 
-        while not graph_helper.edges_planar(edges):  #Potential endless loop?
-            print("Edges not planar, trying agian..")
-            edges, positions = graph_helper.voronoi_to_edges(user_input)
 
-        color_map = {i:random.randint(0,265) for i in random.sample(list(positions.keys()),int(0.8*len(positions)))}   #Notice 0.8 ratio 
-        graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=200, vis_labels=True)
-        graph_object._replot()
+    
+    #check if the graph is planar?
+    
+    #Set initial land pattern:
+    if options.get("ini_land_pattern") == "wood":
+        wood_ratio = 0.8
 
-        #Fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
-        #graph_object.update_node_edges(Fire_fighter_position)
-        
+    if options.get("ini_land_pattern") == "rock":
+        wood_ratio = 0
 
-        # graph_object.update_node_colours(cmap)  #use this to update colors
-        # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
-        
+    if options.get("ini_land_pattern") == "random":
+        wood_ratio = random.random() #random float between 0-1
 
-        print(f'Edges = {edges}')
-        print(f'pos = {positions}')
-        print(f'color_map = {color_map}')
-        
+    #generate initial color map:
+    list_of_positions = (list(positions.keys()))  # We need this in order to pick random
+    #print(f'number of nodes = {number_of_nodes}')
 
-        graph_object.wait_close()
+
+    #Set wood nodes etc:
+    wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(positions)))
+    color_map = {i:100 for i in wood_nodes}
+
+    #Set the initial fires:
+    num_fires = int(len(wood_nodes)*0.5)
+    fire_nodes = random.sample(wood_nodes, num_fires)
+    
+    #Update fire nodes:
+    for i in fire_nodes:
+        color_map[i] = -100
+
+    print(f'num_fires = {num_fires}')
+    print(f'fire_nodes = {fire_nodes}')
+    
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=200, vis_labels=True)
+    graph_object._replot()
+
+    #Fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
+    #graph_object.update_node_edges(Fire_fighter_position)
+    
+
+    # graph_object.update_node_colours(cmap)  #use this to update colors
+    # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
+    
+
+    #print(f'Edges = {edges}')
+    #print(f'positions = {positions}')
+    #print(f'color_map = {color_map}')
+    #print(f'list of positions = {list_of_positions}')   
+
+    graph_object.wait_close()
 
 
 if __name__ == "__main__":
@@ -101,9 +131,5 @@ if __name__ == "__main__":
                "iter_num" : 5
                }
     generate_edges(options)
-
-
-
-
 
 

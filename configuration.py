@@ -39,6 +39,13 @@ r. Random (e.g. 80 % wood)
 Choose the number of firefighter.
     """,
 
+    "ini_fires" : line + """
+Enter the initial number of fires.
+d. Default (3 percent of woods)
+
+r. Random number
+    """,
+
     "firefigter_level" : line + """
 Choose the average skill level firefighters:
 
@@ -105,7 +112,7 @@ def ini_land_pattern(options:dict):
     print(menu_strings.get("ini_land_pattern"))
 
     while True:
-        user_input = input('Enter "1", "2", "3": ')
+        user_input = input('Enter "1", "2", "r": ')
         if user_input == "1":
             choice = "wood"
             break
@@ -114,7 +121,7 @@ def ini_land_pattern(options:dict):
             choice = "rock"
             break
 
-        elif user_input == "3":
+        elif user_input == "r":
             choice = "random"
             break
 
@@ -126,7 +133,37 @@ def ini_land_pattern(options:dict):
     if len(options) == 5:
         return main(options)
     else:
+        return ini_fires(options)
+    
+def ini_fires(options:dict):
+    print(menu_strings.get("ini_fires"))
+
+    while True:
+        user_input = input('Enter "d" "r" or a number: ')
+
+        if user_input == "r":
+            choice = "random"
+            break
+
+        elif user_input == "d":
+            choice = "default"
+            break
+
+        try:
+            choice = int(user_input)
+            break
+
+        except ValueError:
+            print("Wrong input, please try agian")
+        
+
+    options.update({"ini_fires" : choice})
+
+    if len(options) == 5:
+        return main(options)
+    else:
         return firefighter_num(options)
+
 
 def firefighter_num(options:dict):
     print(menu_strings.get("firefigter_num"))
@@ -228,6 +265,7 @@ Current options:
 
 Generation Method: {options.get("gen_method")}
 Initial landscape: {options.get("ini_land_pattern")}
+Initial fires: {options.get("ini_fires")}
 Firefighter number: {options.get("firefighter_num")}
 Firefighter skill level: {options.get("firefighter_level")}
 Iteration steps: {options.get("iter_num")}
@@ -243,6 +281,7 @@ How would you like to proceed?
         user_input = input('Enter "1" or "2": ')
 
         if user_input == "1":
+            print(line)
             generate_edges(options)
 
         elif user_input == "2":
