@@ -1,21 +1,54 @@
 # land_representation.py
-class graph_info():
+class GraphInfo():
     def __new__(cls):
         if not hasattr(cls, 'instance'):  #checks if instance exists
             cls.instance = super(graph_info, cls).__new__(cls)
             return cls.instance
         
     def __init__(self):
-        neighbors = {}
+        self.neighbours = {}
+
+    def initialise_neighbour_register(self, edges):
+        """
+        Generates the neighbour_register for a given vertex.
+        
+        Parameters:
+        - vertex_value (int): The vertex for which to calculate neighbour_register.
+        - edges (list): The graph represented as a list of sets.
+
+        Returns:
+        - list: The neighbour_register for the given vertex.
+
+        """
+        all_nodes = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
+        edges = [set(edge) for edge in edges]
+       
+
+        for node in all_nodes:
+            print(f'Node = {node}')
+            vertex_value_set = {node}
+            print(f'vertex_value_set = {vertex_value_set}')
+            neighbours = []
+            for edge in edges:
+                if vertex_value_set.intersection(edge):
+                    #Here its important we account for self-loops.
+                    if len(edge) == 1:
+                        neighbours.append(vertex_value)
+                        continue #if we dont continue we get KeyError, since there is no differnce
+                    
+                    #If no selfloop we can check difference:
+                    neighbours.append(edge.difference(vertex_value_set).pop())
+            self.neighbours[node] = neighbours
+        # Store the result in the register
+        
 
 class LandPatch:
     def __init__(self, patch_id):
         self.patch_id = patch_id
-        self.neighbors = set()  # Set of neighboring patch_ids
+        self.neighbors = set()
 
     def get_neighbors(self):
-        # Return the IDs of neighboring patches
-        pass
+        graph_info
 
 class RockPatch(LandPatch):
     def mutate(self):

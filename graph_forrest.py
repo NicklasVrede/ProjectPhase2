@@ -1,6 +1,7 @@
 import visualiser_random_forest_graph
 import graph_helper
 import random
+from land_representation import GraphInfo
 
 def read_edges_from_file(file_path:str) -> list[set]:
     """
@@ -101,8 +102,8 @@ def generate_edges(options):
     for i in fire_nodes:
         color_map[i] = -100
 
-    print(f'num_fires = {num_fires}')
-    print(f'fire_nodes = {fire_nodes}')
+    #print(f'num_fires = {num_fires}')
+    #print(f'fire_nodes = {fire_nodes}')
     
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object._replot()
@@ -110,19 +111,27 @@ def generate_edges(options):
 
     fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
     graph_object.update_node_edges(fire_fighter_position)
-    print(fire_fighter_position)
+    #print(f'Fire fighter position = {fire_fighter_position}')
     
 
     # graph_object.update_node_colours(cmap)  #use this to update colors
     # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
     
 
-    #print(f'Edges = {edges}')
+    print(f'Edges = {edges}')
     #print(f'positions = {positions}')
     #print(f'color_map = {color_map}')
     #print(f'list of positions = {list_of_positions}')   
 
+    info = GraphInfo()
+    info.initialise_neighbour_register(edges)
+
+    print(f'Neighbours register = {info.neighbours}')
+
+
     graph_object.wait_close()
+
+
 
 
 if __name__ == "__main__":
