@@ -107,8 +107,10 @@ def generate_edges(options):
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=200, vis_labels=True)
     graph_object._replot()
 
-    #Fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
-    #graph_object.update_node_edges(Fire_fighter_position)
+
+    fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
+    graph_object.update_node_edges(fire_fighter_position)
+    print(fire_fighter_position)
     
 
     # graph_object.update_node_colours(cmap)  #use this to update colors

@@ -1,4 +1,12 @@
 # land_representation.py
+class graph_info():
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):  #checks if instance exists
+            cls.instance = super(graph_info, cls).__new__(cls)
+            return cls.instance
+        
+    def __init__(self):
+        neighbors = {}
 
 class LandPatch:
     def __init__(self, patch_id):
