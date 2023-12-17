@@ -2,6 +2,7 @@ import visualiser_random_forest_graph
 import graph_helper
 import random
 from land_representation import GraphInfo, TreePatch, RockPatch
+from simulation import Simulation
 
 def read_edges_from_file(file_path:str) -> list[set]:
     """
@@ -74,42 +75,39 @@ def generate_edges(options):
 
     #check if the graph is planar?
     #check if the graph is connected?
+
+    #Update neighbour register:
+    graph_info = GraphInfo()
+    graph_info.initialise_neighbour_register(edges)
+    neighbour_register = graph_info.neighbours
+    #print(f'neighbour_register = {neighbour_register}')
     
-    #Set initial land pattern:
-    if options.get("ini_land_pattern") == "wood":
-        wood_ratio = 0.8
 
-    if options.get("ini_land_pattern") == "rock":
-        wood_ratio = 0
-
-    if options.get("ini_land_pattern") == "random":
-        wood_ratio = random.random() #random float between 0-1
-
-    #generate initial color map:
-    list_of_positions = (list(positions.keys()))  # We need this in order to pick random
-    #print(f'number of nodes = {number_of_nodes}')
+    #Positions:
+    list_of_positions = (list(positions.keys()))  # We need this in order to pick random positions
 
     #Initialize land patches:
     patches = {}
+    wood_ratio = options.get("ini_woods") * 0.01
     wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(positions)))
     for i in wood_nodes:
-        wood_patch = TreePatch(i, 100, positions.get(i))
+        wood_patch = TreePatch(i, 100, positions.get(i), neighbour_register.get(i))
         patches[i] = wood_patch
 
     #Initialize fire patches:
     #Set the initial fires:
-    num_fires = int(len(wood_nodes)*0.5)  #Percentage of fire nodes
+    num_fires = int(len(wood_nodes) * options.get("ini_fires") * 0.01)  #Percentage of fire nodes
     fire_nodes = random.sample(wood_nodes, num_fires)
     
     #Update fire nodes:   #we are replacing some exsisting wood nodes with fire nodes
     for i in fire_nodes:
-        fire_patch = TreePatch(i, -100, positions.get(i))
+        fire_patch = TreePatch(i, -100, positions.get(i), neighbour_register.get(i))
         patches[i] = fire_patch   #Reassign patch to fire_patch
 
     #Initialize rock patches:  
     rock_nodes = set(positions.keys()).difference(wood_nodes)
     for i in rock_nodes:
-        rock_patch = RockPatch(i, None, positions.get(i))
+        rock_patch = RockPatch(i, None, positions.get(i), neighbour_register.get(i))
         patches[i] = rock_patch    
 
     #Set initial fire fighters:
@@ -118,7 +116,6 @@ def generate_edges(options):
 
     #Initialize graph info:
     graph_info = GraphInfo()
-    graph_info.initialise_neighbour_register(edges)
     graph_info.initialise_land_patches(patches)
     graph_info.initialise_color_map(patches)
 
@@ -140,6 +137,8 @@ def generate_edges(options):
     #print(f'color_map = {color_map}')
     #print(f'list of positions = {list_of_positions}')   
 
+    for i range(options.get("iter_num")):
+
 
     graph_object.wait_close()
 
@@ -148,10 +147,14 @@ def generate_edges(options):
 
 if __name__ == "__main__":
     options = {"gen_method" : "random",
-               "ini_land_pattern" : "wood",
+               "ini_woods" : 100,
                "firefighter_num" : 5,
                "firefighter_level" : "low",
-               "iter_num" : 5
+               "ini_fires" : 20,
+               "iter_num" : 5,
+               "treegrowth" : 10
+               "firegrowth" : 20
+               "newforrest" : 50 #50 permille / 0.5 %
                }
     generate_edges(options)
 

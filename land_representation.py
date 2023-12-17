@@ -1,9 +1,8 @@
 # land_representation.py
 class GraphInfo():
     def __new__(cls):
-        if not hasattr(cls, 'instance'):  #checks if instance exists
-            cls.instance = super(GraphInfo, cls).__new__(cls)
-            return cls.instance
+        cls.instance = super(GraphInfo, cls).__new__(cls)
+        return cls.instance
         
     def __init__(self):
         self.neighbours = {}
@@ -28,6 +27,7 @@ class GraphInfo():
                     #If no selfloop we can check difference:
                     neighbours.append(edge.difference(vertex_value_set).pop())
             self.neighbours[node] = neighbours
+
         # Store the result in the register
 
     def initialise_land_patches(self, patches):
@@ -40,24 +40,24 @@ class GraphInfo():
                 continue
             self.color_map[id] = patches.get(id).healthstat
 
-    def update_color_map(self, patch):
+    def update_patch_color(self, patch):
         if patch.healthstat == None:
             self.color_map(patch_id).pop() #If patch is stone, we it from the color_map dict
         else:
             self.color_map[patch_id] = colors
 
 class LandPatch:
-    def __init__(self, patch_id, healthstat, position):
+    def __init__(self, patch_id, healthstat, position, neighbours):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.position = position # Identifies the position of the LandPatch
         self.healthstat = healthstat  # Variable identifying its health status
-        self.neighbours = set() # Set of neighbouring LandPatches
+        self.neighbours = neighbours # Set of neighbouring LandPatches
 
     def __repr__(self):
         return f'{__class__.__name__}({self.patch_id}, {self.healthstat}, {self.position})'
 
-    def neighbours_update(self):
-        GraphInfo().neigbours.get(self.patch_id)
+    def get_neighbours(self):
+        return self.neighbours
 
 class RockPatch(LandPatch):
     def mutate(self):

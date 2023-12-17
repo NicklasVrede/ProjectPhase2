@@ -25,14 +25,14 @@ Please pick a generation method of the graph.
 r. Random
     """,
 
-    "ini_land_pattern" : line + """
+    "ini_woods" : line + """
 Choose an option for the initial landscape pattern:
 
 1. All woods
 
 2. All rocks
 
-r. Random (e.g. 80 % wood)
+r. Random amount of woods (between 0% and 100 %)
     """,
 
     "firefigter_num" : line + """
@@ -40,10 +40,10 @@ Choose the number of firefighter.
     """,
 
     "ini_fires" : line + """
-Enter the initial number of fires.
-d. Default (3 percent of woods)
+Enter the initial percentage of fires. (As a whole number)
+d. Default (3% percent of woods)
 
-r. Random number
+r. Random number (between 0% and 100 %)
     """,
 
     "firefigter_level" : line + """
@@ -105,30 +105,30 @@ def gen_method(options:dict=dict()):
     if len(options) == 5:
         return main(options)
     else:
-        return ini_land_pattern(options)
+        return ini_woods(options)
 
 
-def ini_land_pattern(options:dict):
-    print(menu_strings.get("ini_land_pattern"))
+def ini_woods(options:dict):
+    print(menu_strings.get("ini_woods"))
 
     while True:
         user_input = input('Enter "1", "2", "r": ')
         if user_input == "1":
-            choice = "wood"
+            choice = 100
             break
 
         elif user_input == "2":
-            choice = "rock"
+            choice = 0
             break
 
         elif user_input == "r":
-            choice = "random"
+            choice = random.randint(1, 100)
             break
 
         else:
             print("Wrong input, please try agian")
 
-    options.update({"ini_land_pattern" : choice})
+    options.update({"ini_woods" : choice})
 
     if len(options) == 5:
         return main(options)
@@ -142,7 +142,7 @@ def ini_fires(options:dict):
         user_input = input('Enter "d" "r" or a number: ')
 
         if user_input == "r":
-            choice = "random"
+            choice = random.randint(1, 100)
             break
 
         elif user_input == "d":
@@ -171,7 +171,7 @@ def firefighter_num(options:dict):
     while True:
         user_input = input('Enter a number or "r" for random: ')
         if user_input == "r":
-            choice = "r"
+            choice = random.randint(1, 100)
             break
 
         try:
@@ -242,7 +242,7 @@ def change_setting(options):
             return gen_method(options)
 
         elif user_input == "2":
-            return ini_land_pattern(options)
+            return ini_woods(options)
 
         elif user_input == "3":
             return firefighter_num(options)
@@ -264,8 +264,8 @@ def main(options:dict=dict()):
 Current options:
 
 Generation Method: {options.get("gen_method")}
-Initial landscape: {options.get("ini_land_pattern")}
-Initial fires: {options.get("ini_fires")}
+Initial woods: {options.get("ini_woods")} %
+Initial fires: {options.get("ini_fires")} %
 Firefighter number: {options.get("firefighter_num")}
 Firefighter skill level: {options.get("firefighter_level")}
 Iteration steps: {options.get("iter_num")}
