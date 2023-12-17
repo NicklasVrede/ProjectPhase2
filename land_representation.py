@@ -2,58 +2,66 @@
 class GraphInfo():
     def __new__(cls):
         if not hasattr(cls, 'instance'):  #checks if instance exists
-            cls.instance = super(graph_info, cls).__new__(cls)
+            cls.instance = super(GraphInfo, cls).__new__(cls)
             return cls.instance
         
     def __init__(self):
         self.neighbours = {}
-
-    def initialise_neighbour_register(self, edges):
-        """
-        Generates the neighbour_register for a given vertex.
+        self.patches = set()
+        self.color_map = {}
         
-        Parameters:
-        - vertex_value (int): The vertex for which to calculate neighbour_register.
-        - edges (list): The graph represented as a list of sets.
-
-        Returns:
-        - list: The neighbour_register for the given vertex.
-
-        """
+    def initialise_neighbour_register(self, edges):
         all_nodes = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
         edges = [set(edge) for edge in edges]
        
 
         for node in all_nodes:
-            print(f'Node = {node}')
             vertex_value_set = {node}
-            print(f'vertex_value_set = {vertex_value_set}')
             neighbours = []
             for edge in edges:
                 if vertex_value_set.intersection(edge):
                     #Here its important we account for self-loops.
                     if len(edge) == 1:
-                        neighbours.append(vertex_value)
+                        neighbours.append(node)
                         continue #if we dont continue we get KeyError, since there is no differnce
                     
                     #If no selfloop we can check difference:
                     neighbours.append(edge.difference(vertex_value_set).pop())
             self.neighbours[node] = neighbours
         # Store the result in the register
-        
+
+    def initialise_land_patches(self, patches):
+        self.patches = patches
+
+
+    def initialise_color_map(self, patches):
+        for id in patches:
+            if patches.get(id).healthstat == None:   #If patch is stone, we set nothing
+                continue
+            self.color_map[id] = patches.get(id).healthstat
+
+    def update_color_map(self, patch):
+        if patch.healthstat == None:
+            self.color_map(patch_id).pop() #If patch is stone, we it from the color_map dict
+        else:
+            self.color_map[patch_id] = colors
 
 class LandPatch:
-    def __init__(self, patch_id):
-        self.patch_id = patch_id
-        self.neighbors = set()
+    def __init__(self, patch_id, healthstat, position):
+        self.patch_id = patch_id  # Identifies the LandPatch
+        self.position = position # Identifies the position of the LandPatch
+        self.healthstat = healthstat  # Variable identifying its health status
+        self.neighbours = set() # Set of neighbouring LandPatches
 
-    def get_neighbors(self):
-        graph_info
+    def __repr__(self):
+        return f'{__class__.__name__}({self.patch_id}, {self.healthstat}, {self.position})'
+
+    def neighbours_update(self):
+        GraphInfo().neigbours.get(self.patch_id)
 
 class RockPatch(LandPatch):
     def mutate(self):
-        # Allow swapping this RockPatch with a Treepatch without losing connections
-        pass
+        self.healthstat = None
 
 class TreePatch(LandPatch):
     def update_land(self):

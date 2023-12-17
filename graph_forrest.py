@@ -1,7 +1,7 @@
 import visualiser_random_forest_graph
 import graph_helper
 import random
-from land_representation import GraphInfo
+from land_representation import GraphInfo, TreePatch, RockPatch
 
 def read_edges_from_file(file_path:str) -> list[set]:
     """
@@ -72,8 +72,8 @@ def generate_edges(options):
         edges, positions = graph_helper.voronoi_to_edges(user_input)
 
 
-    
     #check if the graph is planar?
+    #check if the graph is connected?
     
     #Set initial land pattern:
     if options.get("ini_land_pattern") == "wood":
@@ -89,44 +89,56 @@ def generate_edges(options):
     list_of_positions = (list(positions.keys()))  # We need this in order to pick random
     #print(f'number of nodes = {number_of_nodes}')
 
-
-    #Set wood nodes etc:
+    #Initialize land patches:
+    patches = {}
     wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(positions)))
-    color_map = {i:100 for i in wood_nodes}
+    for i in wood_nodes:
+        wood_patch = TreePatch(i, 100, positions.get(i))
+        patches[i] = wood_patch
 
+    #Initialize fire patches:
     #Set the initial fires:
-    num_fires = int(len(wood_nodes)*0.5)
+    num_fires = int(len(wood_nodes)*0.5)  #Percentage of fire nodes
     fire_nodes = random.sample(wood_nodes, num_fires)
     
-    #Update fire nodes:
+    #Update fire nodes:   #we are replacing some exsisting wood nodes with fire nodes
     for i in fire_nodes:
-        color_map[i] = -100
+        fire_patch = TreePatch(i, -100, positions.get(i))
+        patches[i] = fire_patch   #Reassign patch to fire_patch
 
-    #print(f'num_fires = {num_fires}')
-    #print(f'fire_nodes = {fire_nodes}')
-    
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=color_map, pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object._replot()
+    #Initialize rock patches:  
+    rock_nodes = set(positions.keys()).difference(wood_nodes)
+    for i in rock_nodes:
+        rock_patch = RockPatch(i, None, positions.get(i))
+        patches[i] = rock_patch    
 
-
+    #Set initial fire fighters:
     fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
-    graph_object.update_node_edges(fire_fighter_position)
+
+
+    #Initialize graph info:
+    graph_info = GraphInfo()
+    graph_info.initialise_neighbour_register(edges)
+    graph_info.initialise_land_patches(patches)
+    graph_info.initialise_color_map(patches)
+
+
+    #initialize graph object:
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
+    graph_object.update_node_edges(fire_fighter_position)  #Update initial fire fighters positions
+
+
     #print(f'Fire fighter position = {fire_fighter_position}')
     
 
     # graph_object.update_node_colours(cmap)  #use this to update colors
     # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
-    
+     
 
-    print(f'Edges = {edges}')
+    #print(f'Edges = {edges}')
     #print(f'positions = {positions}')
     #print(f'color_map = {color_map}')
     #print(f'list of positions = {list_of_positions}')   
-
-    info = GraphInfo()
-    info.initialise_neighbour_register(edges)
-
-    print(f'Neighbours register = {info.neighbours}')
 
 
     graph_object.wait_close()
