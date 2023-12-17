@@ -1,17 +1,26 @@
+from land_representation import GraphInfo
 #firefighter.py
 class Firefighter:
-    def __init__(self, id, skill_level, position):
+    def __init__(self, id, skill_level, position, neighbours):
         self.id = id
         self.skill_level = skill_level
         self.position = position
+        self.neighbours = neighbours
 
     def __repr__(self):
-        return "Firefighter " + str(self.id) + " at " + str(self.position)
+        return f'Firefighter {self.id} at {self.position} with neighbours {self.neighbours}'
 
-    def extinguish_fire(self, fire_patch):
-        fire.extinguish(self.skill_level)
+    def extinguish_fire(self):
+        # Define the logic for extinguishing fire in a specific patch
+        pass   
 
-    def move(self, new_position):
-        self.position = new_position
-
+    def move(self):
+        for neighbour in self.neighbours:
+            print(f'neighbour = {neighbour}')
+            if neighbour.healthstat < 0:
+                print(f'Firefighter {self.id} moved to {neighbour.patch_id}')
+                self.position = neighbour.patch_id
+                break
+            else:
+                continue
     

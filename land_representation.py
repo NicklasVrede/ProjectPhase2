@@ -1,12 +1,14 @@
 # land_representation.py
 class GraphInfo():
     def __new__(cls):
-        cls.instance = super(GraphInfo, cls).__new__(cls)
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(GraphInfo, cls).__new__(cls)
         return cls.instance
         
     def __init__(self):
         self.neighbours = {}
-        self.patches = set()
+        self.neighbour_patches = {}
+        self.patches = {}
         self.color_map = {}
         self.firefighters = {}
         
@@ -52,13 +54,17 @@ class LandPatch:
         self.patch_id = patch_id  # Identifies the LandPatch
         self.position = position # Identifies the position of the LandPatch
         self.healthstat = healthstat  # Variable identifying its health status
-        self.neighbours = neighbours # Set of neighbouring LandPatches
+        self.neighbours = neighbours # list of neighbour ids
 
     def __eq__(self, other: object) -> bool:
         return self.patch_id == other.patch_id
 
     def __repr__(self):
-        return f'{__class__.__name__}({self.patch_id}, {self.healthstat}, {self.position})'
+        neighbour_ids = [neighbour.id for neighbour in self.neighbours]
+        return f'LandPatch {self.patch_id} with healthstat {self.healthstat} and neighbours {neighbour_ids}'
+
+    def update_neighbours(self, neighbours):
+        self.neighbours = neighbours
 
     def get_neighbours(self):
         return self.neighbours

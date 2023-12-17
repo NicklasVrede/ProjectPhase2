@@ -133,18 +133,23 @@ def initiate_simulation(edges, positions, options):
     rock_nodes = set(positions.keys()).difference(wood_nodes)
     for i in rock_nodes:
         rock_patch = RockPatch(i, None, positions.get(i), neighbour_register.get(i))
-        patches[i] = rock_patch    
+        patches[i] = rock_patch
+
+    #Update neighbour_patches:
+    print(patches)
+
+    #initia
 
     #Set initial fire fighters. We allow for firefighters to have the same position.
-    added_firefighters = 1
-    while added_firefighters < options.get("firefighter_num"):
-        print(f'added_firefighters = {added_firefighters}')
+    nr = 1
+    while nr < options.get("firefighter_num")+1:
+        print(f'added_firefighters = {nr}')
         random_node = random.choice(list_of_positions)
-        new_fire_fighter = Firefighter(added_firefighters, options.get("firefighter_level"), random_node)
-        graph_info.firefighters[added_firefighters] = new_fire_fighter
-        added_firefighters += 1
-
-    print(f'Firefighters = {graph_info.firefighters}')
+        new_fire_fighter = Firefighter(nr, options.get("firefighter_level"), random_node, neighbour_register.get(nr-1))
+        graph_info.firefighters[nr] = new_fire_fighter
+        nr += 1
+    print(f'patches = {patches}')
+    #print(f'Firefighters = {graph_info.firefighters}')
     firefigher_pos = list(graph_info.firefighters.keys())
 
 
@@ -167,7 +172,10 @@ def initiate_simulation(edges, positions, options):
         current_simulation.evolve()
         graph_object.update_node_colours(graph_info.color_map)
         #print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
+
+        #Update fire fighters:
         time.sleep(0.5)
+
 
 
     graph_object.wait_close()

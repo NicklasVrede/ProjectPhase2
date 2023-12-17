@@ -39,7 +39,11 @@ class Simulation:
 
 
             self.graphinfo.update_patch_color(patch)
-        
+
+        for firefighter in self.graphinfo.firefighters.values():
+            firefighter.move()
+            firefighter.extinguish_fire()
+            
     def run_simulation(self):
         # Run the entire simulation for the specified number of iterations
         pass
