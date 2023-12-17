@@ -3,6 +3,7 @@ import graph_helper
 import random
 from land_representation import GraphInfo, TreePatch, RockPatch
 from simulation import Simulation
+import time
 
 def read_edges_from_file(file_path:str) -> list[set]:
     """
@@ -19,7 +20,7 @@ def read_edges_from_file(file_path:str) -> list[set]:
     - edges (list[set]): A list of sets representing the edges of the graph.
 
     """
-    
+    positions = {}
     edges = []
     with open(file_path, 'r') as file: 
         for line in file:
@@ -32,12 +33,31 @@ def read_edges_from_file(file_path:str) -> list[set]:
                 try:    #Compose edge, and check correct values.
                     edge = {int(parts[0].strip()), int(parts[1].strip())}  
                     edges.append(edge)
+                    positions = generate_positions(edges)
                 except ValueError:
                     print(f'Ignoring line, invalid value, with input: "{line.strip()}"')
             if len(parts) > 2 or len(parts) < 2:
                 print(f'Ignoring invalid line, cannot form edgde with input: "{line.strip()}"')
 
-    return edges
+    return edges, positions
+
+def generate_positions(edges):  #TODO: make this understandable.
+    """
+    Generates Voronoi data (coordinate map) from a given set of edges.
+
+    Parameters:
+    ----------
+    edges: List[(int, int)]
+        List containing the edges (Tuples of 2 vertices) forming the 2D surface.
+
+    Returns:
+    ----------
+    positions: Dict[int: (float, float)]
+        Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1]).
+    """
+    vertices = set([vertex for edge in edges for vertex in edge])
+    positions = {vertex: tuple(np.random.rand(2)) for vertex in vertices}
+    return positions
 
 def generate_edges(options):
     if options.get("gen_method") == "read":
@@ -72,7 +92,9 @@ def generate_edges(options):
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)
 
+    return initiate_simulation(edges, positions, options)
 
+def initiate_simulation(edges, positions, options):
     #check if the graph is planar?
     #check if the graph is connected?
 
@@ -84,12 +106,14 @@ def generate_edges(options):
     
 
     #Positions:
+    all_vertices = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
     list_of_positions = (list(positions.keys()))  # We need this in order to pick random positions
+    
 
     #Initialize land patches:
     patches = {}
     wood_ratio = options.get("ini_woods") * 0.01
-    wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(positions)))
+    wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(all_vertices)))
     for i in wood_nodes:
         wood_patch = TreePatch(i, 100, positions.get(i), neighbour_register.get(i))
         patches[i] = wood_patch
@@ -136,10 +160,16 @@ def generate_edges(options):
     #print(f'positions = {positions}')
     #print(f'color_map = {color_map}')
     #print(f'list of positions = {list_of_positions}')   
-
+    
+    print(f'newforrest = {options.get("newforrest")}')
     current_simulation = Simulation(graph_info, options)
     for i in range(options.get("iter_num")):
+        print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
         current_simulation.evolve()
+        graph_object.update_node_colours(graph_info.color_map)
+        print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
+        time.sleep(2)
+
 
     graph_object.wait_close()
 
@@ -149,13 +179,13 @@ def generate_edges(options):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 100,
-               "firefighter_num" : 5,
+               "firefighter_num" : 0,
                "firefighter_level" : "low",
                "ini_fires" : 20,
-               "iter_num" : 5,
+               "iter_num" : 12,
                "treegrowth" : 10,
                "firegrowth" : 20,
-               "newforrest" : 50 #50 permille / 0.5 %
+               "newforrest" : 5000 #50 permille / 0.5 %
                }
     generate_edges(options)
 

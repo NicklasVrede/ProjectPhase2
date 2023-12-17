@@ -42,9 +42,9 @@ class GraphInfo():
 
     def update_patch_color(self, patch):
         if patch.healthstat == None:
-            self.color_map(patch_id).pop() #If patch is stone, we it from the color_map dict
+            self.color_map.pop(patch.patch_id) #If patch is stone, we it from the color_map dict
         else:
-            self.color_map[patch_id] = colors
+            self.color_map[patch.patch_id] = patch.healthstat
 
 class LandPatch:
     def __init__(self, patch_id, healthstat, position, neighbours):
@@ -52,6 +52,9 @@ class LandPatch:
         self.position = position # Identifies the position of the LandPatch
         self.healthstat = healthstat  # Variable identifying its health status
         self.neighbours = neighbours # Set of neighbouring LandPatches
+
+    def __eq__(self, other: object) -> bool:
+        return self.patch_id == other.patch_id
 
     def __repr__(self):
         return f'{__class__.__name__}({self.patch_id}, {self.healthstat}, {self.position})'
