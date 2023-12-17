@@ -8,6 +8,7 @@ class GraphInfo():
         self.neighbours = {}
         self.patches = set()
         self.color_map = {}
+        self.firefighters = {}
         
     def initialise_neighbour_register(self, edges):
         all_nodes = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes

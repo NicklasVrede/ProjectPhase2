@@ -4,6 +4,7 @@ import random
 from land_representation import GraphInfo, TreePatch, RockPatch
 from simulation import Simulation
 import time
+from firefighter import Firefighter
 
 def read_edges_from_file(file_path:str) -> list[set]:
     """
@@ -107,7 +108,7 @@ def initiate_simulation(edges, positions, options):
 
     #Positions:
     all_vertices = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
-    list_of_positions = (list(positions.keys()))  # We need this in order to pick random positions
+    list_of_positions = list(positions.keys()) # We need this in order to pick random positions
     
 
     #Initialize land patches:
@@ -134,9 +135,15 @@ def initiate_simulation(edges, positions, options):
         rock_patch = RockPatch(i, None, positions.get(i), neighbour_register.get(i))
         patches[i] = rock_patch    
 
-    #Set initial fire fighters:
-    fire_fighter_position = random.sample(list(positions.keys()),options.get("firefighter_num"))  #Highlight firefighters! Check if greater than number og nodes!
+    #Set initial fire fighters. We allow for firefighters to have the same position.
+    added_firefighters = 1
+    while added_firefighters < options.get("firefighter_num")+1:
+        random_node = random.choice(list_of_positions)
+        new_fire_fighter = Firefighter(added_firefighters, options.get("firefighter_level"), random_node)
+        graph_info.firefighters[random_node] = new_fire_fighter
+        added_firefighters += 1
 
+    print(f'Fire fighters = {graph_info.firefighters.values()}')
 
     #Initialize graph info:
     graph_info = GraphInfo()
@@ -146,29 +153,18 @@ def initiate_simulation(edges, positions, options):
 
     #initialize graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object.update_node_edges(fire_fighter_position)  #Update initial fire fighters positions
+    graph_object.update_node_edges(graph_info.firefighters.keys())  #Update initial fire fighters positions
 
-
-    #print(f'Fire fighter position = {fire_fighter_position}')
     
-
-    # graph_object.update_node_colours(cmap)  #use this to update colors
-    # graph_object.update_node_edges(edges_labels) #use this to update "labels"?
-     
-
-    #print(f'Edges = {edges}')
-    #print(f'positions = {positions}')
-    #print(f'color_map = {color_map}')
-    #print(f'list of positions = {list_of_positions}')   
-    
+    #Initialize simulation:
     print(f'newforrest = {options.get("newforrest")}')
     current_simulation = Simulation(graph_info, options)
     for i in range(options.get("iter_num")):
-        print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
+        #print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
         current_simulation.evolve()
         graph_object.update_node_colours(graph_info.color_map)
-        print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
-        time.sleep(2)
+        #print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
+        time.sleep(0.5)
 
 
     graph_object.wait_close()
@@ -179,13 +175,13 @@ def initiate_simulation(edges, positions, options):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 100,
-               "firefighter_num" : 0,
+               "firefighter_num" : 3,
                "firefighter_level" : "low",
                "ini_fires" : 20,
                "iter_num" : 12,
                "treegrowth" : 10,
                "firegrowth" : 20,
-               "newforrest" : 5000 #50 permille / 0.5 %
+               "newforrest" : 100 #50 permille / 0.5 %
                }
     generate_edges(options)
 
