@@ -11,4 +11,7 @@ class Firefighter:
     def extinguish_fire(self, fire_patch):
         fire.extinguish(self.skill_level)
 
+    def move(self, new_position):
+        self.position = new_position
+
     

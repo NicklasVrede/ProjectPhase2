@@ -137,13 +137,16 @@ def initiate_simulation(edges, positions, options):
 
     #Set initial fire fighters. We allow for firefighters to have the same position.
     added_firefighters = 1
-    while added_firefighters < options.get("firefighter_num")+1:
+    while added_firefighters < options.get("firefighter_num"):
+        print(f'added_firefighters = {added_firefighters}')
         random_node = random.choice(list_of_positions)
         new_fire_fighter = Firefighter(added_firefighters, options.get("firefighter_level"), random_node)
-        graph_info.firefighters[random_node] = new_fire_fighter
+        graph_info.firefighters[added_firefighters] = new_fire_fighter
         added_firefighters += 1
 
-    print(f'Fire fighters = {graph_info.firefighters.values()}')
+    print(f'Firefighters = {graph_info.firefighters}')
+    firefigher_pos = list(graph_info.firefighters.keys())
+
 
     #Initialize graph info:
     graph_info = GraphInfo()
@@ -153,7 +156,7 @@ def initiate_simulation(edges, positions, options):
 
     #initialize graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object.update_node_edges(graph_info.firefighters.keys())  #Update initial fire fighters positions
+    graph_object.update_node_edges(list(firefigher_pos))  #Update initial fire fighters positions
 
     
     #Initialize simulation:
