@@ -56,10 +56,6 @@ class RockPatch(LandPatch):
         pass
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestats):
-        super().__init__(patch_id)
-        self.treestats = treestats  # Identifies the health of the Treepatch [0-256]
-
     def update_land(self):
         # Update the value of treestats due to fire or firefighter action
         pass
