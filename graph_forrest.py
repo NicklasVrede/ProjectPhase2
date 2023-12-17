@@ -137,8 +137,9 @@ def generate_edges(options):
     #print(f'color_map = {color_map}')
     #print(f'list of positions = {list_of_positions}')   
 
-    for i range(options.get("iter_num")):
-
+    current_simulation = Simulation(graph_info, options)
+    for i in range(options.get("iter_num")):
+        current_simulation.evolve()
 
     graph_object.wait_close()
 
@@ -152,8 +153,8 @@ if __name__ == "__main__":
                "firefighter_level" : "low",
                "ini_fires" : 20,
                "iter_num" : 5,
-               "treegrowth" : 10
-               "firegrowth" : 20
+               "treegrowth" : 10,
+               "firegrowth" : 20,
                "newforrest" : 50 #50 permille / 0.5 %
                }
     generate_edges(options)

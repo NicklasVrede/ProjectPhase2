@@ -2,7 +2,7 @@ from land_representation import GraphInfo
 from visualiser_random_forest_graph import Visualiser
 
 class Simulation:
-    def __init__(self, graph, options):
+    def __init__(self, graphinfo, options):
         self.graphinfo = GraphInfo()
         self.color_map = graphinfo.color_map
         self.initial_configuration = initial_configuration
@@ -16,7 +16,7 @@ class Simulation:
         color_map = self.color_map
         
         for patch in patches:
-            elif patch.healthstat == None:
+            elif patch.healthstat is None:
                 if random.random()*100 < self.newforrest:  #Newforrest
                     patch.healthstat = 20
                     continue
