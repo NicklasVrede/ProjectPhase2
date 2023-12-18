@@ -27,7 +27,7 @@ class Simulation:
             else:
                 Fire_population += 1
 
-        self.history[len(self.history)] = {"Tree_population" : Tree_population,
+        self.history[len(self.history)] = {"Tree_population" : Tree_population,   #len scales bad, but we dont care
                                             "Rock_population" : Rock_potulation,
                                             "Fire_population" : Fire_population}
 
@@ -63,6 +63,9 @@ class Simulation:
         self.move_firefighters()
         self.spread_fire()
         self.spread_trees()
+
+    def get_history(self):
+        return self.history
 
     def move_firefighters(self):
         for fighter in list(self.graphinfo.firefighters.keys()):
@@ -103,7 +106,7 @@ class Simulation:
             
     def spread_fire(self):
         for patch in self.graphinfo.patches.values():
-            if patch.healthstat is not None and patch.healthstat > 0:  #find fires
+            if patch.healthstat is not None and patch.healthstat < 0:  #find fires
                 neighbors = self.graphinfo.neighbour_register.get(patch.patch_id)
                 for neighbor in neighbors:
                     if neighbor.healthstat is not None and neighbor.healthstat > 0: #if neighbor is tree
