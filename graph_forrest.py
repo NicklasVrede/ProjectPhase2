@@ -115,25 +115,19 @@ def initiatlize_patches(edges, positions, options):
     
     #Create patches
     for i in wood_nodes:
-        wood_patch = TreePatch(i, 100, positions.get(i))
+        wood_patch = TreePatch(i, 100)
         patches[i] = wood_patch
 
     for i in rock_nodes:
-        rock_patch = RockPatch(i, None, positions.get(i))
+        rock_patch = RockPatch(i, 0)
         patches[i] = rock_patch
 
     for i in fire_nodes:
-        fire_patch = TreePatch(i, -100, positions.get(i))
+        fire_patch = TreePatch(i, -100)
         patches[i] = fire_patch
 
-
     #Initialize graph info:
-    graph_info = GraphInfo()
-    graph_info.initialise_land_patches(patches)
-    graph_info.initialise_color_map(patches)
-    graph_info.initialise_neighbour_register(edges)
-
-    #print(f'neighbour_register = {graph_info.neighbour_register}')
+    graph_info = GraphInfo(edges, patches)
 
     #Set initial fire fighters. We allow for firefighters to have the same position.
     for i in range(1, options.get("firefighter_num") + 1):
@@ -146,7 +140,7 @@ def initiatlize_patches(edges, positions, options):
 
 def initiate_simulation(edges, positions, options, graph_info):
     #initialize graph object:
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object.update_node_edges(list(graph_info.firefighters.keys()))  #Update initial fire fighters positions
 
     

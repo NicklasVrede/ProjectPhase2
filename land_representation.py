@@ -6,11 +6,11 @@ class GraphInfo:
     def __init__(self, edges, patches):
         self.edges = edges
         self.patches = patches #Dict of patch ids and their objects
-        self.color_map = {} #Dict of patch ids and their color
+        self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
         self.fighter_positions = {} #Dict of firefighter ids and their position
-        self.initialise_neighbours()
+        self._initialise_neighbours()
         
-    def initialise_neighbours(self):
+    def _initialise_neighbours(self):
         all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
         edges = [set(edge) for edge in self.edges]
 
@@ -33,13 +33,16 @@ class GraphInfo:
 
             self.patches.get(node).initiate_neighbours(res)
 
-    def initialise_color_map(self, patches):
+    def _initialise_color_map(self, patches):
         for id in patches:
             if patches.get(id).treestat == None:   #If patch is stone, we set nothing
                 continue
-            self.color_map[id] = patches.get(id).treestat
+            self._color_map[id] = patches.get(id).treestat
 
         return self.color_map
+    
+    def get_color_map(self):
+        return self._color_map
 
 class LandPatch:
     def __init__(self, patch_id, treestat, neighbors=None):
@@ -63,7 +66,7 @@ class LandPatch:
         return f"LandPatch {self.patch_id} with treestat {self.treestat}"
     
     def initiate_neighbours(self, neighbours):
-        pass
+        self._neighbours = neighbours
     
     def get_neighbour_id(self):
         neighbour_ids = []
