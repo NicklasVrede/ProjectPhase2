@@ -141,7 +141,7 @@ def initiatlize_patches(edges, positions, options):
 def initiate_simulation(edges, positions, options, graph_info):
     #initialize graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object.update_node_edges(list(graph_info.firefighters.keys()))  #Update initial fire fighters positions
+    graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
     
     #Initialize simulation:

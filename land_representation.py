@@ -8,6 +8,7 @@ class GraphInfo:
         self.patches = patches #Dict of patch ids and their objects
         self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
         self.fighter_positions = {} #Dict of firefighter ids and their position
+        self.firefighters = {} #Dict of firefighter ids and their objects
         self._initialise_neighbours()
         
     def _initialise_neighbours(self):
@@ -43,6 +44,9 @@ class GraphInfo:
     
     def get_color_map(self):
         return self._color_map
+    
+    def get_firefighter_positions(self):
+        return list(self.fighter_positions.values())
 
 class LandPatch:
     def __init__(self, patch_id, treestat, neighbors=None):
