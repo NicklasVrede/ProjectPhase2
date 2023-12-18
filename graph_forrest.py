@@ -43,7 +43,7 @@ def read_edges_from_file(file_path:str) -> list[set]:
 
     return edges, positions
 
-def generate_positions(edges):  #TODO: make this understandable.
+def generate_positions(edges): 
     """
     Generates Voronoi data (coordinate map) from a given set of edges.
 
