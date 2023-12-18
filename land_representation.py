@@ -1,16 +1,18 @@
+from abc import abstractmethod
+import random
+
 # land_representation.py
 class GraphInfo: 
-    def __init__(self):
-        self.patches = {} #Dict of patch ids and their objects
-        self.neighbour_register= {} #Dict of patch ids and their neighbour objects
+    def __init__(self, edges, patches):
+        self.edges = edges
+        self.patches = patches #Dict of patch ids and their objects
         self.color_map = {} #Dict of patch ids and their color
-        self.firefighters = {} #Dict of firefighter ids and their object
         self.fighter_positions = {} #Dict of firefighter ids and their position
-
+        self.initialise_neighbours()
         
-    def initialise_neighbour_register(self, edges):
-        all_nodes = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
-        edges = [set(edge) for edge in edges]
+    def initialise_neighbours(self):
+        all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
+        edges = [set(edge) for edge in self.edges]
 
         for node in all_nodes:
             vertex_value_set = {node}
@@ -29,38 +31,23 @@ class GraphInfo:
             for neighbour in neighbours:
                 res.append(self.patches.get(neighbour))
 
-            self.neighbour_register[node] = res
-
-        return self.neighbour_register
-
-    def initialise_land_patches(self, patches):
-        self.patches = patches
-
-        return self.patches
+            self.patches.get(node).initiate_neighbours(res)
 
     def initialise_color_map(self, patches):
         for id in patches:
-            if patches.get(id).healthstat == None:   #If patch is stone, we set nothing
+            if patches.get(id).treestat == None:   #If patch is stone, we set nothing
                 continue
-            self.color_map[id] = patches.get(id).healthstat
+            self.color_map[id] = patches.get(id).treestat
 
         return self.color_map
 
-
-    def get_neighbours(self, patch_id):
-        return self.neighbour_patches.get(patch_id)
-
-    def update_patch_color(self, patch):
-        if patch.healthstat == None:
-            self.color_map.pop(patch.patch_id) #If patch is stone, we it from the color_map dict
-        else:
-            self.color_map[patch.patch_id] = patch.healthstat
-
 class LandPatch:
-    def __init__(self, patch_id, healthstat, position):
+    def __init__(self, patch_id, treestat, neighbors=None):
         self.patch_id = patch_id  # Identifies the LandPatch
-        self.position = position # Identifies the position of the LandPatch
-        self.healthstat = healthstat  # Variable identifying its health status
+        self.treestat = treestat  # Variable identifying its health status
+        self.burning = False
+        self._neighbours = neighbors  # List of neighbouring LandPatches
+        self._color = self.get_color()
 
     def __eq__(self, other: object) -> bool:
         return self.patch_id == other.patch_id
@@ -73,41 +60,119 @@ class LandPatch:
         #for patch in neighbour_patches:
         #    str_neighbour_patches += f'{patch.patch_id}'
         
-        return f"LandPatch {self.patch_id} with healthstat {self.healthstat}"
+        return f"LandPatch {self.patch_id} with treestat {self.treestat}"
+    
+    def initiate_neighbours(self, neighbours):
+        pass
+    
+    def get_neighbour_id(self):
+        neighbour_ids = []
+        for neighbour in self._neighbours:
+            neighbour_ids.append(neighbour.patch_id)
+        return self._neighbours_ids
+    
+    def get_neighbours(self):
+        return self._neighbours
+    
+    def get_nhealth(self):
+        neighbours_health = {}
+        for neighbour in self._neighbours:
+            neighbours_health[neighbour.patch_id] = neighbour.treestat
+        return neighbours_health
+    
+    def get_color(self):
+        return self._color
+    
+    @abstractmethod
+    def update_color(self):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def mutate(self):
+        raise NotImplementedError
 
 class RockPatch(LandPatch):
+    def __init__(self, patch_id, treestat=0, forrest_prob=1, neighbours=None):
+        super().__init__(patch_id, treestat, neighbours)
+        self.forrest_prob = forrest_prob
+        
     def __repr__(self):
         return f"RockPatch {self.patch_id}"
     
     def mutate(self):
-        self.healthstat = None
+        self = TreePatch(self.patch_id, 40, self.get_neighbours())
+        return self
+    
+    def update_color(self):
+        self._color = 0
 
 class TreePatch(LandPatch):
-    def __repr__(self):
-        if self.healthstat > 0:
-            return f"TreePatch {self.patch_id} with healthstat {self.healthstat}"
-        else:
-            return f"FirePatch {self.patch_id} with healthstat {self.healthstat}"
-    
+    def __init__(self, patch_id, treestat=40):
+        super().__init__(patch_id, treestat)
+        self.growthrate = 10
+        self.burnrate = 20
+        self.buring = False
 
-    def update_land(self):
-        # Update the value of treestats due to fire or firefighter action
-        pass
+    def __repr__(self):
+        if self.treestat > 0:
+            return f"TreePatch {self.patch_id} with treestat {self.treestat}"
+        
+    def update_color(self):
+        if self.burning:
+            self._color = -self.treestat
+        else:
+            self._color = self.treestat
+        
+    def ignite(self):
+        self.burning = True
+        self.update_color()
+    
+    def grow_or_burn(self):
+        if self.burning:
+            self.treestat -= self.burnrate
+            if self.treestat <= 0:
+                self.mutate()
+        else:
+            self.treestat += self.growthrate
+            if self.treestat > 256:
+                self.treestat = 256
 
     def mutate(self):
-        # Allow swapping this Treepatch with a Rockpatch without losing connections
-        pass
+        self = RockPatch(self.patch_id, 0, self.get_neighbours())
 
+    
 
 class Firefighter:
-    def __init__(self, skill_level):
+    def __init__(self, id, skill_level, postion, neighbours=None):
+        self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
-        # Additional attributes as needed
+        self.position = postion  # Identifies the Firefighter's current LandPatch
+        self.neighbours = neighbours  # List of neighbouring LandPatches
 
     def move(self):
-        # Define the logic for firefighter movement
-        pass
+        if self.position.burning:
+            return None #If firefighter is at fire, he will not move.
 
-    def extinguish_fire(self, patch):
-        # Define the logic for extinguishing fire in a specific patch
-        pass
+        move_pool = []
+        for neighbour in self.neighbours:
+            if neighbour.treestat and neighbour.burning:  #we check treestat first or we crash..
+                move_pool.append(neighbour)
+
+        if not move_pool: #if no fire
+            move_pool = self.neighbours
+
+        self.neighbours = new_position.neighbours
+        new_position = random.choice(move_pool).patch_id   #id not object!
+        self.position = new_position
+
+    def extinguish_fire(self):
+        if not self.position.burning:
+            return None #if no fire we do nothing
+        
+        else:
+            self.position.treestat -= 50  #flat amount, becuase that makes most sence
+
+            if self.position.treestat < 0:
+                self.position.mutate()
+                print(f'Firefighter {self.id} extinguished fire at: {self.position.patch_id}')
+
