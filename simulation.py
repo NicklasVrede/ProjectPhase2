@@ -1,7 +1,7 @@
 from land_representation import GraphInfo
 from visualiser_random_forest_graph import Visualiser
 import random
-
+# to do: fix entire module to fit rest.
 class Simulation:
     def __init__(self, graphinfo, options):
         self.graphinfo = graphinfo
@@ -20,7 +20,7 @@ class Simulation:
 
         for i in self.graphinfo.patches:
             patch = self.graphinfo.patches.get(i)
-            if patch.healthstat is None:   #we check for None first or we crash.
+            if patch.treestat is 0: 
                 Rock_potulation += 1
             elif patch.healthstat > 0:
                 Tree_population += 1
