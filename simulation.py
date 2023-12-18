@@ -13,7 +13,6 @@ class Simulation:
 
     def evolve(self):
         patches = self.graphinfo.patches
-
         for i in patches:
             patch = patches.get(i)
             if patch.healthstat is None:
@@ -40,9 +39,9 @@ class Simulation:
 
             self.graphinfo.update_patch_color(patch)
 
-        for firefighter in self.graphinfo.firefighters.values():
-            firefighter.move()
-            firefighter.extinguish_fire()
+    def move_firefighters(self):
+        
+
             
     def run_simulation(self):
         # Run the entire simulation for the specified number of iterations

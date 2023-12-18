@@ -93,79 +93,63 @@ def generate_edges(options):
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)
 
-    return initiate_simulation(edges, positions, options)
+    return initiatlize_patches(edges, positions, options)
 
-def initiate_simulation(edges, positions, options):
+def initiatlize_patches(edges, positions, options):
     #check if the graph is planar?
     #check if the graph is connected?
-
-    #Update neighbour register:
-    graph_info = GraphInfo()
-    graph_info.initialise_neighbour_register(edges)
-    neighbour_register = graph_info.neighbours
-    #print(f'neighbour_register = {neighbour_register}')
-    
 
     #Positions:
     all_vertices = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
     list_of_positions = list(positions.keys()) # We need this in order to pick random positions
-    
 
     #Initialize land patches:
     patches = {}
     wood_ratio = options.get("ini_woods") * 0.01
-    wood_nodes = random.sample(list(positions.keys()), int(wood_ratio*len(all_vertices)))
-    for i in wood_nodes:
-        wood_patch = TreePatch(i, 100, positions.get(i), neighbour_register.get(i))
-        patches[i] = wood_patch
 
-    #Initialize fire patches:
-    #Set the initial fires:
+    wood_nodes = random.sample(list_of_positions, int(wood_ratio*len(all_vertices)))
+    rock_nodes = set(positions.keys()).difference(wood_nodes)
     num_fires = int(len(wood_nodes) * options.get("ini_fires") * 0.01)  #Percentage of fire nodes
     fire_nodes = random.sample(wood_nodes, num_fires)
     
-    #Update fire nodes:   #we are replacing some exsisting wood nodes with fire nodes
-    for i in fire_nodes:
-        fire_patch = TreePatch(i, -100, positions.get(i), neighbour_register.get(i))
-        patches[i] = fire_patch   #Reassign patch to fire_patch
+    #Create patches
+    for i in wood_nodes:
+        wood_patch = TreePatch(i, 100, positions.get(i))
+        patches[i] = wood_patch
 
-    #Initialize rock patches:  
-    rock_nodes = set(positions.keys()).difference(wood_nodes)
     for i in rock_nodes:
-        rock_patch = RockPatch(i, None, positions.get(i), neighbour_register.get(i))
+        rock_patch = RockPatch(i, None, positions.get(i))
         patches[i] = rock_patch
 
-    #Update neighbour_patches:
-    print(patches)
-
-    #initia
-
-    #Set initial fire fighters. We allow for firefighters to have the same position.
-    nr = 1
-    while nr < options.get("firefighter_num")+1:
-        print(f'added_firefighters = {nr}')
-        random_node = random.choice(list_of_positions)
-        new_fire_fighter = Firefighter(nr, options.get("firefighter_level"), random_node, neighbour_register.get(nr-1))
-        graph_info.firefighters[nr] = new_fire_fighter
-        nr += 1
-    print(f'patches = {patches}')
-    #print(f'Firefighters = {graph_info.firefighters}')
-    firefigher_pos = list(graph_info.firefighters.keys())
+    for i in fire_nodes:
+        fire_patch = TreePatch(i, -100, positions.get(i))
+        patches[i] = fire_patch
 
 
     #Initialize graph info:
     graph_info = GraphInfo()
     graph_info.initialise_land_patches(patches)
     graph_info.initialise_color_map(patches)
+    graph_info.initialise_neighbour_register(edges)
 
+    #print(f'neighbour_register = {graph_info.neighbour_register}')
 
+    #Set initial fire fighters. We allow for firefighters to have the same position.
+    for i in range(1, options.get("firefighter_num") + 1):
+        random_node = random.choice(list_of_positions)
+        new_fire_fighter = Firefighter(i, options.get("firefighter_level"), random_node)
+        graph_info.firefighters[i] = new_fire_fighter
+    
+    return initiate_simulation(edges, positions, options, graph_info)
+
+def initiate_simulation(edges, positions, options, graph_info):
     #initialize graph object:
+    firefigher_pos = list(graph_info.firefighters.keys())
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object.update_node_edges(list(firefigher_pos))  #Update initial fire fighters positions
 
     
     #Initialize simulation:
-    print(f'newforrest = {options.get("newforrest")}')
     current_simulation = Simulation(graph_info, options)
     for i in range(options.get("iter_num")):
         #print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
@@ -177,9 +161,7 @@ def initiate_simulation(edges, positions, options):
         time.sleep(0.5)
 
 
-
     graph_object.wait_close()
-
 
 
 
