@@ -160,7 +160,7 @@ def initiate_simulation(edges, positions, options, graph_info):
         wait_time = 0.01
 
     current_simulation = Simulation(graph_info, options)
-    for i in range(options.get("iter_num")):
+    for _ in range(options.get("iter_num")):
         #print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.color_map) #Update color map
