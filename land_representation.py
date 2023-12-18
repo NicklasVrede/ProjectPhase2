@@ -35,48 +35,53 @@ class GraphInfo:
             self.patches.get(node).initiate_neighbours(res)
 
     def _initialise_color_map(self, patches):
-        for id in patches:
-            if patches.get(id).treestat == None:   #If patch is stone, we set nothing
-                continue
-            self._color_map[id] = patches.get(id).treestat
+        self._color_map = {}
+        for patch in patches.values():
+            self._color_map[patch.patch_id] = patch.get_color()
 
-        return self.color_map
+        return self._color_map
+    
+    def update_color_map(self):
+        for patch in self.patches.values():
+            if patch.get_color == 0:
+                if self._color_map[patch.patch_id]:
+                    self._color_map.pop(patch.patch_id)
+
+            self._color_map[patch.patch_id] = patch.get_color()
     
     def get_color_map(self):
+        print(f'color_map = {self._color_map}')
         return self._color_map
     
     def get_firefighter_positions(self):
-        return list(self.fighter_positions.values())
+        res = []
+        for fighter in self.firefighters.values():
+            res.append(fighter.position.patch_id)
+        
+        return res
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, neighbors=None):
+    def __init__(self, patch_id, treestat, burning=False, neighbors=None):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
-        self.burning = False
+        self.burning = burning
         self._neighbours = neighbors  # List of neighbouring LandPatches
-        self._color = self.get_color()
+  # Variable identifying its color
 
     def __eq__(self, other: object) -> bool:
         return self.patch_id == other.patch_id
 
     def __repr__(self):
-        #graph_info = GraphInfo()
-        #neighbour_patches = graph_info.get_neighbours(self.patch_id)
-        #print("neighbour_patches = ", neighbour_patches)
-        #str_neighbour_patches = ""
-        #for patch in neighbour_patches:
-        #    str_neighbour_patches += f'{patch.patch_id}'
-        
-        return f"LandPatch {self.patch_id} with treestat {self.treestat}"
+        return f'LandPatch {self.patch_id} with color {self._color}'
     
     def initiate_neighbours(self, neighbours):
         self._neighbours = neighbours
     
     def get_neighbour_id(self):
-        neighbour_ids = []
+        neighbours_ids = []
         for neighbour in self._neighbours:
-            neighbour_ids.append(neighbour.patch_id)
-        return self._neighbours_ids
+            neighbours_ids.append(neighbour.patch_id)
+        return neighbours_ids
     
     def get_neighbours(self):
         return self._neighbours
@@ -91,38 +96,38 @@ class LandPatch:
         return self._color
     
     @abstractmethod
-    def update_color(self):
-        raise NotImplementedError
-    
-    @abstractmethod
     def mutate(self):
         raise NotImplementedError
 
 class RockPatch(LandPatch):
-    def __init__(self, patch_id, treestat=0, forrest_prob=1, neighbours=None):
-        super().__init__(patch_id, treestat, neighbours)
+    def __init__(self, patch_id, treestat=0, forrest_prob=1):
+        super().__init__(patch_id, treestat)
+        self.burning = False
         self.forrest_prob = forrest_prob
+        self._color = 0
         
     def __repr__(self):
-        return f"RockPatch {self.patch_id}"
+        return f"RockPatch {self.patch_id} with color {self._color}"
+
+    def get_color(self):
+        return self._color
     
     def mutate(self):
         self = TreePatch(self.patch_id, 40, self.get_neighbours())
         return self
-    
-    def update_color(self):
-        self._color = 0
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestat=40):
-        super().__init__(patch_id, treestat)
+    def __init__(self, patch_id, treestat, burning=False):
+        super().__init__(patch_id, treestat, burning)
         self.growthrate = 10
         self.burnrate = 20
-        self.buring = False
+        if burning:
+            self._color = -self.treestat
+        else:
+            self._color = self.treestat
 
     def __repr__(self):
-        if self.treestat > 0:
-            return f"TreePatch {self.patch_id} with treestat {self.treestat}"
+        return f'LandPatch {self.patch_id} with color {self._color}'
         
     def update_color(self):
         if self.burning:
@@ -133,28 +138,63 @@ class TreePatch(LandPatch):
     def ignite(self):
         self.burning = True
         self.update_color()
-    
+
+    def spread_fire(self):
+        if self.burning:
+            neighbours = self._neighbours
+            for neighbour in neighbours:
+                if neighbour.burning == False and neighbour.treestat > 0:
+                    probability = int(30)
+                    random_num = random.randint(0, 100)
+                    if random_num < probability:
+                        neighbour.ignite()
+                        print(f'Fire spread from {self.patch_id} to {neighbour.patch_id}')
+        else: 
+            raise ValueError('Tree is not burning')
+        
     def grow_or_burn(self):
         if self.burning:
             self.treestat -= self.burnrate
+            self.update_color()
             if self.treestat <= 0:
+                print(f'Tree {self.patch_id} burned down')
                 self.mutate()
         else:
             self.treestat += self.growthrate
+            self.update_color()
             if self.treestat > 256:
                 self.treestat = 256
 
+    def modify_treestat(self, amount):
+        if amount < 0:
+            if self.treestat > 256:
+                self.treestat = 256
+            else:
+                return None
+
+        self.treestat += amount
+        if self.treestat >= 0:
+            self.burning = False
+            return self.mutate()
+        
+        self.update_color()
+
+        return self.treestat
+
     def mutate(self):
         self = RockPatch(self.patch_id, 0, self.get_neighbours())
-
+        return self
     
 
 class Firefighter:
-    def __init__(self, id, skill_level, postion, neighbours=None):
+    def __init__(self, id, skill_level, position, neighbours=None):
         self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
-        self.position = postion  # Identifies the Firefighter's current LandPatch
+        self.position = position  # Identifies the Firefighter's current LandPatch
         self.neighbours = neighbours  # List of neighbouring LandPatches
+
+    def __repr__(self) -> str:
+        return f"Firefighter {self.id} at {self.position.patch_id} with skill level {self.skill_level}"
 
     def move(self):
         if self.position.burning:
@@ -168,9 +208,10 @@ class Firefighter:
         if not move_pool: #if no fire
             move_pool = self.neighbours
 
-        self.neighbours = new_position.neighbours
-        new_position = random.choice(move_pool).patch_id   #id not object!
+        new_position = random.choice(move_pool)
+        self.neighbours = new_position.get_neighbours()
         self.position = new_position
+
 
     def extinguish_fire(self):
         if not self.position.burning:
