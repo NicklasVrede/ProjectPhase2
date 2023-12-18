@@ -1,13 +1,12 @@
 from land_representation import GraphInfo
 #firefighter.py
 class Firefighter:
-    def __init__(self, id, skill_level, position):
+    def __init__(self, id, skill_level):
         self.id = id
         self.skill_level = skill_level
-        self.position = position
 
     def __repr__(self):
-        return f'Firefighter {self.id} at {self.position}'
+        return f'Firefighter {self.id}'
 
     def extinguish_fire(self):
         # Define the logic for extinguishing fire in a specific patch

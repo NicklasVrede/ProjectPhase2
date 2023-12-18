@@ -1,10 +1,12 @@
 # land_representation.py
 class GraphInfo: 
     def __init__(self):
-        self.patches = {}
-        self.neighbour_register= {}
-        self.color_map = {}
-        self.firefighters = {}
+        self.patches = {} #Dict of patch ids and their objects
+        self.neighbour_register= {} #Dict of patch ids and their neighbour objects
+        self.color_map = {} #Dict of patch ids and their color
+        self.firefighters = {} #Dict of firefighter ids and their object
+        self.fighter_positions = {} #Dict of firefighter ids and their position
+
         
     def initialise_neighbour_register(self, edges):
         all_nodes = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
@@ -87,7 +89,6 @@ class TreePatch(LandPatch):
         else:
             return f"FirePatch {self.patch_id} with healthstat {self.healthstat}"
     
-        
 
     def update_land(self):
         # Update the value of treestats due to fire or firefighter action
@@ -96,6 +97,7 @@ class TreePatch(LandPatch):
     def mutate(self):
         # Allow swapping this Treepatch with a Rockpatch without losing connections
         pass
+
 
 class Firefighter:
     def __init__(self, skill_level):

@@ -137,16 +137,16 @@ def initiatlize_patches(edges, positions, options):
     #Set initial fire fighters. We allow for firefighters to have the same position.
     for i in range(1, options.get("firefighter_num") + 1):
         random_node = random.choice(list_of_positions)
-        new_fire_fighter = Firefighter(i, options.get("firefighter_level"), random_node)
+        new_fire_fighter = Firefighter(i, options.get("firefighter_level"))
         graph_info.firefighters[i] = new_fire_fighter
+        graph_info.fighter_positions[i] = random_node
     
     return initiate_simulation(edges, positions, options, graph_info)
 
 def initiate_simulation(edges, positions, options, graph_info):
     #initialize graph object:
-    firefigher_pos = list(graph_info.firefighters.keys())
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.color_map, pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object.update_node_edges(list(firefigher_pos))  #Update initial fire fighters positions
+    graph_object.update_node_edges(list(graph_info.firefighters.keys()))  #Update initial fire fighters positions
 
     
     #Initialize simulation:
@@ -155,11 +155,13 @@ def initiate_simulation(edges, positions, options, graph_info):
         #print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
         current_simulation.evolve()
         graph_object.update_node_colours(graph_info.color_map)
+        graph_object.update_node_edges(list(graph_info.fighter_positions.values()))
         #print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
 
         #Update fire fighters:
-        time.sleep(0.5)
+        time.sleep(1)
 
+    print("Simulation finished.")
 
     graph_object.wait_close()
 
@@ -168,10 +170,10 @@ def initiate_simulation(edges, positions, options, graph_info):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 100,
-               "firefighter_num" : 3,
+               "firefighter_num" : 5,
                "firefighter_level" : "low",
                "ini_fires" : 20,
-               "iter_num" : 12,
+               "iter_num" : 100,
                "treegrowth" : 10,
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %
