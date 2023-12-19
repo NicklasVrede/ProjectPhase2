@@ -57,7 +57,7 @@ def generate_positions(edges):
         Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1]).
     """
     vertices = set([vertex for edge in edges for vertex in edge])
-    positions = {vertex: tuple(np.random.rand(2)) for vertex in vertices}
+    positions = {vertex: tuple(random.rand(2)) for vertex in vertices}
     return positions
 
 def generate_edges(options):
@@ -100,17 +100,18 @@ def initiatlize_patches(edges, positions, options):
     #check if the graph is connected?
 
     #Positions:
-    all_vertices = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
-    list_of_positions = list(positions.keys()) # We need this in order to pick random positions
+    all_vertices = list(set.union(*[set(edge) for edge in edges])) #Merges a new set of nodes
 
     #Initialize land patches:
     patches = {}
     wood_ratio = options.get("ini_woods") * 0.01
+    fire_ratio = options.get("ini_fires") * 0.01
 
-    wood_nodes = random.sample(list_of_positions, int(wood_ratio*len(all_vertices)))
-    rock_nodes = set(positions.keys()).difference(wood_nodes)
-    num_fires = int(len(wood_nodes) * options.get("ini_fires") * 0.01)  #Percentage of fire nodes
+    wood_nodes = random.sample(all_vertices, int(wood_ratio*len(all_vertices)))
+    rock_nodes = list(set(all_vertices).difference(wood_nodes))
+    num_fires = int(len(wood_nodes) * fire_ratio)  #Percentage of fire nodes
     fire_nodes = random.sample(wood_nodes, num_fires)
+    wood_nodes = list(set(wood_nodes).difference(fire_nodes))
 
     #Create patches
     patches = {}
@@ -122,7 +123,6 @@ def initiatlize_patches(edges, positions, options):
         patches[i] = TreePatch(i, 100, burning=True)
   
     graph_info = GraphInfo(edges, patches)
-
 
 
     #Set initial fire fighters. We allow for firefighters to have the same position.
@@ -166,7 +166,7 @@ def initiate_simulation(edges, positions, options, graph_info):
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
         #print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
 
-        time.sleep(wait_time)
+        time.sleep(3)
 
     print("Simulation finished.")
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
                "firefighter_num" : 2,
                "firefighter_level" : "low",
                "ini_fires" : 50,
-               "iter_num" : 5,
+               "iter_num" : 6,
                "treegrowth" : 10,
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %

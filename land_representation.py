@@ -1,7 +1,10 @@
 from abc import abstractmethod
 import random
-
 # land_representation.py
+
+class SharedInfo:
+    patches = []
+
 class GraphInfo: 
     def __init__(self, edges, patches):
         self.edges = edges
@@ -66,11 +69,12 @@ class GraphInfo:
         return res
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, burning, neighbors):
+    def __init__(self, patch_id, treestat, neighbors, burning):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
         self._neighbours = neighbors  # List of neighbouring LandPatches
+        self.firefighters = {}
   # Variable identifying its color
 
     def __eq__(self, other: object) -> bool:
@@ -112,7 +116,7 @@ class RockPatch(LandPatch):
         self._color = 0
         
     def __repr__(self):
-        return f"RockPatch {self.patch_id} with color {self._color}"
+        return f"RockPatch {self.patch_id}"
 
     def get_color(self):
         return self._color
@@ -132,7 +136,7 @@ class TreePatch(LandPatch):
             self._color = self.treestat
 
     def __repr__(self):
-        return f'Treepatch {self.patch_id} with color, on fire = {self.burning}'
+        return f'Treepatch {self.patch_id} - on fire = {self.burning}.'
         
     def update_color(self):
         if self.burning:
@@ -184,19 +188,20 @@ class TreePatch(LandPatch):
         return self
 
     def mutate(self) -> RockPatch:
-        print(f'Tree {self.patch_id} mutated to rock')
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
+        print(f'Tree {self.patch_id} mutated to rock. {new_patch}')
         return new_patch
     
 class Firefighter:
     def __init__(self, id, skill_level, position, neighbours):
         self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
-        self.position = position  # Identifies the Firefighter's current LandPatch
+        self.position = position  # Identifies the Firefighter's position patch id
         self.neighbours = neighbours  # List of neighbouring LandPatches
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.position}"
+
 
     def move(self):
         print(f'self.position.burning = {self.position.burning}')
@@ -213,9 +218,10 @@ class Firefighter:
             move_pool = self.neighbours
 
         new_position = random.choice(move_pool)
+        print(f'new position for firefighter {self.id} is {new_position}')
         self.neighbours = new_position.get_neighbours()
         self.position = new_position
-
+        print(f'position of firefighter {self.id} is {self.position}')
 
     def extinguish_fire(self):
         if not self.position.burning:
