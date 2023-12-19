@@ -122,7 +122,7 @@ def initiatlize_patches(edges, positions, options):
     for i in fire_nodes:
         patches[i] = TreePatch(i, 100, burning=True)
   
-    graph_info = GraphInfo(edges, patches, options)
+    graph_info = GraphInfo(edges, options, patches)
 
 
     

@@ -2,24 +2,26 @@ from abc import abstractmethod
 import random
 # land_representation.py
 
-def _wrap(obj):
+def wrap(obj):
     return [obj]
 
 def unwrap(obj):
     return obj[0]
 
 class GraphInfo: 
-    def __init__(self, edges, patches, options):
+    def __init__(self, edges, options, patches):
         self.edges = edges
+        self.options = options
         self.patches = self._patch_wrapper(patches) #Dict of patch ids and their wrapped objects
         print(f'patches = {self.patches}')
         self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
         self.firefighters = self._initialise_firefighters() #Dict of firefighter ids and their objects
-        self.options = options
+        print(self.options)
         self._initialise_neighbours()
 
     def _patch_wrapper(self, patches):
-        return {patch.patch_id: _wrap(patch) for patch in list(patches.values())}
+        print(f'patches = {patches}')
+        return {patch.patch_id: wrap(patch) for patch in list(patches.values())}
 
     def _initialise_neighbours(self):
         all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
@@ -65,7 +67,7 @@ class GraphInfo:
             random_neighbours = unwrap(random_patch).get_neighbours()
             level = self.options.get("firefighter_level")
             new_fire_fighter = Firefighter(i, level, random_patch, random_neighbours)
-            new_fire_fighter.position = _wrap(random_patch)
+            new_fire_fighter.position = random_patch  #already wrapped object.
             res[i] = new_fire_fighter   #Instances of fire
         
         print(f'firefighters = {res}')
@@ -91,8 +93,8 @@ class GraphInfo:
     
     def get_firefighter_positions(self):
         res = []
-        for fighter in self.firefighters.values():
-            res.append(fighter.position.patch_id)
+        for fighter in list(self.firefighters.values()):
+            res.append(unwrap(fighter.position).patch_id)
         
         return res
 
@@ -110,6 +112,9 @@ class LandPatch:
 
     def __repr__(self):
         return f'LandPatch {self.patch_id} with neighbours {self.get_neighbour_id()}'
+    
+    def get_id(self):
+        return self.patch_id
     
     def initiate_neighbours(self, neighbours):
         self._neighbours = neighbours
@@ -229,17 +234,22 @@ class Firefighter:
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.position}"
-
+    
+    def get_position(self):
+        return unwrap(self.position)
+    
+    def get_neighbours(self):
+        return [unwrap(neighbour) for neighbour in self.neighbours]
 
     def move(self):
-        print(f'self.position.burning = {self.position.burning}')
-        if self.position.burning:
+        position = self.get_position()
+        if position.burning:
             print(f'Firefighter is standing still at {self.position}')
             return None #If firefighter is at fire, he will not move.
 
         move_pool = []
-        for neighbour in self.neighbours:
-            if neighbour.treestat and neighbour.burning:  #we check treestat first or we crash..
+        for neighbour in self.get_neighbours():
+            if neighbour.burning:
                 move_pool.append(neighbour)
 
         if not move_pool: #if no fire
@@ -248,13 +258,13 @@ class Firefighter:
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
         self.neighbours = new_position.get_neighbours()
-        self.position = new_position
-        print(f'position of firefighter {self.id} is {self.position}')
+        self.position = wrap(new_position)
 
     def extinguish_fire(self):
-        if not self.position.burning:
+        position = self.get_position()
+        if not position.burning:
             return None #if no fire we do nothing
         
         else:
-            print(f'new position for firefighter {self.id} is {self.position}')
+            pass
 
