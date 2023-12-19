@@ -43,14 +43,19 @@ class GraphInfo:
     
     def update_color_map(self):
         for patch in self.patches.values():
-            if patch.get_color == 0:
-                if self._color_map[patch.patch_id]:
-                    self._color_map.pop(patch.patch_id)
+            if patch.get_color() == 0:
+                if patch.patch_id in self._color_map:    #important to check if key exists or we crash
+                    del self._color_map[patch.patch_id]
+                continue
 
             self._color_map[patch.patch_id] = patch.get_color()
+
+        return self._color_map
+
+    def pop_color_map(self, patch_id):
+        self._color_map.pop(patch_id)
     
     def get_color_map(self):
-        print(f'color_map = {self._color_map}')
         return self._color_map
     
     def get_firefighter_positions(self):
@@ -127,7 +132,7 @@ class TreePatch(LandPatch):
             self._color = self.treestat
 
     def __repr__(self):
-        return f'LandPatch {self.patch_id} with color {self._color}'
+        return f'Treepatch {self.patch_id} with color, on fire = {self.burning}'
         
     def update_color(self):
         if self.burning:
@@ -182,6 +187,7 @@ class TreePatch(LandPatch):
         return self.treestat
 
     def mutate(self):
+        print(f'Tree {self.patch_id} mutated to rock')
         self = RockPatch(self.patch_id, 0, self.get_neighbours())
         return self
     
@@ -194,10 +200,11 @@ class Firefighter:
         self.neighbours = neighbours  # List of neighbouring LandPatches
 
     def __repr__(self) -> str:
-        return f"Firefighter {self.id} at {self.position.patch_id} with skill level {self.skill_level}"
+        return f"Firefighter {self.id} at {self.position}"
 
     def move(self):
         if self.position.burning:
+            print(f'Firefighter is standing still at {self.position}')
             return None #If firefighter is at fire, he will not move.
 
         move_pool = []
@@ -218,9 +225,6 @@ class Firefighter:
             return None #if no fire we do nothing
         
         else:
-            self.position.treestat -= 50  #flat amount, becuase that makes most sence
-
-            if self.position.treestat < 0:
-                self.position.mutate()
-                print(f'Firefighter {self.id} extinguished fire at: {self.position.patch_id}')
+            self.position = self.position.modify_treestat(-50)
+            print(f'new position for firefighter {self.id} is {self.position}')
 

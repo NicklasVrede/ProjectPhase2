@@ -123,7 +123,7 @@ def initiatlize_patches(edges, positions, options):
   
     graph_info = GraphInfo(edges, patches)
 
-    print(f'patches = {patches}')
+
 
     #Set initial fire fighters. We allow for firefighters to have the same position.
     for i in range(1, options.get("firefighter_num") + 1):
