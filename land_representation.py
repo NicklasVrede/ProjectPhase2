@@ -66,7 +66,7 @@ class GraphInfo:
         return res
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, burning=False, neighbors=None):
+    def __init__(self, patch_id, treestat, burning, neighbors):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
@@ -105,8 +105,8 @@ class LandPatch:
         raise NotImplementedError
 
 class RockPatch(LandPatch):
-    def __init__(self, patch_id, treestat=0, forrest_prob=1):
-        super().__init__(patch_id, treestat)
+    def __init__(self, patch_id, treestat, neighbors=None, forrest_prob=1):
+        super().__init__(patch_id, treestat, neighbors, False)
         self.burning = False
         self.forrest_prob = forrest_prob
         self._color = 0
@@ -118,12 +118,12 @@ class RockPatch(LandPatch):
         return self._color
     
     def mutate(self):
-        self = TreePatch(self.patch_id, 40, self.get_neighbours())
-        return self
+        new_patch = TreePatch(self.patch_id, 40, self.get_neighbours())
+        return new_patch
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestat, burning=False):
-        super().__init__(patch_id, treestat, burning)
+    def __init__(self, patch_id, treestat, neighbors=None, burning=False):
+        super().__init__(patch_id, treestat, neighbors, burning)
         self.growthrate = 10
         self.burnrate = 20
         if burning:
@@ -170,30 +170,26 @@ class TreePatch(LandPatch):
             if self.treestat > 256:
                 self.treestat = 256
 
-    def modify_treestat(self, amount):
-        if amount < 0:
-            if self.treestat > 256:
+    def modify_treestat(self, amount) -> LandPatch:
+        if self.treestat >= 256:
                 self.treestat = 256
-            else:
-                return None
+                return self
 
         self.treestat += amount
         if self.treestat >= 0:
-            self.burning = False
             return self.mutate()
         
         self.update_color()
 
-        return self.treestat
-
-    def mutate(self):
-        print(f'Tree {self.patch_id} mutated to rock')
-        self = RockPatch(self.patch_id, 0, self.get_neighbours())
         return self
-    
 
+    def mutate(self) -> RockPatch:
+        print(f'Tree {self.patch_id} mutated to rock')
+        new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
+        return new_patch
+    
 class Firefighter:
-    def __init__(self, id, skill_level, position, neighbours=None):
+    def __init__(self, id, skill_level, position, neighbours):
         self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
         self.position = position  # Identifies the Firefighter's current LandPatch
@@ -203,6 +199,7 @@ class Firefighter:
         return f"Firefighter {self.id} at {self.position}"
 
     def move(self):
+        print(f'self.position.burning = {self.position.burning}')
         if self.position.burning:
             print(f'Firefighter is standing still at {self.position}')
             return None #If firefighter is at fire, he will not move.
@@ -225,6 +222,5 @@ class Firefighter:
             return None #if no fire we do nothing
         
         else:
-            self.position = self.position.modify_treestat(-50)
             print(f'new position for firefighter {self.id} is {self.position}')
 

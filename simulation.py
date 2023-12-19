@@ -49,6 +49,7 @@ class Simulation:
         self.move_firefighters()
         self.spread_fire()
 
+        print(f'color map = {self.graphinfo._color_map}')
         self.graphinfo.update_color_map()
 
     def get_history(self):
