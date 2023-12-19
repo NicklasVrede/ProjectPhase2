@@ -48,8 +48,6 @@ class GraphInfo:
 
             patches.get(node).initiate_neighbours(res)
 
-            print(f'res = {res} for node {node}')
-
     def get_patches(self):
         return {unwrap(patch).patch_id: unwrap(patch) for patch in list(self.patches.values())}
 
@@ -76,7 +74,8 @@ class GraphInfo:
         return res
     
     def update_color_map(self):
-        for patch in self.patches.values():
+        patches = self.get_patches()
+        for patch in patches.values():
             if patch.get_color() == 0:
                 if patch.patch_id in self._color_map:    #important to check if key exists or we crash
                     del self._color_map[patch.patch_id]

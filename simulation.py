@@ -17,8 +17,9 @@ class Simulation:
         Rock_potulation = 0
         Fire_population = 0
 
-        for i in self.graphinfo.patches:
-            patch = self.graphinfo.patches.get(i)
+        patches = self.graphinfo.get_patches()
+        for i in patches:
+            patch = patches.get(i)
             if patch.treestat is 0: 
                 Rock_potulation += 1
             elif patch.burning:
@@ -31,7 +32,6 @@ class Simulation:
                                             "Fire_population" : Fire_population}
 
         # Update the simulation for a single iteration
-        patches = self.graphinfo.patches
         for i in patches:
             patch = patches.get(i)
             if patch.treestat is 0:
@@ -47,11 +47,9 @@ class Simulation:
         
         self.extinguish_fire()
         self.move_firefighters()
-        self.spread_fire()
 
         self.graphinfo.update_color_map()
 
-        print(f'patches: {patches}')
 
     def get_history(self):
         return self.history
@@ -67,12 +65,14 @@ class Simulation:
             fighter.extinguish_fire()
             
     def spread_fire(self):
-        for patch in self.graphinfo.patches.values():
+        patches = self.graphinfo.get_patches()
+        for patch in patches.values():
             if patch.treestat < 0:
                 patch.spread_fire()
 
     def spread_trees(self):
-        for patch in self.graphinfo.patches.values():
+        patches = self.graphinfo.get_patches()
+        for patch in patches.values():
             if patch.healthstat is not None and patch.healthstat > 0:  #find trees
                 neighbors = self.graphinfo.neighbour_register.get(patch.patch_id)
                 for neighbor in neighbors:
