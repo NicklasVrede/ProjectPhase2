@@ -52,6 +52,9 @@ class GraphInfo:
 
     def get_patch(self, patch_id):
         return unwrap(self.patches.get(patch_id))
+    
+    def get_wrapped(self,patch_id):
+        return self.patches.get(patch_id)
 
     def _initialise_color_map(self, patches):
         self._color_map = {}
@@ -196,27 +199,27 @@ class TreePatch(LandPatch):
         else: 
             raise ValueError('Tree is not burning')
         
-    def grow_or_burn(self):
+    def grow_or_burn(self, wrapped_self):
         if self.burning:
             self.treestat -= self.burnrate
             self.update_color()
             if self.treestat <= 0:
                 print(f'Tree {self.patch_id} burned down')
-                self.mutate()
+                self.mutate(wrapped_self)
         else:
             self.treestat += self.growthrate
             self.update_color()
             if self.treestat > 256:
                 self.treestat = 256
 
-    def modify_treestat(self, amount) -> LandPatch:
+    def modify_treestat(self, amount, wrapped_self) -> LandPatch:
         if self.treestat >= 256:
                 self.treestat = 256
                 return self
 
         self.treestat += amount
         if self.treestat >= 0:
-            return self.mutate()
+            return self.mutate(wrapped_self)
         
         self.update_color()
 
@@ -239,9 +242,8 @@ class Firefighter:
     def get_position(self):
         return unwrap(self.position)
     
-    def get_neighbours(self):
-        neighbours = unwrap(self.position).get_neighbours()
-        return [unwrap(neighbour) for neighbour in neighbours]
+    def get_neighbours_wrapped(self):
+        return unwrap(self.position).get_neighbours()
 
     def move(self):
         position = self.get_position()
@@ -250,9 +252,9 @@ class Firefighter:
             return None #If firefighter is at fire, he will not move.
 
         move_pool = []
-        neighbours = self.get_neighbours()
+        neighbours = self.get_neighbours_wrapped()
         for neighbour in neighbours:
-            if neighbour.burning:
+            if unwrap(neighbour).burning:
                 move_pool.append(neighbour)
 
         if not move_pool: #if no fire
@@ -260,8 +262,8 @@ class Firefighter:
 
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
-        self.neighbours = new_position.get_neighbours()
-        self.position = wrap(new_position)
+        self.neighbours = unwrap(new_position).get_neighbours()
+        self.position = new_position
 
     def extinguish_fire(self):
         position = self.get_position()

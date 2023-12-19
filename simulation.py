@@ -42,10 +42,11 @@ class Simulation:
                     patch.mutate()
 
             elif 256 > patch.treestat > 0:
-                patch.grow_or_burn()
+                print(f'self.graphinfo.get_wrapped().get(i) = {self.graphinfo.get_wrapped(i)}')
+                patch.grow_or_burn(self.graphinfo.get_wrapped(i))
 
         
-        self.extinguish_fire()
+        #self.extinguish_fire()
         self.move_firefighters()
 
         self.graphinfo.update_color_map()
