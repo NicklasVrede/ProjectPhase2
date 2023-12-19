@@ -9,7 +9,7 @@ menu_strings = {
     "welcome" : line + """
 Welcome to the Forest Fire Simulation Program!
 
-In this simulation, you will explore the dynamic evolution of a population 
+In this simulation, you will explore, the dynamic evolution of a population 
 of automata in a simulated forest environment. The fate of the landscape 
 is in your hands as you influence the growth of trees, the movement of firefighters, 
 and the spread of wildfires.
