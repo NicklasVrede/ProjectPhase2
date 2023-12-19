@@ -2,28 +2,39 @@ from abc import abstractmethod
 import random
 # land_representation.py
 
-class SharedInfo:
-    patches = []
+def _wrap(obj):
+    return [obj]
+
+def unwrap(obj):
+    return obj[0]
 
 class GraphInfo: 
-    def __init__(self, edges, patches):
+    def __init__(self, edges, patches, options):
         self.edges = edges
-        self.patches = patches #Dict of patch ids and their objects
+        self.patches = self._patch_wrapper(patches) #Dict of patch ids and their objects
+        print(f'patches = {self.patches}')
         self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
         self.fighter_positions = {} #Dict of firefighter ids and their position
         self.firefighters = {} #Dict of firefighter ids and their objects
+        self.options = options
         self._initialise_neighbours()
-        
+        self._initialise_firefighters()
+
+    def _patch_wrapper(self, patches):
+        return {patch.patch_id: _wrap(patch) for patch in list(patches.values())}
+
+
     def _initialise_neighbours(self):
         all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
         edges = [set(edge) for edge in self.edges]
+        patches = self.get_patches()
 
         for node in all_nodes:
             vertex_value_set = {node}
             neighbours = []
             for edge in edges:
                 if vertex_value_set.intersection(edge):
-                    #Here its important we account for self-loops.
+                    #Here its important we account for self-loops. is it?
                     if len(edge) == 1:
                         neighbours.append(node)
                         continue #if we dont continue we get KeyError, since there is no differnce
@@ -35,7 +46,15 @@ class GraphInfo:
             for neighbour in neighbours:
                 res.append(self.patches.get(neighbour))
 
-            self.patches.get(node).initiate_neighbours(res)
+            patches.get(node).initiate_neighbours(res)
+
+            print(f'res = {res} for node {node}')
+
+    def get_patches(self):
+        return {unwrap(patch).patch_id: unwrap(patch) for patch in list(self.patches.values())}
+
+    def get_patch(self, patch_id):
+        return unwrap(self.patches.get(patch_id))
 
     def _initialise_color_map(self, patches):
         self._color_map = {}
@@ -43,6 +62,18 @@ class GraphInfo:
             self._color_map[patch.patch_id] = patch.get_color()
 
         return self._color_map
+    
+    def _initialise_firefighters(self):
+        res = {}
+        for i in range(1, self.options.get("firefighter_num") + 1):
+            random_patch = random.choice(self.patches)
+            random_neighbours = unwrap(random_patch).get_neighbours()
+            level = self.options.get("firefighter_level")
+            new_fire_fighter = Firefighter(i, level, random_patch, random_neighbours)
+            new_fire_fighter.position = _wrap(random_patch)
+            res[i] = new_fire_fighter   #Instances of fire
+        
+        return res
     
     def update_color_map(self):
         for patch in self.patches.values():
@@ -81,7 +112,7 @@ class LandPatch:
         return self.patch_id == other.patch_id
 
     def __repr__(self):
-        return f'LandPatch {self.patch_id} with color {self._color}'
+        return f'LandPatch {self.patch_id} with neighbours {self.get_neighbour_id()}'
     
     def initiate_neighbours(self, neighbours):
         self._neighbours = neighbours
@@ -136,7 +167,7 @@ class TreePatch(LandPatch):
             self._color = self.treestat
 
     def __repr__(self):
-        return f'Treepatch {self.patch_id} - on fire = {self.burning}.'
+        return f'Treepatch {self.patch_id}'
         
     def update_color(self):
         if self.burning:

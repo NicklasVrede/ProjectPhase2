@@ -122,16 +122,8 @@ def initiatlize_patches(edges, positions, options):
     for i in fire_nodes:
         patches[i] = TreePatch(i, 100, burning=True)
   
-    graph_info = GraphInfo(edges, patches)
+    graph_info = GraphInfo(edges, patches, options)
 
-
-    #Set initial fire fighters. We allow for firefighters to have the same position.
-    for i in range(1, options.get("firefighter_num") + 1):
-        random_patch = random.choice(graph_info.patches)
-        new_fire_fighter = Firefighter(i, options.get("firefighter_level"), random_patch, random_patch.get_neighbours())
-        new_fire_fighter.position = random_patch
-        graph_info.firefighters[i] = new_fire_fighter
-        graph_info.fighter_positions[i] = random_patch.patch_id
 
     
     return initiate_simulation(edges, positions, options, graph_info)
@@ -160,11 +152,9 @@ def initiate_simulation(edges, positions, options, graph_info):
 
     current_simulation = Simulation(graph_info, options)
     for _ in range(options.get("iter_num")):
-        #print("Iteration: ", i+1, " of ", options.get("iter_num"), " iterations.")
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
-        #print(f'Color map for iteration {i+1} out of {options.get("iter_num")} = {graph_info.color_map}')
 
         time.sleep(3)
 
