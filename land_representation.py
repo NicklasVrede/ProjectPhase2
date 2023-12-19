@@ -11,18 +11,15 @@ def unwrap(obj):
 class GraphInfo: 
     def __init__(self, edges, patches, options):
         self.edges = edges
-        self.patches = self._patch_wrapper(patches) #Dict of patch ids and their objects
+        self.patches = self._patch_wrapper(patches) #Dict of patch ids and their wrapped objects
         print(f'patches = {self.patches}')
         self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
-        self.fighter_positions = {} #Dict of firefighter ids and their position
-        self.firefighters = {} #Dict of firefighter ids and their objects
+        self.firefighters = self._initialise_firefighters() #Dict of firefighter ids and their objects
         self.options = options
         self._initialise_neighbours()
-        self._initialise_firefighters()
 
     def _patch_wrapper(self, patches):
         return {patch.patch_id: _wrap(patch) for patch in list(patches.values())}
-
 
     def _initialise_neighbours(self):
         all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
@@ -71,6 +68,7 @@ class GraphInfo:
             new_fire_fighter.position = _wrap(random_patch)
             res[i] = new_fire_fighter   #Instances of fire
         
+        print(f'firefighters = {res}')
         return res
     
     def update_color_map(self):
