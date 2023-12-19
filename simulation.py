@@ -50,6 +50,7 @@ class Simulation:
 
         self.graphinfo.update_color_map()
 
+        print(f'self.graphinfor.patches = {self.graphinfo.patches}')
 
     def get_history(self):
         return self.history

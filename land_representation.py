@@ -66,7 +66,7 @@ class GraphInfo:
             random_patch = random.choice(self.patches)
             random_neighbours = unwrap(random_patch).get_neighbours()
             level = self.options.get("firefighter_level")
-            new_fire_fighter = Firefighter(i, level, random_patch, random_neighbours)
+            new_fire_fighter = Firefighter(i, level, random_patch)
             new_fire_fighter.position = random_patch  #already wrapped object.
             res[i] = new_fire_fighter   #Instances of fire
         
@@ -154,9 +154,11 @@ class RockPatch(LandPatch):
     def get_color(self):
         return self._color
     
-    def mutate(self):
+    def mutate(self, wrapped_self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours())
-        return new_patch
+        wrapped_self[0] = new_patch
+
+        return wrapped_self
 
 class TreePatch(LandPatch):
     def __init__(self, patch_id, treestat, neighbors=None, burning=False):
@@ -220,17 +222,16 @@ class TreePatch(LandPatch):
 
         return self
 
-    def mutate(self) -> RockPatch:
+    def mutate(self, wrapped_self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
-        print(f'Tree {self.patch_id} mutated to rock. {new_patch}')
-        return new_patch
+        wrapped_self[0] = new_patch
+        return wrapped_self
     
 class Firefighter:
-    def __init__(self, id, skill_level, position, neighbours):
+    def __init__(self, id, skill_level, position):
         self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
         self.position = position  # Identifies the Firefighter's position patch id
-        self.neighbours = neighbours  # List of neighbouring LandPatches
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.position}"
@@ -239,7 +240,8 @@ class Firefighter:
         return unwrap(self.position)
     
     def get_neighbours(self):
-        return [unwrap(neighbour) for neighbour in self.neighbours]
+        neighbours = unwrap(self.position).get_neighbours()
+        return [unwrap(neighbour) for neighbour in neighbours]
 
     def move(self):
         position = self.get_position()
@@ -248,12 +250,13 @@ class Firefighter:
             return None #If firefighter is at fire, he will not move.
 
         move_pool = []
-        for neighbour in self.get_neighbours():
+        neighbours = self.get_neighbours()
+        for neighbour in neighbours:
             if neighbour.burning:
                 move_pool.append(neighbour)
 
         if not move_pool: #if no fire
-            move_pool = self.neighbours
+            move_pool = neighbours
 
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
