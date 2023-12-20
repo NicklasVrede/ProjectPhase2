@@ -11,7 +11,7 @@ class GraphInfo:
         self.neigbour_id_register = {} #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
         self.neigbour_register = {} #Not used yet.
         self.color_map = self._initialise_color_map() #dict of patch ids and their color
-        self.firefirghters = self._initialise_firefighters() #dict of firefighter ids and their objects
+        self.firefighters = self._initialise_firefighters() #dict of firefighter ids and their objects
         self._initialise_neighbours() #initialise neighbours
         self._initialise_observer()
     
@@ -30,8 +30,7 @@ class GraphInfo:
         for i in range(1, self.options.get("firefighter_num") + 1):
             random_patch = random.choice(self.patches)
             level = self.options.get("firefighter_level")
-            new_fire_fighter = Firefighter(i, level, random_patch)
-            new_fire_fighter.position = random_patch  #already wrapped object.
+            new_fire_fighter = Firefighter(i, level, random_patch.patch_id, self)
             res[i] = new_fire_fighter   #Instances of fire
         
         print(f'firefighters = {res}')
@@ -62,10 +61,13 @@ class GraphInfo:
     def _initialise_observer(self):
         for patch in list(self.patches.values()):
             patch.graph_info = self
+
     
     def update_color(self, patch:object, color=None):
+        """
+        """
         if isinstance(patch, RockPatch):
-            if patch_id in self.color_map:
+            if patch.patch_id in self.color_map:
                 self.color_map.pop(patch.patch_id)
         
         else:
@@ -73,14 +75,22 @@ class GraphInfo:
 
     def update_patch(self, patch:object):
         self.patches[patch.patch_id] = patch
+        print(f'Updated patch {patch.patch_id} to {patch}')
 
-
+    def get_color_map(self):
+        return self.color_map
+    
+    def get_patches(self):
+        return self.patches
+        
     def get_firefighter_positions(self):
         res = []
         for fighter in list(self.firefighters.values()):
-            res.append((fighter.position).patch_id)
+            res.append(fighter.position.patch_id)
         
         return res
+
+        #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())]
 
 class LandPatch:
     def __init__(self, patch_id, treestat, neighbors, burning, graph_info=None):
@@ -99,8 +109,8 @@ class LandPatch:
     def get_neighbours(self):
         res = []
         neighbours_id = self.get_neighbour_id()
-        for _ in neighbours_id:
-            res.append(self.graph_info.patches.get(neighbour_id))
+        for i in neighbours_id:
+            res.append(self.graph_info.patches.get(i))
 
         return res
     
@@ -135,8 +145,9 @@ class RockPatch(LandPatch):
             self.graph_info.color_map.pop(self.patch_id)
     
     def mutate(self):
-        new_patch = TreePatch(self.patch_id, 40, self.get_neighbours())
-    
+        new_patch = TreePatch(self.patch_id, 40, self.get_neighbours(), graph_info=self.graph_info)
+        self.graph_info.update_patch(new_patch)
+
         return new_patch
 
 class TreePatch(LandPatch):
@@ -158,7 +169,7 @@ class TreePatch(LandPatch):
             return self.treestat
     
     def update_color(self):
-        self.graph_info.update_color(self, get_color())  #Update color in graphinfo
+        self.graph_info.update_color(self, self.get_color())  #Update color in graphinfo
         
     def ignite(self):
         self.burning = True
@@ -204,26 +215,28 @@ class TreePatch(LandPatch):
         return self
 
     def mutate(self) -> RockPatch:
-        new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
+        new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
+        self.graph_info.update_patch(new_patch)
         return new_patch
     
 class Firefighter:
-    def __init__(self, id, skill_level, position):
+    def __init__(self, id, skill_level, position, graph_info):
         self.id = id
         self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
         self.position = position  # Identifies the Firefighter's position patch id
+        self.graph_info = graph_info
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.position}"
     
-    def get_position(self):
-        return self.position
+    def get_pos_object(self):
+        return self.graph_info.patches.get(self.position)
     
-    def get_neighbours_wrapped(self):
-        return self.position.get_neighbours()
+    def get_neighbours_objects(self):
+        neighbour_ids = self.get_pos_object().get_neighbour_id()
 
     def move(self):
-        position = self.get_position()
+        position = self.get_pos_object()
         if position.burning:
             print(f'Firefighter is standing still at {self.position}')
             return None #If firefighter is at fire, he will not move.
@@ -239,7 +252,7 @@ class Firefighter:
 
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
-        self.neighbours = (new_position).get_neighbours()
+        self.neighbours = new_position.get_neighbours()
         self.position = new_position
 
     def extinguish_fire(self):

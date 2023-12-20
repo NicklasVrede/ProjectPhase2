@@ -48,7 +48,6 @@ class Simulation:
         self.activate_firefighters()
         self.move_firefighters()
 
-        self.graphinfo.update_color_map()
 
 
     def get_history(self):

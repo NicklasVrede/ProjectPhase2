@@ -192,7 +192,7 @@ if __name__ == "__main__":
                "firefighter_num" : 2,
                "firefighter_level" : "low",
                "ini_fires" : 50,
-               "iter_num" : 6,
+               "iter_num" : 8,
                "treegrowth" : 10,
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %
