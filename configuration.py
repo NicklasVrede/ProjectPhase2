@@ -85,6 +85,9 @@ def welcome():
     return gen_method()
 
 def gen_method(options:dict=dict()):
+    if options.get("gen_method"):
+        return ini_woods(options)
+
     print(menu_strings.get("gen_method"))
     while True:
         user_input = input('Enter "1" or "r": ')

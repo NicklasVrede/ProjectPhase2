@@ -131,7 +131,6 @@ def initiatlize_patches(edges, positions, options):
 def initiate_simulation(edges, positions, options, graph_info):
     #initialize graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
-    print(f'firefighters positions = {graph_info.get_firefighter_positions()}')
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
     
@@ -157,7 +156,7 @@ def initiate_simulation(edges, positions, options, graph_info):
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
 
-        time.sleep(3)
+        time.sleep(1)
 
     print("Simulation finished.")
 
@@ -193,7 +192,7 @@ if __name__ == "__main__":
                "firefighter_num" : 2,
                "firefighter_level" : "low",
                "ini_fires" : 50,
-               "iter_num" : 6,
+               "iter_num" : 8,
                "treegrowth" : 10,
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %

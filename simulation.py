@@ -45,12 +45,10 @@ class Simulation:
                 patch.grow_or_burn()
 
         
-        #self.extinguish_fire()
+        self.activate_firefighters()
         self.move_firefighters()
 
-        self.graphinfo.update_color_map()
 
-        print(f'self.graphinfor.patches = {self.graphinfo.patches}')
 
     def get_history(self):
         return self.history
@@ -61,7 +59,7 @@ class Simulation:
 
         self.graphinfo.get_firefighter_positions()
 
-    def extinguish_fire(self):
+    def activate_firefighters(self):
         for fighter in list(self.graphinfo.firefighters.values()):
             fighter.extinguish_fire()
             
