@@ -86,7 +86,7 @@ class GraphInfo:
     def get_firefighter_positions(self):
         res = []
         for fighter in list(self.firefighters.values()):
-            res.append(fighter.position.patch_id)
+            res.append(fighter.position)
         
         return res
 
@@ -235,6 +235,11 @@ class Firefighter:
     def get_neighbours_objects(self):
         neighbour_ids = self.get_pos_object().get_neighbour_id() 
         
+        res = []
+        for i in neighbour_ids:
+            res.append(self.graph_info.patches.get(i))
+        
+        return res
 
     def move(self):
         position = self.get_pos_object()
@@ -243,7 +248,7 @@ class Firefighter:
             return None #If firefighter is at fire, he will not move.
 
         move_pool = []
-        neighbours = self.get_neighbours_wrapped()
+        neighbours = self.get_neighbours_objects()
         for neighbour in neighbours:
             if neighbour.burning:
                 move_pool.append(neighbour)
@@ -253,14 +258,7 @@ class Firefighter:
 
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
-        self.neighbours = new_position.get_neighbours()
-        self.position = new_position
+        self.position = new_position.patch_id
 
     def extinguish_fire(self):
-        position = self.get_position()
-        if not position.burning:
-            return None #if no fire we do nothing
-        
-        else:
-            pass
-
+        pass
