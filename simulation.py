@@ -44,6 +44,9 @@ class Simulation:
             elif 256 > patch.treestat > 0:
                 patch.grow_or_burn()
 
+                if patch.burning:
+                    patch.spread_fire()
+
         
         self.activate_firefighters()
         self.move_firefighters()

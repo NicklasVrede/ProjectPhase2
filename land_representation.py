@@ -101,14 +101,14 @@ class LandPatch:
         self.graph_info = graph_info
         
     def __repr__(self):
-        return f'LandPatch {self.patch_id} with neighbours {self.get_neighbour_id()}'
+        return f'LandPatch {self.patch_id} with neighbours {self.get_neighbours_ids()}'
     
-    def get_neighbour_id(self):
+    def get_neighbours_ids(self):
         return self.graph_info.neigbour_id_register.get(self.patch_id)
     
     def get_neighbours(self):
         res = []
-        neighbours_id = self.get_neighbour_id()
+        neighbours_id = self.get_neighbours_ids()
         for i in neighbours_id:
             res.append(self.graph_info.patches.get(i))
 
@@ -131,7 +131,7 @@ class RockPatch(LandPatch):
         super().__init__(patch_id, treestat, neighbors, False, graph_info)
         self.forrest_prob = forrest_prob
 
-        if graph_info:
+        if self.graph_info:
             self.graph_info.update_color(self)
         
     def __repr__(self):
@@ -155,8 +155,12 @@ class TreePatch(LandPatch):
         super().__init__(patch_id, treestat, neighbors, burning, graph_info)
         self.growthrate = 10
         self.burnrate = 20
+        self.spread_rate= 30
+
+        if self.burning:
+            self.fire_health = 10
     
-        if graph_info:
+        if self.graph_info:
             self.graph_info.update_color(self)
 
     def __repr__(self):
@@ -164,7 +168,9 @@ class TreePatch(LandPatch):
     
     def get_color(self):
         if self.burning:
-            return -self.treestat
+            color = int(self.fire_health *2.56)  #int is important. otherwise visualiser fucks up the color.¨
+            print(f'Fire color = {color}')
+            return color
         else:
             return self.treestat
     
@@ -177,42 +183,43 @@ class TreePatch(LandPatch):
 
     def spread_fire(self):
         if self.burning:
-            neighbours = self._neighbours
+            neighbours = self.get_neighbours()
             for neighbour in neighbours:
-                if neighbour.burning == False and neighbour.treestat > 0:
-                    probability = int(30)
-                    random_num = random.randint(0, 100)
-                    if random_num < probability:
+                if not neighbour.burning and neighbour.treestat > 0:
+                    if random.randint(0, 100) < self.spread_rate:  #30 by defualt
                         neighbour.ignite()
-                        print(f'Fire spread from {self.patch_id} to {neighbour.patch_id}')
-        else: 
-            raise ValueError('Tree is not burning')
-        
-    def grow_or_burn(self):
-        if self.burning:
+
+    def modify_fire_health(self, amount):
+        self.fire_health += amount
+        if self.fire_health > 0:
+            self.burning = False
+            self.update_color()
+
+    def burn_speed_calculator(self):
+        return int(self.fire_health * 1.6)
+    
+    def modify_treestat(self):
+        if self.treestat >= 256:
+            self.treestat = 256
+            return
+
+        else:
             self.treestat -= self.burnrate
             self.update_color()
-            if self.treestat <= 0:
-                print(f'Tree {self.patch_id} burned down')
+            if self.treestat < 0:
                 self.mutate()
+    
+    def grow_or_burn(self):
+        if self.burning:
+            self.modify_treestat()
+            self.modify_fire_health(self.burn_speed_calculator())
+            
         else:
             self.treestat += self.growthrate
             self.update_color()
             if self.treestat > 256:
                 self.treestat = 256
 
-    def modify_treestat(self, amount) -> LandPatch:
-        if self.treestat >= 256:
-                self.treestat = 256
-                return self
-
-        self.treestat += amount
-        if self.treestat >= 0:
-            return self.mutate()
-        
-        self.update_color()
-
-        return self
 
     def mutate(self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
@@ -233,10 +240,10 @@ class Firefighter:
         return self.graph_info.patches.get(self.position)
     
     def get_neighbours_objects(self):
-        neighbour_ids = self.get_pos_object().get_neighbour_id() 
+        neighbours_ids = self.get_pos_object().get_neighbours_ids() 
         
         res = []
-        for i in neighbour_ids:
+        for i in neighbours_ids:
             res.append(self.graph_info.patches.get(i))
         
         return res

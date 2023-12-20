@@ -21,7 +21,6 @@ def read_edges_from_file(file_path:str) -> list[set]:
     - edges (list[set]): A list of sets representing the edges of the graph.
 
     """
-    positions = {}
     edges = []
     with open(file_path, 'r') as file: 
         for line in file:
@@ -32,15 +31,14 @@ def read_edges_from_file(file_path:str) -> list[set]:
             parts = line.strip().split(',')
             if len(parts) == 2:
                 try:    #Compose edge, and check correct values.
-                    edge = {int(parts[0].strip()), int(parts[1].strip())}  
+                    edge = (int(parts[0].strip()), int(parts[1].strip()))
                     edges.append(edge)
-                    positions = generate_positions(edges)
                 except ValueError:
                     print(f'Ignoring line, invalid value, with input: "{line.strip()}"')
             if len(parts) > 2 or len(parts) < 2:
                 print(f'Ignoring invalid line, cannot form edgde with input: "{line.strip()}"')
 
-    return edges, positions
+    return edges
 
 def generate_positions(edges): 
     """
@@ -56,8 +54,17 @@ def generate_positions(edges):
     positions: Dict[int: (float, float)]
         Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1]).
     """
-    vertices = set([vertex for edge in edges for vertex in edge])
-    positions = {vertex: tuple(random.rand(2)) for vertex in vertices}
+    print(f'edges = {edges}')
+    edges_lists = [list(edge) for edge in edges]
+    
+    all_nodes = list(set.union(*[set(edge) for edge in edges_lists])) #Merges a new set of nodes
+
+    scaler = 1 / (len(all_nodes) - 1)
+
+
+    positions = [(scaler*node[0], scaler*node[1]) for node in edges_lists]
+
+    positions = positions
     return positions
 
 def generate_edges(options):
@@ -71,11 +78,16 @@ def generate_edges(options):
                     return main(options)
                 
                 edges = read_edges_from_file(user_input)
-                positions = None
+                positions = generate_positions(edges)
 
                 if len(edges) == 0:
                     print("Could not generate edges from file, please try an other file.")
                     continue
+
+                if graph_helper.edges_planar(edges):
+                    break
+                else:
+                    print("The graph is not planar, please try an other file.")
             
             except FileNotFoundError:
                 print("File not found. Please enter a valid file path.")
@@ -92,6 +104,7 @@ def generate_edges(options):
 
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)
+        print(f'positions = {positions}')
 
     return initiatlize_patches(edges, positions, options)
 
@@ -100,15 +113,15 @@ def initiatlize_patches(edges, positions, options):
     #check if the graph is connected?
 
     #Positions:
-    all_vertices = list(set.union(*[set(edge) for edge in edges])) #Merges a new set of nodes
+    all_nodes = list(set.union(*[set(edge) for edge in edges])) #Merges a new set of nodes
 
     #Initialize land patches:
     patches = {}
     wood_ratio = options.get("ini_woods") * 0.01
     fire_ratio = options.get("ini_fires") * 0.01
 
-    wood_nodes = random.sample(all_vertices, int(wood_ratio*len(all_vertices)))
-    rock_nodes = list(set(all_vertices).difference(wood_nodes))
+    wood_nodes = random.sample(all_nodes, int(wood_ratio*len(all_nodes)))
+    rock_nodes = list(set(all_nodes).difference(wood_nodes))
     num_fires = int(len(wood_nodes) * fire_ratio)  #Percentage of fire nodes
     fire_nodes = random.sample(wood_nodes, num_fires)
     wood_nodes = list(set(wood_nodes).difference(fire_nodes))
