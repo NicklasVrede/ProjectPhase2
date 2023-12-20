@@ -170,7 +170,6 @@ class TreePatch(LandPatch):
     def get_color(self):
         if self.burning:
             color = -int(self.fire_health *2.56)  #int is important. otherwise visualiser fucks up the color
-            print()
             return color
         else:
             return self.treestat
@@ -180,7 +179,7 @@ class TreePatch(LandPatch):
         
     def ignite(self):
         self.burning = True
-        self.firehealth = 10
+        self.fire_health = 10
         self.update_color()
 
     def spread_fire(self):
@@ -193,12 +192,14 @@ class TreePatch(LandPatch):
 
     def modify_fire_health(self, amount):
         self.fire_health += amount
-        if self.fire_health > 0:
+        print(f'new fire health = {self.fire_health}')
+        if self.fire_health < 0:
             self.burning = False
             self.update_color()
 
     def burn_speed_calculator(self):
-        return int(self.fire_health * 1.6)
+        value = int(self.fire_health * 1.6)
+        return value
     
     def modify_treestat(self):
         if self.treestat >= 256:
@@ -231,12 +232,21 @@ class TreePatch(LandPatch):
 class Firefighter:
     def __init__(self, id, skill_level, position, graph_info):
         self.id = id
-        self.skill_level = skill_level  # Variable identifying its skill in extinguishing fires
         self.position = position  # Identifies the Firefighter's position patch id
         self.graph_info = graph_info
+        self._initiate_stats(skill_level)
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.position}"
+    
+    def _initiate_stats(self, skill_level):
+        if skill_level == "low":
+            self.power = 20
+        if skill_level == "medium":
+            self.power = 40
+        if skill_level == "high":
+            self.power = 40
+            self.brain = True
     
     def get_pos_object(self):
         return self.graph_info.patches.get(self.position)
@@ -270,4 +280,6 @@ class Firefighter:
         self.position = new_position.patch_id
 
     def extinguish_fire(self):
-        pass
+        if self.get_pos_object.burning:
+            self.get_pos_object().modify_fire_health(-self.power)
+            print(f'Firefighter {self.id} is fighting fire at {self.position}')
