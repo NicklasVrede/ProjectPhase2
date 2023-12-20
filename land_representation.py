@@ -233,7 +233,8 @@ class Firefighter:
         return self.graph_info.patches.get(self.position)
     
     def get_neighbours_objects(self):
-        neighbour_ids = self.get_pos_object().get_neighbour_id()
+        neighbour_ids = self.get_pos_object().get_neighbour_id() 
+        
 
     def move(self):
         position = self.get_pos_object()
