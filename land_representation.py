@@ -7,18 +7,16 @@ class GraphInfo:
     def __init__(self, edges, options, patches):
         self.edges = edges #list of edges
         self.options = options #dict of options
-        self.patches = patches #dict of patch ids and their objects
-        self.neigbour_id_register = {} #dict of patch ids and their neighbour ids
-        self.neigbour_register = {} #dict of patch ids and their neighbour objects
+        self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
+        self.neigbour_id_register = {} #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
+        self.neigbour_register = {} #Not used yet.
         self.color_map = self._initialise_color_map() #dict of patch ids and their color
         self.firefirghters = self._initialise_firefighters() #dict of firefighter ids and their objects
-        self._initialise_neighbours()
-        print(f'color_map = {self.color_map}')
-        print(f'neigbour_id_register = {self.neigbour_id_register}')
+        self._initialise_neighbours() #initialise neighbours
+        self._initialise_observer()
     
     def _initialise_color_map(self):
         res = {}
-        print(f'list(self.patch.values()= {list(self.patches.values())}')
         for patch in list(self.patches.values()):
             if isinstance(patch, RockPatch):
                 continue
@@ -26,7 +24,19 @@ class GraphInfo:
                 res[patch.patch_id] = patch.get_color()
         
         return res
-
+    
+    def _initialise_firefighters(self):
+        res = {}
+        for i in range(1, self.options.get("firefighter_num") + 1):
+            random_patch = random.choice(self.patches)
+            level = self.options.get("firefighter_level")
+            new_fire_fighter = Firefighter(i, level, random_patch)
+            new_fire_fighter.position = random_patch  #already wrapped object.
+            res[i] = new_fire_fighter   #Instances of fire
+        
+        print(f'firefighters = {res}')
+        return res
+    
     def _initialise_neighbours(self):
         all_patches = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
         edges = [set(edge) for edge in self.edges]
@@ -49,17 +59,9 @@ class GraphInfo:
 
         #add objects to neigbour_register?
     
-    def _initialise_firefighters(self):
-        res = {}
-        for i in range(1, self.options.get("firefighter_num") + 1):
-            random_patch = random.choice(self.patches)
-            level = self.options.get("firefighter_level")
-            new_fire_fighter = Firefighter(i, level, random_patch)
-            new_fire_fighter.position = random_patch  #already wrapped object.
-            res[i] = new_fire_fighter   #Instances of fire
-        
-        print(f'firefighters = {res}')
-        return res
+    def _initialise_observer(self):
+        for patch in list(self.patches.values()):
+            patch.graph_info = self
     
     def update_color(self, patch:object, color=None):
         if isinstance(patch, RockPatch):
@@ -85,27 +87,22 @@ class LandPatch:
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
-        self._neighbours = neighbors  # List of neighbouring LandPatches
         self.firefighters = {}
         self.graph_info = graph_info
         
-    
-  # Variable identifying its color
-
     def __repr__(self):
         return f'LandPatch {self.patch_id} with neighbours {self.get_neighbour_id()}'
     
-    def get_id(self):
-        return self.patch_id
-    
     def get_neighbour_id(self):
-        neighbours_ids = []
-        for neighbour in self._neighbours:
-            neighbours_ids.append(neighbour.patch_id)
-        return neighbours_ids
+        return self.graph_info.neigbour_id_register.get(self.patch_id)
     
     def get_neighbours(self):
-        return self._neighbours
+        res = []
+        neighbours_id = self.get_neighbour_id()
+        for _ in neighbours_id:
+            res.append(self.graph_info.patches.get(neighbour_id))
+
+        return res
     
     @abstractmethod
     def get_color(self):
