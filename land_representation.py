@@ -159,6 +159,7 @@ class TreePatch(LandPatch):
 
         if self.burning:
             self.fire_health = 10
+            print(f'Patch {self.patch_id} is burning with health {self.fire_health}')
     
         if self.graph_info:
             self.graph_info.update_color(self)
@@ -168,8 +169,8 @@ class TreePatch(LandPatch):
     
     def get_color(self):
         if self.burning:
-            color = int(self.fire_health *2.56)  #int is important. otherwise visualiser fucks up the color.¨
-            print(f'Fire color = {color}')
+            color = -int(self.fire_health *2.56)  #int is important. otherwise visualiser fucks up the color
+            print()
             return color
         else:
             return self.treestat
@@ -179,6 +180,7 @@ class TreePatch(LandPatch):
         
     def ignite(self):
         self.burning = True
+        self.firehealth = 10
         self.update_color()
 
     def spread_fire(self):

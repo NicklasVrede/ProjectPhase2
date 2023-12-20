@@ -202,7 +202,7 @@ def reporting(history, options):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 80,
-               "firefighter_num" : 2,
+               "firefighter_num" : 0,
                "firefighter_level" : "low",
                "ini_fires" : 50,
                "iter_num" : 8,
