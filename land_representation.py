@@ -21,7 +21,13 @@ class GraphInfo:
 
     def _patch_wrapper(self, patches):
         print(f'patches = {patches}')
-        return {patch.patch_id: wrap(patch) for patch in list(patches.values())}
+        res = {}
+        for patch in patches.values():
+            patch.wrapped_self = wrap(patch)
+            res[patch.patch_id] = patch.wrapped_self
+            print(f'wrapped patch = {patch.wrapped_self}')
+
+        return res
 
     def _initialise_neighbours(self):
         all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
@@ -102,12 +108,13 @@ class GraphInfo:
         return res
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, neighbors, burning):
+    def __init__(self, patch_id, treestat, burning, neighbors=None, wrapped_self=None):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
+        self.wrapped_self = wrapped_self
         self._neighbours = neighbors  # List of neighbouring LandPatches
-        self.firefighters = {}
+
   # Variable identifying its color
 
     def __eq__(self, other: object) -> bool:
@@ -146,7 +153,7 @@ class LandPatch:
 
 class RockPatch(LandPatch):
     def __init__(self, patch_id, treestat, neighbors=None, forrest_prob=1):
-        super().__init__(patch_id, treestat, neighbors, False)
+        super().__init__(patch_id, treestat, False, neighbors)
         self.burning = False
         self.forrest_prob = forrest_prob
         self._color = 0
@@ -157,15 +164,15 @@ class RockPatch(LandPatch):
     def get_color(self):
         return self._color
     
-    def mutate(self, wrapped_self):
+    def mutate(self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours())
-        wrapped_self[0] = new_patch
+        self.wrapped_self[0] = new_patch
 
-        return wrapped_self
+        return self.wrapped_self
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestat, neighbors=None, burning=False):
-        super().__init__(patch_id, treestat, neighbors, burning)
+    def __init__(self, patch_id, treestat, burning=False, neighbors=None):
+        super().__init__(patch_id, treestat, burning, neighbors)
         self.growthrate = 10
         self.burnrate = 20
         if burning:
@@ -199,36 +206,36 @@ class TreePatch(LandPatch):
         else: 
             raise ValueError('Tree is not burning')
         
-    def grow_or_burn(self, wrapped_self):
+    def grow_or_burn(self):
         if self.burning:
             self.treestat -= self.burnrate
             self.update_color()
             if self.treestat <= 0:
                 print(f'Tree {self.patch_id} burned down')
-                self.mutate(wrapped_self)
+                self.mutate()
         else:
             self.treestat += self.growthrate
             self.update_color()
             if self.treestat > 256:
                 self.treestat = 256
 
-    def modify_treestat(self, amount, wrapped_self) -> LandPatch:
+    def modify_treestat(self, amount) -> LandPatch:
         if self.treestat >= 256:
                 self.treestat = 256
                 return self
 
         self.treestat += amount
         if self.treestat >= 0:
-            return self.mutate(wrapped_self)
+            return self.mutate()
         
         self.update_color()
 
         return self
 
-    def mutate(self, wrapped_self) -> RockPatch:
+    def mutate(self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
-        wrapped_self[0] = new_patch
-        return wrapped_self
+        self.wrapped_self[0] = new_patch
+        return self.wrapped_self
     
 class Firefighter:
     def __init__(self, id, skill_level, position):

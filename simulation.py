@@ -42,8 +42,7 @@ class Simulation:
                     patch.mutate()
 
             elif 256 > patch.treestat > 0:
-                print(f'self.graphinfo.get_wrapped().get(i) = {self.graphinfo.get_wrapped(i)}')
-                patch.grow_or_burn(self.graphinfo.get_wrapped(i))
+                patch.grow_or_burn()
 
         
         #self.extinguish_fire()
