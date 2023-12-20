@@ -2,78 +2,57 @@ from abc import abstractmethod
 import random
 # land_representation.py
 
-def wrap(obj):
-    return [obj]
-
-def unwrap(obj):
-    return obj[0]
 
 class GraphInfo: 
     def __init__(self, edges, options, patches):
-        self.edges = edges
-        self.options = options
-        self.patches = self._patch_wrapper(patches) #Dict of patch ids and their wrapped objects
-        print(f'patches = {self.patches}')
-        self._color_map = self._initialise_color_map(patches) #Dict of patch ids and their color
-        self.firefighters = self._initialise_firefighters() #Dict of firefighter ids and their objects
-        print(self.options)
+        self.edges = edges #list of edges
+        self.options = options #dict of options
+        self.patches = patches #dict of patch ids and their objects
+        self.neigbour_id_register = {} #dict of patch ids and their neighbour ids
+        self.neigbour_register = {} #dict of patch ids and their neighbour objects
+        self.color_map = self._initialise_color_map() #dict of patch ids and their color
+        self.firefirghters = self._initialise_firefighters() #dict of firefighter ids and their objects
         self._initialise_neighbours()
-
-    def _patch_wrapper(self, patches):
-        print(f'patches = {patches}')
+        print(f'color_map = {self.color_map}')
+        print(f'neigbour_id_register = {self.neigbour_id_register}')
+    
+    def _initialise_color_map(self):
         res = {}
-        for patch in patches.values():
-            patch.wrapped_self = wrap(patch)
-            res[patch.patch_id] = patch.wrapped_self
-            print(f'wrapped patch = {patch.wrapped_self}')
-
+        print(f'list(self.patch.values()= {list(self.patches.values())}')
+        for patch in list(self.patches.values()):
+            if isinstance(patch, RockPatch):
+                continue
+            else:
+                res[patch.patch_id] = patch.get_color()
+        
         return res
 
     def _initialise_neighbours(self):
-        all_nodes = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
+        all_patches = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
         edges = [set(edge) for edge in self.edges]
-        patches = self.get_patches()
+        patches = self.patches
 
-        for node in all_nodes:
-            vertex_value_set = {node}
+        for i in all_patches:
+            vertex_value_set = {i}
             neighbours = []
             for edge in edges:
                 if vertex_value_set.intersection(edge):
                     #Here its important we account for self-loops. is it?
                     if len(edge) == 1:
-                        neighbours.append(node)
+                        neighbours.append(i)
                         continue #if we dont continue we get KeyError, since there is no differnce
                     
                     #If no selfloop we can check difference:
                     neighbours.append(edge.difference(vertex_value_set).pop())
             
-            res = []
-            for neighbour in neighbours:
-                res.append(self.patches.get(neighbour))
+            self.neigbour_id_register[i] = neighbours
 
-            patches.get(node).initiate_neighbours(res)
-
-    def get_patches(self):
-        return {unwrap(patch).patch_id: unwrap(patch) for patch in list(self.patches.values())}
-
-    def get_patch(self, patch_id):
-        return unwrap(self.patches.get(patch_id))
-    
-    def get_wrapped(self,patch_id):
-        return self.patches.get(patch_id)
-
-    def _initialise_color_map(self, patches):
-        self._color_map = {}
-        for patch in patches.values():
-            self._color_map[patch.patch_id] = patch.get_color()
-
-        return self._color_map
+        #add objects to neigbour_register?
     
     def _initialise_firefighters(self):
         res = {}
         for i in range(1, self.options.get("firefighter_num") + 1):
             random_patch = random.choice(self.patches)
-            random_neighbours = unwrap(random_patch).get_neighbours()
             level = self.options.get("firefighter_level")
             new_fire_fighter = Firefighter(i, level, random_patch)
             new_fire_fighter.position = random_patch  #already wrapped object.
@@ -82,52 +61,42 @@ class GraphInfo:
         print(f'firefighters = {res}')
         return res
     
-    def update_color_map(self):
-        patches = self.get_patches()
-        for patch in patches.values():
-            if patch.get_color() == 0:
-                if patch.patch_id in self._color_map:    #important to check if key exists or we crash
-                    del self._color_map[patch.patch_id]
-                continue
+    def update_color(self, patch:object, color=None):
+        if isinstance(patch, RockPatch):
+            if patch_id in self.color_map:
+                self.color_map.pop(patch.patch_id)
+        
+        else:
+            self.color_map[patch.patch_id] = patch.get_color()
 
-            self._color_map[patch.patch_id] = patch.get_color()
+    def update_patch(self, patch:object):
+        self.patches[patch.patch_id] = patch
 
-        return self._color_map
 
-    def pop_color_map(self, patch_id):
-        self._color_map.pop(patch_id)
-    
-    def get_color_map(self):
-        return self._color_map
-    
     def get_firefighter_positions(self):
         res = []
         for fighter in list(self.firefighters.values()):
-            res.append(unwrap(fighter.position).patch_id)
+            res.append((fighter.position).patch_id)
         
         return res
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, burning, neighbors=None, wrapped_self=None):
+    def __init__(self, patch_id, treestat, neighbors, burning, graph_info=None):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
-        self.wrapped_self = wrapped_self
         self._neighbours = neighbors  # List of neighbouring LandPatches
-
+        self.firefighters = {}
+        self.graph_info = graph_info
+        
+    
   # Variable identifying its color
-
-    def __eq__(self, other: object) -> bool:
-        return self.patch_id == other.patch_id
 
     def __repr__(self):
         return f'LandPatch {self.patch_id} with neighbours {self.get_neighbour_id()}'
     
     def get_id(self):
         return self.patch_id
-    
-    def initiate_neighbours(self, neighbours):
-        self._neighbours = neighbours
     
     def get_neighbour_id(self):
         neighbours_ids = []
@@ -138,56 +107,61 @@ class LandPatch:
     def get_neighbours(self):
         return self._neighbours
     
-    def get_nhealth(self):
-        neighbours_health = {}
-        for neighbour in self._neighbours:
-            neighbours_health[neighbour.patch_id] = neighbour.treestat
-        return neighbours_health
-    
+    @abstractmethod
     def get_color(self):
-        return self._color
+        raise NotImplementedError
+    
+    @abstractmethod
+    def update_color(self):
+        raise NotImplementedError
     
     @abstractmethod
     def mutate(self):
         raise NotImplementedError
 
 class RockPatch(LandPatch):
-    def __init__(self, patch_id, treestat, neighbors=None, forrest_prob=1):
-        super().__init__(patch_id, treestat, False, neighbors)
-        self.burning = False
+    def __init__(self, patch_id, treestat, neighbors=None, forrest_prob=1, graph_info=None):
+        super().__init__(patch_id, treestat, neighbors, False, graph_info)
         self.forrest_prob = forrest_prob
-        self._color = 0
+
+        if graph_info:
+            self.graph_info.update_color(self)
         
     def __repr__(self):
         return f"RockPatch {self.patch_id}"
-
+    
     def get_color(self):
-        return self._color
+        raise ValueError('RockPatch has no color')
+    
+    def update_color(self):
+        if self.patch_id in self.graph_info.color_map:
+            self.graph_info.color_map.pop(self.patch_id)
     
     def mutate(self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours())
-        self.wrapped_self[0] = new_patch
-
-        return self.wrapped_self
+    
+        return new_patch
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestat, burning=False, neighbors=None):
-        super().__init__(patch_id, treestat, burning, neighbors)
+    def __init__(self, patch_id, treestat, neighbors=None, burning=False, graph_info=None):
+        super().__init__(patch_id, treestat, neighbors, burning, graph_info)
         self.growthrate = 10
         self.burnrate = 20
-        if burning:
-            self._color = -self.treestat
-        else:
-            self._color = self.treestat
+    
+        if graph_info:
+            self.graph_info.update_color(self)
 
     def __repr__(self):
         return f'Treepatch {self.patch_id}'
-        
-    def update_color(self):
+    
+    def get_color(self):
         if self.burning:
-            self._color = -self.treestat
+            return -self.treestat
         else:
-            self._color = self.treestat
+            return self.treestat
+    
+    def update_color(self):
+        self.graph_info.update_color(self, get_color())  #Update color in graphinfo
         
     def ignite(self):
         self.burning = True
@@ -234,8 +208,7 @@ class TreePatch(LandPatch):
 
     def mutate(self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours())
-        self.wrapped_self[0] = new_patch
-        return self.wrapped_self
+        return new_patch
     
 class Firefighter:
     def __init__(self, id, skill_level, position):
@@ -247,10 +220,10 @@ class Firefighter:
         return f"Firefighter {self.id} at {self.position}"
     
     def get_position(self):
-        return unwrap(self.position)
+        return self.position
     
     def get_neighbours_wrapped(self):
-        return unwrap(self.position).get_neighbours()
+        return self.position.get_neighbours()
 
     def move(self):
         position = self.get_position()
@@ -261,7 +234,7 @@ class Firefighter:
         move_pool = []
         neighbours = self.get_neighbours_wrapped()
         for neighbour in neighbours:
-            if unwrap(neighbour).burning:
+            if neighbour.burning:
                 move_pool.append(neighbour)
 
         if not move_pool: #if no fire
@@ -269,7 +242,7 @@ class Firefighter:
 
         new_position = random.choice(move_pool)
         print(f'new position for firefighter {self.id} is {new_position}')
-        self.neighbours = unwrap(new_position).get_neighbours()
+        self.neighbours = (new_position).get_neighbours()
         self.position = new_position
 
     def extinguish_fire(self):
