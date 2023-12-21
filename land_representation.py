@@ -66,14 +66,6 @@ class GraphInfo:
         self.patches[patch.patch_id] = patch
         print(f'Updated patch {patch.patch_id} to {patch}')
 
-    def update_color_map(self, patch):
-        if isinstance(patch, RockPatch):
-            if patch.patch_id in self.color_map:
-                del self.color_map[patch.patch_id]
-
-        else:
-            self.color_map[patch.patch_id] = patch.get_color()
-
     def get_color_map(self):
         print(f'color_map = {self.color_map}')
         print(f'patches = {self.patches}')
@@ -140,11 +132,10 @@ class RockPatch(LandPatch):
         raise ValueError('RockPatch has no color')
     
     def update_color(self):
-        self.graph_info.update_color_map(self)
+        del self.graph_info.color_map[self.patch_id]
     
     def mutate(self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours(), graph_info=self.graph_info)
-        new_patch.update_color()
         self.graph_info.update_patch(new_patch)
 
         return new_patch
@@ -173,7 +164,7 @@ class TreePatch(LandPatch):
             return self.treestat
     
     def update_color(self):
-        self.graph_info.update_color_map(self)
+        self.graph_info.color_map[self.patch_id] = self.get_color()
         
     def ignite(self):
         self.burning = True
@@ -194,12 +185,13 @@ class TreePatch(LandPatch):
         
         if self.firestat > 100:
             self.firestat = 100
+            return
         
         if self.firestat < 0:
             self.burning = False
-            self.update_color()
             print(f'Fire was extinguished at {self}, treestat = {self.treestat}')
-    
+        self.update_color()
+
     def evolve_treestat(self):
         if self.burning:
             self.treestat -= self.burnrate
@@ -207,26 +199,22 @@ class TreePatch(LandPatch):
                 self.mutate()
 
         else:
-            if isinstance(self, TreePatch):
-                self.treestat += self.growthrate
-                if self.treestat >= 256:
-                    self.treestat = 256
-                self.update_color()
-            else:
-                raise ValueError('RockPatch has no treestat')
+            self.treestat += self.growthrate
+            if self.treestat >= 256:
+                self.treestat = 256
+            self.update_color()
+        
     
-    def evole_stats(self, firefighter=False):
+    def evole_stats(self):
         if self.burning:
             self.evolve_firestat()
 
         self.evolve_treestat()
         
-        self.update_color()
 
     def mutate(self) -> RockPatch:
         #print(f'Fire burned out at {self}')
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
-        new_patch.update_color()
         self.graph_info.update_patch(new_patch)
         return new_patch
     
@@ -236,7 +224,6 @@ class Firefighter:
         self.position = position  # Identifies the Firefighter's position patch id
         self.graph_info = graph_info
         self.initiate_skill(skill_level)
-
 
     def initiate_skill(self, skill_level):
         if skill_level == "low":
