@@ -10,7 +10,7 @@ class GraphInfo:
         self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
         self.neigbour_id_register = {} #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
         self.neigbour_register = {} #Not used yet.
-        self.color_map = self._initialise_color_map() #dict of patch ids and their color
+        self.color_map = self._initialise_color_map() #dict of patch ids and their colors
         self.firefighters = self._initialise_firefighters() #dict of firefighter ids and their objects
         self._initialise_neighbours() #initialise neighbours
         self._initialise_observer()
@@ -28,9 +28,9 @@ class GraphInfo:
     def _initialise_firefighters(self):
         res = {}
         for i in range(1, self.options.get("firefighter_num") + 1):
-            random_patch = random.choice(self.patches)
+            random_id = random.choice(list(self.patches.keys()))
             level = self.options.get("firefighter_level")
-            new_fire_fighter = Firefighter(i, level, random_patch.patch_id, self)
+            new_fire_fighter = Firefighter(i, level, random_id, self)
             res[i] = new_fire_fighter   #Instances of fire
         
         print(f'firefighters = {res}')
@@ -62,22 +62,21 @@ class GraphInfo:
         for patch in list(self.patches.values()):
             patch.graph_info = self
 
-    
-    def update_color(self, patch:object, color=None):
-        """
-        """
-        if isinstance(patch, RockPatch):
-            if patch.patch_id in self.color_map:
-                self.color_map.pop(patch.patch_id)
-        
-        else:
-            self.color_map[patch.patch_id] = patch.get_color()
-
     def update_patch(self, patch:object):
         self.patches[patch.patch_id] = patch
         print(f'Updated patch {patch.patch_id} to {patch}')
 
+    def update_color_map(self, patch):
+        if isinstance(patch, RockPatch):
+            if patch.patch_id in self.color_map:
+                del self.color_map[patch.patch_id]
+
+        else:
+            self.color_map[patch.patch_id] = patch.get_color()
+
     def get_color_map(self):
+        print(f'color_map = {self.color_map}')
+        print(f'patches = {self.patches}')
         return self.color_map
     
     def get_patches(self):
@@ -141,12 +140,11 @@ class RockPatch(LandPatch):
         raise ValueError('RockPatch has no color')
     
     def update_color(self):
-        if self.patch_id in self.graph_info.color_map:
-            self.graph_info.color_map.pop(self.patch_id)
-            print(f'Removed color of {self}')
+        self.graph_info.update_color_map(self)
     
     def mutate(self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours(), graph_info=self.graph_info)
+        new_patch.update_color()
         self.graph_info.update_patch(new_patch)
 
         return new_patch
@@ -175,7 +173,7 @@ class TreePatch(LandPatch):
             return self.treestat
     
     def update_color(self):
-        self.graph_info.color_map[self.patch_id] = self.get_color()
+        self.graph_info.update_color_map(self)
         
     def ignite(self):
         self.burning = True
@@ -191,7 +189,7 @@ class TreePatch(LandPatch):
                         neighbour.ignite()
                         print(f'Fire spread to {neighbour}')
 
-    def evolve_firestat(self, firefighter=False):
+    def evolve_firestat(self):
         self.firestat += int(self.firestat * 0.1 + 10)
         
         if self.firestat > 100:
@@ -209,10 +207,13 @@ class TreePatch(LandPatch):
                 self.mutate()
 
         else:
-            self.treestat += self.growthrate
-            if self.treestat >= 256:
-                self.treestat = 256
-            self.update_color()
+            if isinstance(self, TreePatch):
+                self.treestat += self.growthrate
+                if self.treestat >= 256:
+                    self.treestat = 256
+                self.update_color()
+            else:
+                raise ValueError('RockPatch has no treestat')
     
     def evole_stats(self, firefighter=False):
         if self.burning:
@@ -223,9 +224,10 @@ class TreePatch(LandPatch):
         self.update_color()
 
     def mutate(self) -> RockPatch:
+        #print(f'Fire burned out at {self}')
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
         new_patch.update_color()
-        print(f'Fire burned out at {self}')
+        self.graph_info.update_patch(new_patch)
         return new_patch
     
 class Firefighter:
@@ -233,19 +235,20 @@ class Firefighter:
         self.id = id
         self.position = position  # Identifies the Firefighter's position patch id
         self.graph_info = graph_info
-        self._initiate_stats(skill_level)
+        self.initiate_skill(skill_level)
+
+
+    def initiate_skill(self, skill_level):
+        if skill_level == "low":
+            self.power = 20  # Default value
+        if skill_level == "medium":
+            self.power = 25
+        elif skill_level == "high":
+            self.power = 30
+            self.brain = True
 
     def __repr__(self) -> str:
         return f"Firefighter {self.id} at {self.get_pos_object()}, with power: {self.power}"
-    
-    def _initiate_stats(self, skill_level):
-        if skill_level == "low":
-            self.power = 20
-        if skill_level == "medium":
-            self.power = 25
-        if skill_level == "high":
-            self.power = 30
-            self.brain = True
     
     def get_pos_object(self):
         return self.graph_info.patches.get(self.position)
@@ -275,19 +278,12 @@ class Firefighter:
 
         new_position = random.choice(move_pool)
         self.position = new_position.patch_id
-        print(f'Firefighter {self.id} moved to {new_position}')
 
     def extinguish_fire(self, fire):
-        print(f'Fire is at {fire}')
-        firestat_before = fire.firestat
         fire.firestat -= self.power
         if fire.firestat < 0:
             fire.burning = False
             fire.update_color()
             return print(f'Firefighter {self.id} extinguished fire at {fire}')
 
-        firestat_after = fire.firestat 
-        print(f'Firefighter {self.id} reduced fire health from {firestat_before} to {firestat_after}')
         
-
-

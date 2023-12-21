@@ -153,7 +153,7 @@ def initiate_simulation(edges, positions, options, graph_info):
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
 
-        time.sleep(3)
+        time.sleep(1)
 
     print("Simulation finished.")
 
