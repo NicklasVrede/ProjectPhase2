@@ -1,13 +1,9 @@
-from land_representation import GraphInfo
-from visualiser_random_forest_graph import Visualiser
+from land_representation import RockPatch
 import random
 # to do: fix entire module to fit rest.
 class Simulation:
     def __init__(self, graphinfo, options):
         self.graphinfo = graphinfo
-        self.treegrowth = 1 + options.get("treegrowth") * 0.01
-        self.firegrowth = 1 + options.get("firegrowth") * 0.01
-        self.newforrest = options.get("newforrest")
         self.history = {}  # Store simulation history
         # Initialize other simulation-specific attributes
 
@@ -30,26 +26,25 @@ class Simulation:
         self.history[len(self.history)] = {"Tree_population" : Tree_population,   #len scales bad, but we dont care
                                             "Rock_population" : Rock_potulation,
                                             "Fire_population" : Fire_population}
-
         # Update the simulation for a single iteration
         for i in patches:
             patch = patches.get(i)
-            if patch.treestat is 0:
+            if isinstance(patch, RockPatch):
+                probability = self.graphinfo.options.get("newforrest")
                 random_num = random.randint(0, 10000)  #Making the probability act as permille.
-                probability = self.newforrest
                 if random_num < probability:  #Newforrest
                     print(f'{random_num} < {probability} = {random_num < probability}')
                     patch.mutate()
 
-            elif 256 > patch.treestat > 0:
+            else:
                 patch.grow_or_burn()
 
                 if patch.burning:
                     patch.spread_fire()
-
         
         self.activate_firefighters()
         self.move_firefighters()
+        
 
 
 

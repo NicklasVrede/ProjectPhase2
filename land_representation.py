@@ -158,8 +158,7 @@ class TreePatch(LandPatch):
         self.spread_rate= 30
 
         if self.burning:
-            self.fire_health = 10
-            print(f'Patch {self.patch_id} is burning with health {self.fire_health}')
+            self.firestat = 10
     
         if self.graph_info:
             self.graph_info.update_color(self)
@@ -169,7 +168,7 @@ class TreePatch(LandPatch):
     
     def get_color(self):
         if self.burning:
-            color = -int(self.fire_health *2.56)  #int is important. otherwise visualiser fucks up the color
+            color = -int(self.firestat * 2.56)  #int is important. otherwise visualiser fucks up the color
             return color
         else:
             return self.treestat
@@ -179,7 +178,7 @@ class TreePatch(LandPatch):
         
     def ignite(self):
         self.burning = True
-        self.fire_health = 10
+        self.firestat = 10
         self.update_color()
 
     def spread_fire(self):
@@ -189,44 +188,42 @@ class TreePatch(LandPatch):
                 if not neighbour.burning and neighbour.treestat > 0:
                     if random.randint(0, 100) < self.spread_rate:  #30 by defualt
                         neighbour.ignite()
+                        print(f'Fire spread to {neighbour}')
 
-    def modify_fire_health(self, amount):
-        self.fire_health += amount
-        print(f'new fire health = {self.fire_health}')
-        if self.fire_health < 0:
+    def evolve_firestat(self):
+        self.firestat += int(self.firestat * 1.1 + 10)
+        
+        if self.firestat > 100:
+            self.firestat = 100
+        
+        if self.firestat < 0:
             self.burning = False
             self.update_color()
-
-    def burn_speed_calculator(self):
-        value = int(self.fire_health * 1.6)
-        return value
+            print(f'Fire was extinguished at {self}, treestat = {self.treestat}')
     
-    def modify_treestat(self):
-        if self.treestat >= 256:
-            self.treestat = 256
-            return
-
-        else:
-            self.treestat -= self.burnrate
-            self.update_color()
+    def evolve_treestat(self):
+        if self.burning:
+            self.treestat -= - self.burnrate
             if self.treestat < 0:
                 self.mutate()
-    
-    def grow_or_burn(self):
-        if self.burning:
-            self.modify_treestat()
-            self.modify_fire_health(self.burn_speed_calculator())
-            
+
         else:
             self.treestat += self.growthrate
-            self.update_color()
-            if self.treestat > 256:
+            if self.treestat >= 256:
                 self.treestat = 256
-
+                self.update_color()
+    
+    def evole_stats(self):
+        if self.burning:
+            self.evolve_firestat()
+            
+        self.evolve_treestat()
+        self.update_color()
 
     def mutate(self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
         self.graph_info.update_patch(new_patch)
+        print(f'Fire burned out at {self}')
         return new_patch
     
 class Firefighter:
@@ -237,22 +234,22 @@ class Firefighter:
         self._initiate_stats(skill_level)
 
     def __repr__(self) -> str:
-        return f"Firefighter {self.id} at {self.position}"
+        return f"Firefighter {self.id} at {self.get_pos_object()}, with power: {self.power}"
     
     def _initiate_stats(self, skill_level):
         if skill_level == "low":
             self.power = 20
         if skill_level == "medium":
-            self.power = 40
+            self.power = 25
         if skill_level == "high":
-            self.power = 40
+            self.power = 30
             self.brain = True
     
     def get_pos_object(self):
         return self.graph_info.patches.get(self.position)
     
     def get_neighbours_objects(self):
-        neighbours_ids = self.get_pos_object().get_neighbours_ids() 
+        neighbours_ids = self.get_pos_object().get_neighbours_ids()
         
         res = []
         for i in neighbours_ids:
@@ -263,8 +260,7 @@ class Firefighter:
     def move(self):
         position = self.get_pos_object()
         if position.burning:
-            print(f'Firefighter is standing still at {self.position}')
-            return None #If firefighter is at fire, he will not move.
+            return self.extinguish_fire(position) #If firefighter is at fire, he will fight the fire.
 
         move_pool = []
         neighbours = self.get_neighbours_objects()
@@ -276,10 +272,14 @@ class Firefighter:
             move_pool = neighbours
 
         new_position = random.choice(move_pool)
-        print(f'new position for firefighter {self.id} is {new_position}')
         self.position = new_position.patch_id
+        print(f'Firefighter {self.id} moved to {new_position}')
 
-    def extinguish_fire(self):
-        if self.get_pos_object.burning:
-            self.get_pos_object().modify_fire_health(-self.power)
-            print(f'Firefighter {self.id} is fighting fire at {self.position}')
+    def extinguish_fire(self, fire):
+        firestat_before = fire.firestat
+        fire.evole_stats(-self.power)
+        firestat_after = fire.firestat 
+        print(f'Firefighter {self.id} reduced fire health from {firestat_before} to {firestat_after}')
+        
+
+

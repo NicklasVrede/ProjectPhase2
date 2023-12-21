@@ -104,7 +104,6 @@ def generate_edges(options):
 
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)
-        print(f'positions = {positions}')
 
     return initiatlize_patches(edges, positions, options)
 
@@ -148,28 +147,13 @@ def initiate_simulation(edges, positions, options, graph_info):
 
     
     #Initialize simulation:
-    #Scale wait time with number of iterations
-    if options.get("iter_num") < 10:
-        wait_time = 1
-    elif options.get("iter_num") < 20:
-        wait_time = 0.7
-    elif options.get("iter_num") < 50:
-        wait_time = 0.3
-    elif options.get("iter_num") < 99:
-        wait_time = 0.1
-    elif options.get("iter_num") < 200:
-        wait_time = 0.05
-    elif options.get("iter_num") >= 200:
-        wait_time = 0.01
-
-
     current_simulation = Simulation(graph_info, options)
     for _ in range(options.get("iter_num")):
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
 
-        time.sleep(1)
+        time.sleep(3)
 
     print("Simulation finished.")
 
@@ -202,10 +186,10 @@ def reporting(history, options):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 80,
-               "firefighter_num" : 0,
+               "firefighter_num" : 2,
                "firefighter_level" : "low",
                "ini_fires" : 50,
-               "iter_num" : 8,
+               "iter_num" : 20,
                "treegrowth" : 10,
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %
