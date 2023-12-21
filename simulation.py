@@ -37,29 +37,25 @@ class Simulation:
                     patch.mutate()
 
             else:
-                patch.grow_or_burn()
-
                 if patch.burning:
                     patch.spread_fire()
-        
+                    
+                patch.evole_stats()
+
+                
+
         self.activate_firefighters()
-        self.move_firefighters()
         
+
 
 
 
     def get_history(self):
         return self.history
 
-    def move_firefighters(self):
-        for fighter in list(self.graphinfo.firefighters.values()):
-            fighter.move()
-
-        self.graphinfo.get_firefighter_positions()
-
     def activate_firefighters(self):
         for fighter in list(self.graphinfo.firefighters.values()):
-            fighter.extinguish_fire()
+            fighter.move()
             
     def spread_fire(self):
         patches = self.graphinfo.get_patches()

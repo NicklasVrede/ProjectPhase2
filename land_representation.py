@@ -190,8 +190,8 @@ class TreePatch(LandPatch):
                         neighbour.ignite()
                         print(f'Fire spread to {neighbour}')
 
-    def evolve_firestat(self):
-        self.firestat += int(self.firestat * 1.1 + 10)
+    def evolve_firestat(self, firefighter=False):
+        self.firestat += int(self.firestat * 0.1 + 10)
         
         if self.firestat > 100:
             self.firestat = 100
@@ -203,7 +203,7 @@ class TreePatch(LandPatch):
     
     def evolve_treestat(self):
         if self.burning:
-            self.treestat -= - self.burnrate
+            self.treestat -= self.burnrate
             if self.treestat < 0:
                 self.mutate()
 
@@ -213,7 +213,7 @@ class TreePatch(LandPatch):
                 self.treestat = 256
                 self.update_color()
     
-    def evole_stats(self):
+    def evole_stats(self, firefighter=False):
         if self.burning:
             self.evolve_firestat()
             
@@ -277,7 +277,12 @@ class Firefighter:
 
     def extinguish_fire(self, fire):
         firestat_before = fire.firestat
-        fire.evole_stats(-self.power)
+        fire.firestat -= self.power
+        if fire.firestat < 0:
+            fire.burning = False
+            fire.update_color()
+            return print(f'Firefighter {self.id} extinguished fire at {fire}')
+
         firestat_after = fire.firestat 
         print(f'Firefighter {self.id} reduced fire health from {firestat_before} to {firestat_after}')
         
