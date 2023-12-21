@@ -40,7 +40,7 @@ class Simulation:
                 if patch.burning:
                     patch.spread_fire()
                     
-                patch.evole_stats()
+                patch.evolve_tree()
 
                 
 

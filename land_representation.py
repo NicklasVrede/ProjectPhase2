@@ -203,13 +203,22 @@ class TreePatch(LandPatch):
             if self.treestat >= 256:
                 self.treestat = 256
             self.update_color()
-        
+
+    def spread_forrest(self):
+        neighbours = self.get_neighbours()
+        for neighbour in neighbours:
+            if isinstance(neighbour, RockPatch):
+                probability = int(5 + 20 * (self.treestat / 256))   #variable probability 5-20%
+                random_num = random.randint(0, 100)
+                if random_num < probability:
+                    neighbour.mutate()
     
-    def evole_stats(self):
+    def evolve_tree(self):
         if self.burning:
             self.evolve_firestat()
 
         self.evolve_treestat()
+        self.spread_forrest()
         
 
     def mutate(self) -> RockPatch:
