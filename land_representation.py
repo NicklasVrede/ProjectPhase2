@@ -132,7 +132,7 @@ class RockPatch(LandPatch):
         self.forrest_prob = forrest_prob
 
         if self.graph_info:
-            self.graph_info.update_color(self)
+            self.update_color()
         
     def __repr__(self):
         return f"RockPatch {self.patch_id}"
@@ -143,6 +143,7 @@ class RockPatch(LandPatch):
     def update_color(self):
         if self.patch_id in self.graph_info.color_map:
             self.graph_info.color_map.pop(self.patch_id)
+            print(f'Removed color of {self}')
     
     def mutate(self):
         new_patch = TreePatch(self.patch_id, 40, self.get_neighbours(), graph_info=self.graph_info)
@@ -161,7 +162,7 @@ class TreePatch(LandPatch):
             self.firestat = 10
     
         if self.graph_info:
-            self.graph_info.update_color(self)
+            self.update_color()
 
     def __repr__(self):
         return f'Treepatch {self.patch_id}'
@@ -174,7 +175,7 @@ class TreePatch(LandPatch):
             return self.treestat
     
     def update_color(self):
-        self.graph_info.update_color(self, self.get_color())  #Update color in graphinfo
+        self.graph_info.color_map[self.patch_id] = self.get_color()
         
     def ignite(self):
         self.burning = True
@@ -211,18 +212,19 @@ class TreePatch(LandPatch):
             self.treestat += self.growthrate
             if self.treestat >= 256:
                 self.treestat = 256
-                self.update_color()
+            self.update_color()
     
     def evole_stats(self, firefighter=False):
         if self.burning:
             self.evolve_firestat()
-            
+
         self.evolve_treestat()
+        
         self.update_color()
 
     def mutate(self) -> RockPatch:
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
-        self.graph_info.update_patch(new_patch)
+        new_patch.update_color()
         print(f'Fire burned out at {self}')
         return new_patch
     
@@ -276,6 +278,7 @@ class Firefighter:
         print(f'Firefighter {self.id} moved to {new_position}')
 
     def extinguish_fire(self, fire):
+        print(f'Fire is at {fire}')
         firestat_before = fire.firestat
         fire.firestat -= self.power
         if fire.firestat < 0:
