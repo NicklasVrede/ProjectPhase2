@@ -119,8 +119,10 @@ class Firefighter:
 
         return steps
 
-    def find_path(self, closest_fire, distance, steps=0, path=[], current_position=None):
+    def find_path(self, closest_fire, distance, steps=0, path=None, current_position=None):
         print(f'distance = {distance}, closest_fire = {closest_fire}, steps = {steps}')
+        if path is None:
+            path = []
         steps += 1
         if current_position is None:
             current_position = self.get_pos_object()
@@ -140,8 +142,6 @@ class Firefighter:
                 new_path = self.find_path(closest_fire, distance, steps, path.copy(), neighbour)
                 if new_path:
                     return new_path
-                else: 
-                    continue
                 
 
     def extinguish_fire(self, patch):

@@ -1,9 +1,20 @@
 import random
+from typing import Dict, List, Tuple, Union
 from land_representation import TreePatch, RockPatch
 from firefighter import Firefighter
 import graph_helper
 
-def generate_edges(options):
+def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int, int]], Dict[int, Tuple[float, float]]]:
+    """
+    Generates edges and positions based on the provided options.
+
+    Parameters:
+    options (Dict[str, Union[str, int]]): A dictionary containing generation options. 
+ 
+    Returns:
+    edges - Tuple[List[Tuple[int, int]]: A tuple containing a list of edges and a dictionary of positions.
+    positions - Dict[int, Tuple[float, float]]]: Each edge is a tuple of two integers, and each position is a tuple of two floats.
+    """
     if options.get("gen_method") == "read":
         while True:
             try:
@@ -44,21 +55,16 @@ def generate_edges(options):
     return edges, positions
     
 
-def read_edges_from_file(file_path:str) -> list[set]:
+def read_edges_from_file(file_path: str) -> List[Tuple[int, int]]:
     """
-    Read graph edges from a file and return a list of sets representing the edges.
-
-    The file should contain lines representing edges, with each line
-    containing two vertices separated by a comma. Lines starting with
-    '#' are considered comments and are ignored. Invalid lines are also ignored.
+    Reads graph edges from a file.
 
     Parameters:
-    - file_path (str): The path to the file containing graph edges.
+    file_path (str): The path to the file.
 
     Returns:
-    - edges (list[set]): A list of sets representing the edges of the graph.
-
-    """
+    edges - List[Tuple[int, int]]: A list of edges. Each edge is a tuple of two integers.
+   """
     edges = []
     with open(file_path, 'r') as file: 
         for line in file:
@@ -78,19 +84,15 @@ def read_edges_from_file(file_path:str) -> list[set]:
 
     return edges
 
-def generate_positions(edges): 
+def generate_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, float]]:
     """
-    Generates Voronoi data (coordinate map) from a given set of edges.
+    Generates positions for each vertex in the given edges.
 
     Parameters:
-    ----------
-    edges: List[(int, int)]
-        List containing the edges (Tuples of 2 vertices) forming the 2D surface.
+    edges (List[Tuple[int, int]]): A list of edges.
 
     Returns:
-    ----------
-    positions: Dict[int: (float, float)]
-        Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1]).
+    positions - Dict[int, Tuple[float, float]]: A dictionary mapping each vertex to a position. Each position is a tuple of two floats.
     """
     print(f'edges = {edges}')
     edges_lists = [list(edge) for edge in edges]
@@ -104,7 +106,18 @@ def generate_positions(edges):
     return positions
 
 
-def initialize_patches(edges, positions, options):
+def initialize_patches(edges: List[Tuple[int, int]], positions: Dict[int, Tuple[float, float]], options: Dict[str, Union[str, int]]) -> Dict[int, Union[TreePatch, RockPatch]]:
+    """
+    Initializes patches based on the given edges, positions, and options.
+
+    Parameters:
+    edges (List[Tuple[int, int]]): A list of edges.
+    positions (Dict[int, Tuple[float, float]]): A dictionary of positions.
+    options (Dict[str, Union[str, int]]): A dictionary of options.
+
+    Returns:
+    patches - Dict[int, Union[TreePatch, RockPatch]]: A dictionary of patch objects.
+    """
     all_nodes = list(positions.keys()) #Merges a new set of nodes
 
     #Initialize ration of woods and fires
@@ -129,7 +142,16 @@ def initialize_patches(edges, positions, options):
     return patches
     
 
-def initialise_color_map(patches):
+def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dict[int, int]:
+    """
+    Initializes a color map based on the given patches.
+
+    Parameters:
+    patches (Dict[int, Union[TreePatch, RockPatch]]): A dictionary of patches.
+
+    Returns:
+    color_map - Dict[int, Tuple[int, int, int]]: A color map. Each key is a patch ID, and each value is a color.
+    """
     res = {}
     for patch in list(patches.values()):
         if patch.treestat == 0:
@@ -139,7 +161,13 @@ def initialise_color_map(patches):
     
     return res
 
-def initialise_firefighters(self):
+def initialise_firefighters(self) -> Dict[int, Firefighter]:
+    """
+    Initializes firefighters.
+
+    Returns:
+    firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
+    """
     res = {}
     for i in range(1, self.options.get("firefighter_num") + 1):
         random_id = random.choice(list(self.patches.keys()))
@@ -150,7 +178,13 @@ def initialise_firefighters(self):
     print(f'firefighters = {res}')
     return res
 
-def initialise_neighbours(self):
+def initialise_neighbours(self) -> Dict[int, List[int]]:
+    """
+    Initializes neighbours for each patch.
+
+    Returns:
+    neighbour_id_register - Dict[int, List[int]]: A dictionary mapping each patch to a list of its neighbours.
+    """
     all_patches = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
     edges = [set(edge) for edge in self.edges]
     res = {}
