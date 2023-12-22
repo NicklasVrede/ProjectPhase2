@@ -27,7 +27,7 @@ def main(options=dict()):
     firefighters = initialise_firefighters(patches, options)
 
     #initialize graph info object:
-    graph_info = GraphInfo(options, patches, color_map, firefighters)
+    graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
 
     #initialize simulation:
     return initiate_simulation(edges, positions, options, graph_info)
