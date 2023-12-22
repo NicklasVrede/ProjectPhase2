@@ -1,3 +1,6 @@
+import random
+
+
 class Firefighter:
     def __init__(self, id, skill_level, position, graph_info):
         self.id = id
