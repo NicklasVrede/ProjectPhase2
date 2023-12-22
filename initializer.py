@@ -1,6 +1,7 @@
 import random
 from land_representation import TreePatch, RockPatch
 from firefighter import Firefighter
+import graph_helper
 
 def generate_edges(options):
     if options.get("gen_method") == "read":
