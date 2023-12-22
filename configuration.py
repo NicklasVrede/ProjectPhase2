@@ -2,7 +2,6 @@
 Config Module
 """
 import random
-from graph_forrest import generate_edges
 
 line =  "\n"*3 + "-" * 40 + "\n"*3
 menu_strings = {
@@ -78,11 +77,11 @@ Which option would you like to change?
     
     }
 
-def welcome():
+def welcome(options):
     print (menu_strings.get("welcome"))
     input()
 
-    return gen_method()
+    return gen_method(options)
 
 def gen_method(options:dict=dict()):
     if options.get("gen_method"):
@@ -105,13 +104,12 @@ def gen_method(options:dict=dict()):
 
     options.update({"gen_method" : choice})
     
-    if len(options) == 5:
-        return main(options)
-    else:
-        return ini_woods(options)
+    return ini_woods(options)
 
 
 def ini_woods(options:dict):
+    if options.get("ini_woods"):
+        return ini_fires(options)
     print(menu_strings.get("ini_woods"))
 
     while True:
@@ -133,12 +131,11 @@ def ini_woods(options:dict):
 
     options.update({"ini_woods" : choice})
 
-    if len(options) == 5:
-        return main(options)
-    else:
-        return ini_fires(options)
+    return ini_fires(options)
     
 def ini_fires(options:dict):
+    if options.get("ini_fires"):
+        return firefighter_num(options)
     print(menu_strings.get("ini_fires"))
 
     while True:
@@ -162,13 +159,13 @@ def ini_fires(options:dict):
 
     options.update({"ini_fires" : choice})
 
-    if len(options) == 5:
-        return main(options)
-    else:
-        return firefighter_num(options)
+
+    return firefighter_num(options)
 
 
 def firefighter_num(options:dict):
+    if options.get("firefighter_num"):
+        return firefighter_level(options)
     print(menu_strings.get("firefigter_num"))
 
     while True:
@@ -187,12 +184,12 @@ def firefighter_num(options:dict):
     
     options.update({"firefighter_num" : choice})
 
-    if len(options) == 5:
-        return main(options)
-    else:
-        return firefighter_level(options)
+
+    return firefighter_level(options)
 
 def firefighter_level(options:dict):
+    if options.get("firefighter_level"):
+        return iter_num(options)
     print(menu_strings.get("firefigter_level"))
 
     while True:
@@ -211,12 +208,12 @@ def firefighter_level(options:dict):
     print(choice)
     options.update({"firefighter_level" : choice})
 
-    if len(options) == 5:
-        return main(options)
-    else:
-        return iter_num(options)
+
+    return iter_num(options)
 
 def iter_num(options:dict):
+    if options.get("iter_num"):
+        return config_final(options)
     print(menu_strings.get("iter_num"))
 
     while True:
@@ -234,7 +231,7 @@ def iter_num(options:dict):
             
     options.update({"iter_num" : choice})
 
-    return main(options)
+    return config_final(options)
 
 def change_setting(options):
     print(menu_strings.get("change_setting"))
@@ -249,20 +246,17 @@ def change_setting(options):
 
         elif user_input == "3":
             return firefighter_num(options)
-            break
-
+    
         elif user_input == "4":
             return firefighter_level(options)
-            break
 
         elif user_input == "5":
             return iter_num(options)
-            break
 
         else:
             print("Wrong input, please try agian")
       
-def main(options:dict=dict()):
+def config_final(options:dict=dict()):
     print(line + f"""
 Current options:
 
@@ -285,7 +279,8 @@ How would you like to proceed?
 
         if user_input == "1":
             print(line)
-            generate_edges(options)
+            from graph_forrest import main
+            return main(options)
 
         elif user_input == "2":
             return change_setting(options)
