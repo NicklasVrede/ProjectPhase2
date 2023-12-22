@@ -178,7 +178,7 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     
     return res
 
-def initialise_neighbours(self) -> Dict[int, List[int]]:
+def initialise_neighbours(edges) -> Dict[int, List[int]]:
     """
     Initializes neighbours for each patch.
 
