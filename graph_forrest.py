@@ -20,7 +20,7 @@ def main(options=dict()):
     color_map = initialise_color_map(patches)
 
     #initialize firefighter objects:
-    firefighters = initialise_firefighters(patches, options)
+    firefighters = initialise_firefighters(options, patches)
 
     #initialize graph info object:
     graph_info = GraphInfo(edges, options, patches, color_map, firefighters)
@@ -38,11 +38,14 @@ class GraphInfo:
         self.neighbour_register = {} #Not used yet.
         self.color_map =  color_map
         self.firefighters =  firefighters
-        self._initialise_link_to_patches()
+        self._initialise_links()
 
-    def _initialise_link_to_patches(self):
+    def _initialise_links(self):
         for patch in list(self.patches.values()): # list() is actually not needed, since we dont need indexes.
             patch.graph_info = self
+        
+        for firefighter in list(self.firefighters.values()):
+            firefighter.graph_info = self
 
     def update_patch(self, patch:object):
         self.patches[patch.patch_id] = patch
@@ -95,4 +98,4 @@ if __name__ == "__main__":
                "firegrowth" : 20,
                "newforrest" : 100 #50 permille / 0.5 %
                }
-    main()
+    main(options)

@@ -161,7 +161,7 @@ def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dic
     
     return res
 
-def initialise_firefighters(self) -> Dict[int, Firefighter]:
+def initialise_firefighters(options, patches) -> Dict[int, Firefighter]:
     """
     Initializes firefighters.
 
@@ -169,10 +169,10 @@ def initialise_firefighters(self) -> Dict[int, Firefighter]:
     firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
     """
     res = {}
-    for i in range(1, self.options.get("firefighter_num") + 1):
-        random_id = random.choice(list(self.patches.keys()))
-        level = self.options.get("firefighter_level")
-        new_fire_fighter = Firefighter(i, level, random_id, self)
+    for i in range(1, options.get("firefighter_num") + 1):
+        random_id = random.choice(list(patches.keys()))
+        level = options.get("firefighter_level")
+        new_fire_fighter = Firefighter(i, level, random_id)
         res[i] = new_fire_fighter   #Instances of fire
     
     print(f'firefighters = {res}')
