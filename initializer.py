@@ -161,7 +161,7 @@ def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dic
     
     return res
 
-def initialise_firefighters(options, patches) -> Dict[int, Firefighter]:
+def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     """
     Initializes firefighters.
 
@@ -169,13 +169,13 @@ def initialise_firefighters(options, patches) -> Dict[int, Firefighter]:
     firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
     """
     res = {}
+    print(f'firefighter_num = {options.get("firefighter_num")}')
     for i in range(1, options.get("firefighter_num") + 1):
         random_id = random.choice(list(patches.keys()))
         level = options.get("firefighter_level")
         new_fire_fighter = Firefighter(i, level, random_id)
         res[i] = new_fire_fighter   #Instances of fire
     
-    print(f'firefighters = {res}')
     return res
 
 def initialise_neighbours(self) -> Dict[int, List[int]]:
@@ -185,8 +185,8 @@ def initialise_neighbours(self) -> Dict[int, List[int]]:
     Returns:
     neighbour_id_register - Dict[int, List[int]]: A dictionary mapping each patch to a list of its neighbours.
     """
-    all_patches = set.union(*[set(edge) for edge in self.edges]) #Merges a new set of nodes
-    edges = [set(edge) for edge in self.edges]
+    all_patches = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
+    edges = [set(edge) for edge in edges]
     res = {}
 
     for i in all_patches:

@@ -1,10 +1,11 @@
 from configuration import welcome
-from initializer import generate_edges, initialize_patches, initialise_color_map, initialise_firefighters
+from initializer import generate_edges, initialize_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
 from simulation import Simulation
 import time
 
 def main(options=dict()):
+    print(f'options = {options}')
     if options is None or len(options) < 6:
         if options is None:
             return welcome()
@@ -15,26 +16,28 @@ def main(options=dict()):
 
     #initialize patch objects:
     patches = initialize_patches(edges, positions, options)
+
+    #initialize neighbour register:
+    neighbour_id_register = initialise_neighbours(edges)
     
     #initialize color map:
     color_map = initialise_color_map(patches)
 
     #initialize firefighter objects:
-    firefighters = initialise_firefighters(options, patches)
+    firefighters = initialise_firefighters(patches, options)
 
     #initialize graph info object:
-    graph_info = GraphInfo(edges, options, patches, color_map, firefighters)
+    graph_info = GraphInfo(options, patches, color_map, firefighters)
 
     #initialize simulation:
     return initiate_simulation(edges, positions, options, graph_info)
 
 
 class GraphInfo: 
-    def __init__(self, edges, options, patches, color_map, firefighters):
-        self.edges = edges #list of edges
+    def __init__(self, options, patches, color_map, firefighters):
         self.options = options #dict of options
         self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
-        self.neighbour_id_register = self._initialise_neighbours() #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
+        self.neighbour_id_register = #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
         self.neighbour_register = {} #Not used yet.
         self.color_map =  color_map
         self.firefighters =  firefighters
@@ -43,7 +46,7 @@ class GraphInfo:
     def _initialise_links(self):
         for patch in list(self.patches.values()): # list() is actually not needed, since we dont need indexes.
             patch.graph_info = self
-        
+
         for firefighter in list(self.firefighters.values()):
             firefighter.graph_info = self
 
@@ -90,7 +93,7 @@ def initiate_simulation(edges, positions, options, graph_info):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 80,
-               "firefighter_num" : 1,
+               "firefighter_num" : 2,
                "firefighter_level" : "high",
                "ini_fires" : 30,
                "iter_num" : 40,

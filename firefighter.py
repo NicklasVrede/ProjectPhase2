@@ -2,11 +2,11 @@ import random
 
 
 class Firefighter:
-    def __init__(self, id, skill_level, position, graph_info):
+    def __init__(self, id, skill_level, position):
         self.id = id
         self.position = position  # Identifies the Firefighter's position patch id
-        self.graph_info = graph_info
         self.brain = False
+        self.graph_info = None
         self.initiate_skill(skill_level)
 
     def initiate_skill(self, skill_level):
