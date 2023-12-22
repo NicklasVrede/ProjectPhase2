@@ -34,10 +34,10 @@ def main(options=dict()):
 
 
 class GraphInfo: 
-    def __init__(self, options, patches, color_map, firefighters):
+    def __init__(self, options, patches, color_map, firefighters, neighbour_id_register):
         self.options = options #dict of options
         self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
-        self.neighbour_id_register = #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
+        self.neighbour_id_register = neighbour_id_register #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
         self.neighbour_register = {} #Not used yet.
         self.color_map =  color_map
         self.firefighters =  firefighters
