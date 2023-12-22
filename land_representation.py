@@ -4,7 +4,7 @@ import random
 # land_representation.py
 
 class LandPatch:
-    def __init__(self, patch_id, treestat, neighbors, burning, graph_info=None):
+    def __init__(self, patch_id, treestat, burning, graph_info=None):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
@@ -38,8 +38,8 @@ class LandPatch:
         raise NotImplementedError
 
 class TreePatch(LandPatch):
-    def __init__(self, patch_id, treestat, neighbors=None, burning=False, graph_info=None):
-        super().__init__(patch_id, treestat, neighbors, burning, graph_info)
+    def __init__(self, patch_id, treestat, burning=False, graph_info=None):
+        super().__init__(patch_id, treestat, burning, graph_info)
         self.growthrate = 10
         self.burnrate = 20
         self.spread_rate= 30
@@ -122,8 +122,8 @@ class TreePatch(LandPatch):
         return new_patch
     
 class RockPatch(LandPatch):
-    def __init__(self, patch_id, treestat, neighbors=None, forrest_prob=1, graph_info=None):
-        super().__init__(patch_id, treestat, neighbors, False, graph_info)
+    def __init__(self, patch_id, treestat, forrest_prob=1, graph_info=None):
+        super().__init__(patch_id, treestat, False, graph_info)
         self.forrest_prob = forrest_prob
 
         if self.graph_info:

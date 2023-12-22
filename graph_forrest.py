@@ -5,7 +5,6 @@ from simulation import Simulation
 import time
 
 def main(options=dict()):
-    print(f'options = {options}')
     if options is None or len(options) < 6:
         if options is None:
             return welcome()
@@ -28,7 +27,7 @@ def main(options=dict()):
 
     #initialize graph info object:
     graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
-
+    print(f'graph_info.patches = {graph_info.patches}')
     #initialize simulation:
     return initiate_simulation(edges, positions, options, graph_info)
 
@@ -94,7 +93,7 @@ if __name__ == "__main__":
     options = {"gen_method" : "random",
                "ini_woods" : 80,
                "firefighter_num" : 2,
-               "firefighter_level" : "high",
+               "firefighter_level" : "low",
                "ini_fires" : 30,
                "iter_num" : 40,
                "treegrowth" : 10,
