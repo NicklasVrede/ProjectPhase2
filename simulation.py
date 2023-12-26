@@ -16,7 +16,7 @@ class Simulation:
         patches = self.graphinfo.get_patches()
         for i in patches:
             patch = patches.get(i)
-            if patch.treestat is 0: 
+            if patch.treestat == 0: 
                 Rock_potulation += 1
             elif patch.burning:
                 Fire_population += 1
@@ -30,7 +30,7 @@ class Simulation:
         for i in patches:
             patch = patches.get(i)
             if isinstance(patch, RockPatch):
-                probability = self.graphinfo.options.get("newforrest")
+                probability = self.graphinfo.options.get("new_forrest_probability")  #Newforrest
                 random_num = random.randint(0, 10000)  #Making the probability act as permille.
                 if random_num < probability:  #Newforrest
                     print(f'{random_num} < {probability} = {random_num < probability}')

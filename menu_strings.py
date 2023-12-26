@@ -18,6 +18,7 @@ Advanced options:
 9. Burn rate (-{options.get("burn_rate")})
 10. New random forrest probability ({options.get("new_forrest_probability")/100} %)
 11. Fire spread rate ({options.get("fire_spread_rate")} %)
+
 Proceed:
 12. Proceed with graph generation
 
@@ -100,11 +101,11 @@ r. Random number (between 0% and 100 %)
     "firefigter_level" : line + """
 Choose the average skill level firefighters:
 
-1. Low
+1. Low (Low power, no intelligence)
 
-2. Medium
+2. Medium (High power, no intelligence)
 
-3. High
+3. High (High power, intelligent)
     """,
 
     "iter_num" : line + """
