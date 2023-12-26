@@ -1,4 +1,4 @@
-{"gen_method" : "random",
+{"gen_method" : "random", #Generation method for patches. "random" or "read"
 "ini_woods" : 100, # Percentage of forrests in the graph, rest = rocks
 "firefighter_num" : 2, # Number of firefighters
 "firefighter_level" : 1, # 1 (low), 2 (medium) or 3 (high)

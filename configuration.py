@@ -97,7 +97,6 @@ def read_options_from_file(options):
         user_input = input('Enter "1" or "2": ')
 
         if user_input == "1":
-            choice = "read"
             break
 
         elif user_input == "2":
@@ -108,7 +107,9 @@ def read_options_from_file(options):
 
     print()
     while True:
-        user_input = input('Enter the path to the file: ')
+        user_input = input('Enter the path to the file, or enter "d" to load "options.txt": ')
+        if user_input == "d":
+            user_input = "options.txt"
         try:
             with open(user_input, "r") as file:
                 lines = file.readlines()
@@ -145,7 +146,7 @@ def convert_to_int(options:dict):
         try:
             options[key] = int(value)
         except ValueError:
-            pass
+            continue  #Do nothing if the value is not an int
 
     return options
 
@@ -155,37 +156,37 @@ def options_checker(options:dict):
 
     Only checks, if the option is defined.
     """
-    if "gen_method" in options and options.get("gen_method") not in ["read", "random"]:
+    if "gen_method" not in options:
+        print("Generation method not read from file.")
+    elif options.get("gen_method") not in ["read", "random"]:
         raise ValueError("Wrong value for gen_method")
-    else:
-        print("Generation method was not read from file.")
-
-    if "ini_woods" in options and options.get("ini_woods") not in ["default", "random"]:
+    
+    if "ini_woods" not in options:
+        print("Initial woods not read from file.")
+    elif options.get("ini_woods") not in ["default", "random"]:
         if not isinstance(options.get("ini_woods"), int):
             raise ValueError("Wrong value for ini_woods")
-    else:
-        print("Initial woods were not read from file.")
-
-    if "ini_fires" in options and options.get("ini_fires") not in ["default", "random"]:
+        
+    if "ini_fires" not in options:
+        print("Initial fires not read from file.")
+    elif options.get("ini_fires") not in ["default", "random"]:
         if not isinstance(options.get("ini_fires"), int):
             raise ValueError("Wrong value for ini_fires")
-    else:
-        print("Initial fires were not read from file.")
-
-    if "firefighter_num" in options and not isinstance(options.get("firefighter_num"), int):
+        
+    if "firefighter_num" not in options:
+        print("Firefighter number not read from file.")
+    elif not isinstance(options.get("firefighter_num"), int):
         raise ValueError("Wrong value for firefighter_num")
-    else:
-        print("Firefighter number was not read from file.")
-
-    if "firefighter_level" in options and options.get("firefighter_level") not in [1, 2, 3]:
+    
+    if "firefighter_level" not in options:
+        print("Firefighter level not read from file.")
+    elif not isinstance(options.get("firefighter_level"), int):
         raise ValueError("Wrong value for firefighter_level")
-    else:
-        print("Firefighter level was not read from file.")
-
-    if "iter_num" in options and type(options.get("iter_num")) == int:  #not needed?
+    
+    if "iter_num" not in options:
+        print("Iteration steps not read from file.")
+    elif not isinstance(options.get("iter_num"), int): #not needed?
         raise ValueError("Wrong value for iter_num")
-    else:
-        print("Iteration number was not read from file.")
 
     return True
 

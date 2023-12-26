@@ -172,7 +172,7 @@ class Firefighter:
             neighbours = current_position.get_neighbours()
             neighbours_to_check = []
             for neighbour in neighbours:
-                if neighbour not in dead_ends.get(steps) and neighbour.patch_id not in set(path) and neighbour is not def_position: #Avoid dead ends and backtracking
+                if neighbour not in dead_ends.get(steps) and neighbour.patch_id not in path and neighbour is not def_position: #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
 
             #check for dead end:
