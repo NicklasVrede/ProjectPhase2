@@ -46,9 +46,9 @@ class TreePatch(LandPatch):
     
         if self.graph_info:
             self.update_color()
-        self.growthrate = graph_info.options.get('growth_rate') #10 by default
-        self.burnrate = graph_info.options.get('burn_rate') #10 by default
-        self.spread_rate= graph_info.options.get('fire_spread_rate') #30 by default
+            self.growthrate = graph_info.options.get('growth_rate') #10 by default
+            self.burnrate = graph_info.options.get('burn_rate') #10 by default
+            self.spread_rate= graph_info.options.get('fire_spread_rate') #30 by default
 
     def __repr__(self):
         return f'Treepatch {self.patch_id}'
