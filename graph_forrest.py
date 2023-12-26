@@ -80,7 +80,7 @@ def initiate_simulation(edges, positions, options, graph_info):
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
 
-        time.sleep(60)
+        time.sleep(2)
 
     print("Simulation finished.")
 
@@ -90,10 +90,10 @@ def initiate_simulation(edges, positions, options, graph_info):
 
 if __name__ == "__main__":
     options = {"gen_method" : "random",
-               "ini_woods" : 80,
-               "firefighter_num" : 1,
-               "firefighter_level" : "high",
-               "ini_fires" : 25,
+               "ini_woods" : 100,
+               "firefighter_num" : 2,
+               "firefighter_level" : "low",
+               "ini_fires" : 10,
                "iter_num" : 40,
                "treegrowth" : 10,
                "firegrowth" : 20,

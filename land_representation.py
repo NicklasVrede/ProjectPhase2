@@ -42,7 +42,7 @@ class TreePatch(LandPatch):
         super().__init__(patch_id, treestat, burning, graph_info)
         self.growthrate = 10
         self.burnrate = 20
-        self.spread_rate= 0
+        self.spread_rate= 30
 
         if self.burning:
             self.firestat = 10
@@ -117,6 +117,7 @@ class TreePatch(LandPatch):
         self.spread_forrest()
         
     def mutate(self):
+        self.burning = False #for firefigthers functionallity, since they store target patches
         new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
         self.graph_info.update_patch(new_patch)
         return new_patch

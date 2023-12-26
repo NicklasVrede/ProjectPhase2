@@ -12,11 +12,11 @@ class Firefighter:
 
     def initiate_skill(self, skill_level):
         if skill_level == "low":
-            self.power = 20  # Default value
+            self.power = 25  # Default value
         if skill_level == "medium":
-            self.power = 25
+            self.power = 35
         elif skill_level == "high":
-            self.power = 30
+            self.power = 40
             self.brain = True
             self.path = []
 
@@ -64,11 +64,6 @@ class Firefighter:
         self.position = new_position.patch_id
 
     def smart_move(self, position):
-        print("smart move")
-        if self.path:
-            self.position = self.path.pop(0)
-            return print(f'Firefighter {self.id} moved to {self.get_pos_object()}')
-
         all_fires = []
         for patch in list(self.graph_info.patches.values()):
             if patch.burning:
@@ -76,6 +71,20 @@ class Firefighter:
         
         if not all_fires:
             return print(f'Firefighter {self.id} could not find any fire')
+        
+        #check if any fires are closer than target:
+        if self.path and self.target.burning:
+            for fire in all_fires:
+                distance = self.find_least_steps(position, fire)
+                if distance < len(self.path):
+                    self.path = []
+                    print(f'Firefighter {self.id} found closer fire at {fire} and reset path')
+                    break
+            
+            if self.path:
+                self.position = self.path.pop(0)
+                return print(f'Firefighter is moving towars a fire at {self.target}')
+
 
         #find closest fire:
         closest_fire = None
@@ -86,16 +95,15 @@ class Firefighter:
                 closest_fire = fire
                 closest_distance = distance
 
-        print(f'Firefighter {self.id} found closest fire at {closest_fire} with distance {closest_distance}')
-
         #Now we have the closest fire. And the shortest distance to it.
         #We need to find the shortest path to it:
-        shortest_path = self.find_path(closest_fire, closest_distance)
+        shortest_path, target = self.find_path(closest_fire, closest_distance)
 
         #Now we have the shortest path to the closest fire.
         #We add this path to the firefighter.
         self.path = shortest_path
-        print(f'Firefighter {self.id} is using the path {shortest_path}')
+        self.target = target
+        print(f'Firefighter at {position} moving to {closest_fire} with path {self.path}')
 
     def find_least_steps(self, position, target):
         """
@@ -129,29 +137,6 @@ class Firefighter:
 
         return steps
     
-    def find_path(self, closest_fire, distance, steps=0, path=None, current_position=None):
-        print(f'distance = {distance}, closest_fire = {closest_fire}, steps = {steps}')
-        if path is None:
-            path = []
-        steps += 1
-        if current_position is None:
-            current_position = self.get_pos_object()
-
-        if steps > distance:
-            return None
-        
-        path.append(current_position) #add current position to path
-
-        if current_position == closest_fire:
-            return path
-        
-        print(f'path = {path}')
-        neighbours = current_position.get_neighbours()
-        for neighbour in neighbours:
-            if neighbour not in path:
-                new_path = self.find_path(closest_fire, distance, steps, path.copy(), neighbour)
-                if new_path:
-                    return new_path
 
     def find_path(self, closest_fire, distance):
         """
@@ -167,7 +152,6 @@ class Firefighter:
         dead_ends = {} #dict with dead ends as values and steps as keys.
         for i in range(1,distance+2):
             dead_ends[i] = set()   #set default empty sets sets.
-        print(f'dead_ends = {dead_ends}')
         def_position = self.get_pos_object()
         current_position = def_position
         target = closest_fire
@@ -177,12 +161,10 @@ class Firefighter:
 
         while True:
             steps += 1
-            time.sleep(1)
             #Check if we have reached the max distance
             if steps > distance:
                 dead_ends[steps].add(current_position)
                 current_position = def_position
-                print(f'Max distance reached, adding {current_position} to dead_ends')
                 path, steps = [], 0
                 continue
             
@@ -192,12 +174,10 @@ class Firefighter:
             for neighbour in neighbours:
                 if neighbour not in dead_ends.get(steps) and neighbour.patch_id not in set(path) and neighbour is not def_position: #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
-            print(f'neighbours_to_check = {neighbours_to_check}')
 
             #check for dead end:
             if not neighbours_to_check:
                 dead_ends[steps].add(current_position)
-                print(f'No neighbours, adding {current_position} to dead_ends')
                 current_position = def_position
                 path, steps = [], 0
                 continue
@@ -205,12 +185,11 @@ class Firefighter:
             #Pick random neighbour:
             current_position = random.choice(neighbours_to_check)
             path.append(current_position.patch_id)
-            print(f'path = {path}')
 
             #check if we have reached the target:
             if current_position.patch_id == target.patch_id:
-                print(f'Found fire at {current_position}')
-                return path
+                return path, target
+
 
                 
     
