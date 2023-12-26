@@ -95,8 +95,8 @@ if __name__ == "__main__":
             "firefighter_level" : 3, #low, medium, high
             "ini_fires" : 10, #Percentage of fires in forrests
             "iter_num" : 40, #Number of sumulation iterations
-            "treegrowth" : 10, #
-            "firegrowth" : 20, #
-            "newforrest" : 100 #Probability of new forrest in permille ie. 50 = 0,5 %
+            "tree_growth" : 10, #
+            "burn_growth" : 20, #
+            "new_forrest_probability" : 100 #Probability of new forrest in permille ie. 50 = 0,5 %
             }
     main(options)

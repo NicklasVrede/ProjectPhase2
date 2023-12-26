@@ -27,6 +27,7 @@ class Simulation:
                                             "Rock_population" : Rock_potulation,
                                             "Fire_population" : Fire_population}
         # Update the simulation for a single iteration
+        self.activate_firefighters()
         for i in patches:
             patch = patches.get(i)
             if isinstance(patch, RockPatch):
@@ -41,7 +42,7 @@ class Simulation:
                     
                 patch.evolve_tree()
 
-        self.activate_firefighters()
+  
         
     def get_history(self):
         return self.history

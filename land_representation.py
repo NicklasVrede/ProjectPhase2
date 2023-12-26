@@ -40,9 +40,9 @@ class LandPatch:
 class TreePatch(LandPatch):
     def __init__(self, patch_id, treestat, burning=False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
-        self.growthrate = graph_info.options.get('growthrate', 10) #10 by default
-        self.burnrate = graph_info.options.get('burnrate', 10) #10 by default
-        self.spread_rate= graph_info.options.get('spreadrate', 30) #30 by default
+        self.growthrate = graph_info.options.get('growth_rate', 10) #10 by default
+        self.burnrate = graph_info.options.get('burn_rate', 10) #10 by default
+        self.spread_rate= graph_info.options.get('fire_spread_rate', 30) #30 by default
 
         if self.burning:
             self.firestat = 10

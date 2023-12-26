@@ -43,7 +43,7 @@ class Firefighter:
     def move(self):
         position = self.get_pos_object()
         if position.burning:
-            return self.extinguish_fire(position) #If firefighter is at fire, he will fight the fire.
+            return self.extinguish_fire(position) #If firefighter is at fire, he will fight the fire and not move.
 
         move_pool = []
         neighbours = self.get_neighbours()
@@ -62,6 +62,7 @@ class Firefighter:
             
         new_position = random.choice(move_pool)
         self.position = new_position.patch_id
+        self.extinguish_fire(new_position)  #fight fire at new position
 
     def smart_move(self, position):
         all_fires = []
