@@ -45,10 +45,10 @@ class GraphInfo:
         for patch in list(self.patches.values()): # list() is actually not needed, since we dont need indexes.
             patch.graph_info = self
 
-            if self.treestat > 0:
-                self.growthrate = self.options.get('growth_rate') #10 by default
-                self.burnrate = self.options.get('burn_rate') #10 by default
-                self.spread_rate= self.options.get('fire_spread_rate') #30 by default
+            if patch.treestat > 0:
+                patch.growthrate = self.options.get('growth_rate')
+                patch.burnrate = self.options.get('burn_rate')
+                patch.spread_rate= self.options.get('fire_spread_rate')
 
         for firefighter in list(self.firefighters.values()):
             firefighter.graph_info = self
