@@ -11,11 +11,11 @@ class Firefighter:
         self.initiate_skill(skill_level)
 
     def initiate_skill(self, skill_level):
-        if skill_level == "low":
+        if skill_level == 1:
             self.power = 25  # Default value
-        if skill_level == "medium":
+        if skill_level == 2:
             self.power = 35
-        elif skill_level == "high":
+        elif skill_level == 3:
             self.power = 40
             self.brain = True
             self.path = []

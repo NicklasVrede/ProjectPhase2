@@ -90,13 +90,13 @@ def initiate_simulation(edges, positions, options, graph_info):
 
 if __name__ == "__main__":
     options = {"gen_method" : "random",
-               "ini_woods" : 100,
-               "firefighter_num" : 2,
-               "firefighter_level" : "low",
-               "ini_fires" : 10,
-               "iter_num" : 40,
-               "treegrowth" : 10,
-               "firegrowth" : 20,
-               "newforrest" : 100 #50 permille / 0.5 %
-               }
+            "ini_woods" : 100, #Percentage of forrests in the graph, rest = rocks
+            "firefighter_num" : 2, #Number of firefighters
+            "firefighter_level" : 3, #low, medium, high
+            "ini_fires" : 10, #Percentage of fires in forrests
+            "iter_num" : 40, #Number of sumulation iterations
+            "treegrowth" : 10, #
+            "firegrowth" : 20, #
+            "newforrest" : 100 #Probability of new forrest in permille ie. 50 = 0,5 %
+            }
     main(options)
