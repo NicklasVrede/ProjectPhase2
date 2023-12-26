@@ -2,104 +2,12 @@
 Config Module
 """
 import random
-
-options = {} #defined to express f-strings in menu_strings
-line =  "\n"*3 + "-" * 40 + "\n"*3
-menu_strings = {
-    "welcome" : line + """
-Welcome to the Forest Fire Simulation Program!
-
-In this simulation, you will explore the dynamic evolution of a population 
-of automata in a simulated forest environment. The fate of the landscape 
-is in your hands as you influence the growth of trees, the movement of firefighters, 
-and the spread of wildfires.
-
-Press [Enter] to embark on this exciting journey and configure the simulation parameters.
-""",
-
-    "read_options_from_file" : line + """
-Would you like to read the options from a file?
-
-1. Yes
-
-2. No
-""",
-
-    "gen_method" : line + """
-Please pick a generation method of the graph.
-
-1. From file
-
-r. Random
-""",
-
-    "ini_woods" : line + """
-Choose an option for the initial landscape pattern:
-
-1. All woods
-
-2. All rocks
-
-r. Random amount of woods (between 0% and 100 %)
-""",
-
-    "firefigter_num" : line + """
-Choose the number of firefighter.
-""",
-
-    "ini_fires" : line + """
-Enter the initial percentage of fires. (As a whole number)
-d. Default (3% percent of woods)
-
-r. Random number (between 0% and 100 %)
-""",
-
-    "firefigter_level" : line + """
-Choose the average skill level firefighters:
-
-1. Low
-
-2. Medium
-
-3. High
-    """,
-
-    "iter_num" : line + """
-How many iteration steps would you like?
-""",
-
-    "change_setting" : line + f"""
-Which option would you like to change?
-
-1. Generation Method ({options.get("gen_method")})
-
-2. Initial landscape pattern ({options.get("ini_woods")} %)
-
-3. Firefighter number ({options.get("firefighter_num")})
-
-4. Firefighter skill level ({options.get("firefighter_level")})
-
-5. Iteration steps ({options.get("iter_num")})
-
-Advanced options:
-6. Tree growth rate ({options.get("tree_growth_rate")})
-
-7. Tree burn rate ({options.get("tree_burn_rate")})
-
-8. New random forrest probability ({options.get("new_forrest_probability")})
-
-9. Fire spread rate ({options.get("fire_spread_rate")})
-
-10. Proceed with graph generation.
-
-All options:
-11. All options. Restart the configuration.
-
-"""
-    
-    }
+from menu_strings import line, menu_strings
+from options_utilities import advanced_defaults, read_file, convert_to_int, options_checker
+from configuration_advanced import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
 
 def welcome(options):
+    options = advanced_defaults(options)
     print(menu_strings.get("welcome"))
     input()
 
@@ -119,33 +27,8 @@ def read_options_from_file(options):
         else:
             print("Wrong input, please try agian")
 
-    print()
-    while True:
-        user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
-        if user_input == "":
-            user_input = "options.txt"
-        try:
-            with open(user_input, "r") as file:
-                lines = file.readlines()
-            
-            # Remove comments and strip whitespace
-            lines = [line.split('#')[0].strip() for line in lines]
-
-            # Join the lines back into a single string
-            file_content = ''.join(lines)
-
-            # Now you can evaluate the file content as before
-            options = eval(file_content) 
-            print(f'Options read from file: {options}')
-            break
-
-        except FileNotFoundError:
-            print("File not found, please try agian")
-
-        except SyntaxError:
-            print('File syntax error, use the template "options.txt"')
-
     #Correct and check options
+    options = read_file(options)
     options = convert_to_int(options)
     try:
         options_checker(options)
@@ -154,56 +37,6 @@ def read_options_from_file(options):
         return read_options_from_file(options)
 
     return gen_method(options)
-
-def convert_to_int(options:dict):
-    for key, value in options.items():
-        try:
-            options[key] = int(value)
-        except ValueError:
-            continue  #Do nothing if the value is not an int
-
-    return options
-
-def options_checker(options:dict):
-    """
-    Checks if the options are valid
-
-    Only checks, if the option is defined.
-    """
-    if "gen_method" not in options:
-        print("Generation method not read from file.")
-    elif options.get("gen_method") not in ["read", "random"]:
-        raise ValueError("Wrong value for gen_method")
-    
-    if "ini_woods" not in options:
-        print("Initial woods not read from file.")
-    elif options.get("ini_woods") not in ["default", "random"]:
-        if not isinstance(options.get("ini_woods"), int):
-            raise ValueError("Wrong value for ini_woods")
-        
-    if "ini_fires" not in options:
-        print("Initial fires not read from file.")
-    elif options.get("ini_fires") not in ["default", "random"]:
-        if not isinstance(options.get("ini_fires"), int):
-            raise ValueError("Wrong value for ini_fires")
-        
-    if "firefighter_num" not in options:
-        print("Firefighter number not read from file.")
-    elif not isinstance(options.get("firefighter_num"), int):
-        raise ValueError("Wrong value for firefighter_num")
-    
-    if "firefighter_level" not in options:
-        print("Firefighter level not read from file.")
-    elif not isinstance(options.get("firefighter_level"), int):
-        raise ValueError("Wrong value for firefighter_level")
-    
-    if "iter_num" not in options:
-        print("Iteration steps not read from file.")
-    elif not isinstance(options.get("iter_num"), int): #not needed?
-        raise ValueError("Wrong value for iter_num")
-
-    return True
-
 
 def gen_method(options:dict=dict()):
     if options.get("gen_method"):
@@ -356,54 +189,63 @@ def iter_num(options:dict):
     return config_final(options)
 
 def change_setting(options):
-    print(menu_strings.get("change_setting"))
+    print(menu_strings.get("change_setting")(options))
 
     while True:
-        user_input = input('Enter "1", "2", "3", "4" or "5":')
+        user_input = input('Enter a number: ')
         if user_input == "1":
+            options.update({"gen_method" : None})
             return gen_method(options)
 
         elif user_input == "2":
+            options.update({"ini_woods" : None})
             return ini_woods(options)
 
         elif user_input == "3":
+            options.update({"firefighter_num" : None})
             return firefighter_num(options)
     
         elif user_input == "4":
+            options.update({"firefighter_level" : None})
             return firefighter_level(options)
 
         elif user_input == "5":
+            options.update({"iter_num" : None})
             return iter_num(options)
         
         elif user_input == "6":
+            options = dict()
+            return welcome(options)
+        
+        elif user_input == "7":
+            options.update({"growth_rate" : None, "burn_rate" : None, "new_forrest_probability" : None, "fire_spread_rate" : None})
+            return growth_rate(options)
+        
+        elif user_input == "8":
+            options.update({"growth_rate" : None})
+            return growth_rate(options)
 
+        elif user_input == "9":
+            options.update({"burn_rate" : None})
+            return burn_rate(options)
+        
+        elif user_input == "10":
+            options.update({"new_forrest_probability" : None})
+            return new_forrest_probability(options)
+        
+        elif user_input == "11":
+            options.update({"fire_spread_rate" : None})
+            return fire_spread_rate(options)
+        
+        elif user_input == "12":
+            return config_final(options)
+        
         else:
             print("Wrong input, please try agian")
 
       
 def config_final(options:dict=dict()):
-    print(line + f"""
-Current options:
-
-Generation Method: {options.get("gen_method")}
-Initial woods: {options.get("ini_woods")} %
-Initial fires: {options.get("ini_fires")} %
-Firefighter number: {options.get("firefighter_num")}
-Firefighter skill level: {options.get("firefighter_level")}
-Iteration steps: {options.get("iter_num")}
-
-#Advanced options:
-Tree growth rate: {options.get("tree_growth_rate")}
-Tree burn rate: {options.get("tree_burn_rate")}
-New random forrest probability: {options.get("new_forrest_probability")}
-Fire spread rate: {options.get("fire_spread_rate")}
-
-How would you like to proceed?
-
-1. Proceed with graph generation
-
-2. Change a setting.
-""")
+    print(menu_strings.get("config_final")(options))
     
     while True:
         user_input = input('Enter "1" or "2": ')
@@ -416,7 +258,6 @@ How would you like to proceed?
         elif user_input == "2":
             return change_setting(options)
    
-
 
 if __name__ == "__main__":
     welcome(dict())

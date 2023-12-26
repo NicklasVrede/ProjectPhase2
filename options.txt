@@ -4,7 +4,8 @@
 "firefighter_level" : 1, # 1 (low), 2 (medium) or 3 (high)
 "ini_fires" : 10, # Percentage of fires in forrests
 "iter_num" : 40, # Number of sumulation iterations
-"treegrowth" : 10, # Treestat fixed increase
-"firegrowth" : 20, # Fires effect on Treestat fixed.
-"newforrest" : 100 # Probability of new forrest in permille ie. 50 = 0,5 %
+"growth_rate" : 10, # Treestat fixed increase
+"burn_rate" : 20, # Fires effect on Treestat fixed.
+"new_forrest_probability" : 100, # Probability of new forrest in permille ie. 50 = 0,5 %
+"fire_spread_rate" : 30 # Percentage risk of fire to spread each iterations
 }
