@@ -13,7 +13,7 @@ class LandPatch:
         
     def __repr__(self):
         return f'LandPatch {self.patch_id} with neighbours {self.get_neighbours_ids()}'
-    
+
     def get_neighbours_ids(self):
         return self.graph_info.neighbour_id_register.get(self.patch_id)
     
@@ -42,7 +42,7 @@ class TreePatch(LandPatch):
         super().__init__(patch_id, treestat, burning, graph_info)
         self.growthrate = 10
         self.burnrate = 20
-        self.spread_rate= 30
+        self.spread_rate= 0
 
         if self.burning:
             self.firestat = 10
