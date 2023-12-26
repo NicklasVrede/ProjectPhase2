@@ -3,6 +3,7 @@ Config Module
 """
 import random
 
+options = {} #defined to express f-strings in menu_strings
 line =  "\n"*3 + "-" * 40 + "\n"*3
 menu_strings = {
     "welcome" : line + """
@@ -67,20 +68,33 @@ Choose the average skill level firefighters:
 How many iteration steps would you like?
 """,
 
-    "change_setting" : line + """
+    "change_setting" : line + f"""
 Which option would you like to change?
 
-1. Generation Method
+1. Generation Method ({options.get("gen_method")})
 
-2. Initial landscape pattern
+2. Initial landscape pattern ({options.get("ini_woods")} %)
 
-3. Firefighter number
+3. Firefighter number ({options.get("firefighter_num")})
 
-4. Firefighter skill level
+4. Firefighter skill level ({options.get("firefighter_level")})
 
-5. Iteration steps
+5. Iteration steps ({options.get("iter_num")})
 
-6. All
+Advanced options:
+6. Tree growth rate ({options.get("tree_growth_rate")})
+
+7. Tree burn rate ({options.get("tree_burn_rate")})
+
+8. New random forrest probability ({options.get("new_forrest_probability")})
+
+9. Fire spread rate ({options.get("fire_spread_rate")})
+
+10. Proceed with graph generation.
+
+All options:
+11. All options. Restart the configuration.
+
 """
     
     }
@@ -107,8 +121,8 @@ def read_options_from_file(options):
 
     print()
     while True:
-        user_input = input('Enter the path to the file, or enter "d" to load "options.txt": ')
-        if user_input == "d":
+        user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
+        if user_input == "":
             user_input = "options.txt"
         try:
             with open(user_input, "r") as file:
@@ -360,6 +374,8 @@ def change_setting(options):
 
         elif user_input == "5":
             return iter_num(options)
+        
+        elif user_input == "6":
 
         else:
             print("Wrong input, please try agian")
@@ -375,6 +391,12 @@ Initial fires: {options.get("ini_fires")} %
 Firefighter number: {options.get("firefighter_num")}
 Firefighter skill level: {options.get("firefighter_level")}
 Iteration steps: {options.get("iter_num")}
+
+#Advanced options:
+Tree growth rate: {options.get("tree_growth_rate")}
+Tree burn rate: {options.get("tree_burn_rate")}
+New random forrest probability: {options.get("new_forrest_probability")}
+Fire spread rate: {options.get("fire_spread_rate")}
 
 How would you like to proceed?
 
