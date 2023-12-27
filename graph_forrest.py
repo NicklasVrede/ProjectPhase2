@@ -15,11 +15,11 @@ def main(options: Dict[str, int] = dict()) -> None:
     Following steps are executed:
     1. Initiates the configuration. - options Dict[str, int]
     2. Generates edges and positions. - edges List[Tuple[int, int]], positions Dict[int, Tuple[float, float]
-    3. Initializes patch objects. - patches Dict[int, Union[TreePatch, RockPatch]]
-    4. Initializes neighbour register. - neighbour_id_register Dict[int, List[int]]
-    5. Initializes color map. - color_map Dict[int, int]
-    6. Initializes firefighter objects. - firefighters Dict[int, Firefighter]
-    7. Initializes graph info object. - graph_info GraphInfo
+    3. Initialises patch objects. - patches Dict[int, Union[TreePatch, RockPatch]]
+    4. Initialises neighbour register. - neighbour_id_register Dict[int, List[int]]
+    5. Initialises color map. - color_map Dict[int, int]
+    6. Initialises firefighter objects. - firefighters Dict[int, Firefighter]
+    7. Initialises graph info object. - graph_info GraphInfo
     8. Initiates simulation. 
     """
     #initiate configuration:
@@ -31,19 +31,19 @@ def main(options: Dict[str, int] = dict()) -> None:
     
     edges, positions = generate_edges(options)
 
-    #initialize patch objects:
+    #Initialise patch objects:
     patches = initialize_patches(edges, positions, options)
 
-    #initialize neighbour register:
+    #Initialise neighbour register:
     neighbour_id_register = initialise_neighbours(edges)
     
-    #initialize color map:
+    #Initialise color map:
     color_map = initialise_color_map(patches)
 
-    #initialize firefighter objects:
+    #Initialise firefighter objects:
     firefighters = initialise_firefighters(patches, options)
 
-    #initialize graph info object:
+    #Initialise graph info object:
     graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
     
     #initiate simulation:
@@ -129,7 +129,7 @@ def initiate_simulation(edges, positions, options, graph_info):
     """
     Initiates the simulation.
     """
-    #initialize graph object:
+    #Initialise graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 

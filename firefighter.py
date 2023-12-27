@@ -3,14 +3,26 @@ import time
 
 
 class Firefighter:
-    def __init__(self, id, skill_level, position):
+    """
+    Firefighter class.
+
+    Attributes:
+    id (int): Identifies the Firefighter.
+    power (int): Variable identifying fireextinguishing power.
+    position (int): Variable identifying its position.
+    brain (bool): Variable identifying if the firefighter is smart.
+    graph_info (GraphInfo): Stores information about the graph.
+    path (list): List of patch ids to representing a path.
+    target (object): Target patch object on fire.
+    """
+    def __init__(self, id: int, skill_level: int, position: int):
         self.id = id
         self.position = position  # Identifies the Firefighter's position patch id
         self.brain = False
         self.graph_info = None
-        self.initiate_skill(skill_level)
+        self._initialise_skill(skill_level)
 
-    def initiate_skill(self, skill_level):
+    def _initialise_skill(self, skill_level):
         if skill_level == 1:
             self.power = 25  # Default value
         if skill_level == 2:

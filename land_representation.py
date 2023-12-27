@@ -14,10 +14,10 @@ class LandPatch:
     graph_info (GraphInfo): Stores information about the graph.
 
     """
-    def __init__(self, patch_id, treestat, burning, graph_info=None):
-        self.patch_id = patch_id  # Identifies the LandPatch
-        self.treestat = treestat  # Variable identifying its health status
-        self.burning = burning
+    def __init__(self, patch_id: int, treestat: int, burning: bool, graph_info = None):
+        self.patch_id = patch_id
+        self.treestat = treestat
+        self.burning = burning 
         self.graph_info = graph_info
 
     def get_neighbours_ids(self) -> List[int]:
@@ -64,7 +64,7 @@ class TreePatch(LandPatch):
     burnrate (int): Variable identifying the burn rate of the patch.
     spread_rate (int): Variable identifying the spread rate of the patch.
     """
-    def __init__(self, patch_id, treestat, burning=False, graph_info=None):
+    def __init__(self, patch_id: int, treestat: int, burning: bool =False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
 
         if self.burning:
@@ -191,7 +191,7 @@ class RockPatch(LandPatch):
     burning (bool): Variable identifying if the patch is burning.
     graph_info (GraphInfo): Stores information about the graph.
     """
-    def __init__(self, patch_id, treestat, graph_info=None):
+    def __init__(self, patch_id: int, treestat: int, graph_info=None):
         super().__init__(patch_id, treestat, False, graph_info) #burning = False
 
         if self.graph_info:
@@ -206,16 +206,15 @@ class RockPatch(LandPatch):
     def _update_color(self) -> None:
         """
         Removes the color from color_map.
-        Note: This must only run once, when the patch is created.
+        Note: This only run once, when the patch is created.
         """
         del self.graph_info.color_map[self.patch_id]
     
     def get_color(self) -> None:
         """
-        Returns a error, since RockPatch has no color.
+        Raises a ValueError, since RockPatch has no value in color_map.
         """
         raise ValueError('RockPatch has no color')
-    
     
     def mutate(self) -> 'TreePatch':
         """
