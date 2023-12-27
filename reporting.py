@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def reporting(history, options):
+def reporting(history):
     print("Reporting")
     iterations = list(history.keys())
     tree_populations = [history[i]["Tree_population"] for i in iterations]

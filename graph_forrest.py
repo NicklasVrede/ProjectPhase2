@@ -3,6 +3,7 @@ from configuration import welcome
 from initializer import generate_edges, initialize_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
 from simulation import Simulation
+from reporting import reporting
 import time
 
 def main(options: Dict[str, int] = dict()) -> None:
@@ -46,8 +47,27 @@ def main(options: Dict[str, int] = dict()) -> None:
     #Initialise graph info object:
     graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
     
-    #initiate simulation:
-    return initiate_simulation(edges, positions, options, graph_info)
+    #Initialise graph object:
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
+    graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
+
+    
+    #Initiate simulation
+    current_simulation = Simulation(graph_info)
+    for _ in range(options.get("iter_num")):
+        current_simulation.evolve() #Evolve the simulation
+        graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
+        graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
+
+        sleep_time = 10 / options.get("iter_num")
+        time.sleep(sleep_time)
+
+    print("Simulation finished.")
+
+    #Initiate reporting
+    reporting(current_simulation.get_history())
+    
+    return main()
 
 
 class GraphInfo:
@@ -125,35 +145,6 @@ class GraphInfo:
         #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())]
 
 
-def initiate_simulation(edges, positions, options, graph_info):
-    """
-    Initiates the simulation.
-
-    Parameters:
-    edges (List[Tuple[int, int]]): A list of edges.
-    positions (Dict[int, Tuple[float, float]]): A dictionary of patch IDs and their positions.
-    options (Dict[str, int]): A dictionary of options.
-    graph_info (GraphInfo): Stores information about the graph.
-    """
-    #Initialise graph object:
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
-    graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
-
-    
-    #Initiate simulation
-    current_simulation = Simulation(graph_info, options)
-    for _ in range(options.get("iter_num")):
-        current_simulation.evolve() #Evolve the simulation
-        graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
-        graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
-
-        sleep_time = 10 / options.get("iter_num")
-        time.sleep(sleep_time)
-
-    print("Simulation finished.")
-
-    graph_object.wait_close()
-    return None
 
 
 #Run the program

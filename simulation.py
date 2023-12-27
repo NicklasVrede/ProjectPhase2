@@ -9,7 +9,7 @@ class Simulation:
     graphinfo (GraphInfo): Stores information about the graph.
     history (Dict[int, Dict[str, int]]): A dictionary of simulation history.
     """
-    def __init__(self, graphinfo: 'GraphInfo', options: Dict[str, int] = dict()):
+    def __init__(self, graphinfo: 'GraphInfo'):
         self.graphinfo = graphinfo
         self.history = {}  # Store simulation history
         # Initialize other simulation-specific attributes
