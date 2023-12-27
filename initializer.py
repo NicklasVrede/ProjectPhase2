@@ -43,11 +43,12 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
         print("Specify the minimal number of sites for the graph (Min. 6). Or type 'back' to go back.")
         while True:
             try:
+                user_input = input('Enter a number or "back": ')
                 if user_input == "back":
                     from configuration import main
                     return main(options)
-
-                user_input = int(input("Enter a number: "))
+                
+                user_input = int(user_input)
                 if user_input >= 6:
                     break
                 else:
@@ -55,7 +56,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     continue
                 
             except ValueError:
-                print("Input must be a number")
+                print("Invalid input, please try again.")
 
         
         edges, positions = graph_helper.voronoi_to_edges(user_input)

@@ -39,13 +39,15 @@ class Simulation:
                                             "Fire_population" : Fire_population}
         
         # Update the simulation for a single iteration
-        self.activate_firefighters()
         for i in patches:
             patch = patches.get(i)
-            if patch.treestat == 0:  
+            if patch.treestat == 0:
+                print(f'{patch} is a rock.?')  
                 patch.random_forrest()
             else:
                 patch.evolve_tree()
+
+        self.activate_firefighters()
         
     def get_history(self):
         """

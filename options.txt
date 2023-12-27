@@ -2,7 +2,7 @@
 "ini_woods" : 100, # Percentage of forrests in the graph, rest = rocks
 "firefighter_num" : 8, # Number of firefighters
 "firefighter_level" : 3, # 1 (low), 2 (medium) or 3 (high)
-"ini_fires" : 10, # Percentage of fires in forrests
+"ini_fires" : 20, # Percentage of fires in forrests
 "iter_num" : 40, # Number of sumulation iterations
 "growth_rate" : 10, # Treestat fixed increase
 "burn_rate" : 20, # Fires effect on Treestat fixed.
