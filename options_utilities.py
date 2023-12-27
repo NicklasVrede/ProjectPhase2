@@ -31,7 +31,6 @@ def read_options(options: Dict[int, str]) -> Dict[int, str]:
 
             # Now you can evaluate the file content as before
             options.update(eval(file_content))
-            print(f'Options read from file: {options}')
             break
 
         except FileNotFoundError:
