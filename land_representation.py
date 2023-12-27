@@ -216,6 +216,16 @@ class RockPatch(LandPatch):
         """
         raise ValueError('RockPatch has no color')
     
+    def random_forrest(self) -> TreePatch:
+        """
+        Calculates probability of new forrest and mutates the patch if the probability is met.
+        """
+        probability = self.graphinfo.options.get("new_forrest_probability")  #move to self?
+        random_num = random.randint(0, 10000)  #Making the probability act as permille.
+        if random_num < probability:  #Newforrest
+            print(f'Random forrest appeared at {self}!') #For testing
+            self.mutate()
+    
     def mutate(self) -> 'TreePatch':
         """
         Mutates the patch into a TreePatch or RockPatch.

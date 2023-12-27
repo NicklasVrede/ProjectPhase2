@@ -36,26 +36,19 @@ class Simulation:
             else: 
                 Tree_population += 1
 
-        self.history[len(self.history)] = {"Tree_population" : Tree_population,   #len scales bad, but we dont care
+        self.history[len(self.history)] = {"Tree_population" : Tree_population,
                                             "Rock_population" : Rock_potulation,
                                             "Fire_population" : Fire_population}
+        
         # Update the simulation for a single iteration
         self.activate_firefighters()
         for i in patches:
             patch = patches.get(i)
-            if isinstance(patch, RockPatch):
-                probability = self.graphinfo.options.get("new_forrest_probability")  #Newforrest
-                random_num = random.randint(0, 10000)  #Making the probability act as permille.
-                if random_num < probability:  #Newforrest
-                    print(f'{random_num} < {probability} = {random_num < probability}')
-                    patch.mutate()
+            if isinstance(patch, RockPatch):   #More this to Rocks?
+                patch.random_forrest()
             else:
-                if patch.burning:
-                    patch.spread_fire()
-                    
+                patch.spread_fire()
                 patch.evolve_tree()
-
-  
         
     def get_history(self):
         """
@@ -70,12 +63,4 @@ class Simulation:
         for fighter in list(self.graphinfo.firefighters.values()):
             fighter.move()
             
-    def spread_fire(self):
-        """
-        Spreads fire to neighbouring patches.
-        """
-        patches = self.graphinfo.get_patches()
-        for patch in patches.values():
-            if patch.treestat < 0:
-                patch.spread_fire()
 
