@@ -105,4 +105,4 @@ if __name__ == "__main__":
             "fire_spread_rate" : 30, #Probability of fire spreading
             "new_forrest_probability" : 100 #Probability of new forrest in permille ie. 50 = 0,5 %
             }
-    main(options)
+    main()
