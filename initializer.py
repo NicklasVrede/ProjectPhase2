@@ -25,7 +25,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     return main(options)
                 
                 edges = read_edges_from_file(user_input)
-                positions = generate_positions(edges)
+                positions = None
 
                 if len(edges) == 0:
                     print("Could not generate edges from file, please try an other file.")
@@ -40,11 +40,15 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 print("File not found. Please enter a valid file path.")
 
     elif options.get("gen_method") == "random":
-        print("Specify the minimal number of sites for the graph.")
+        print("Specify the minimal number of sites for the graph (Min. 6). Or type 'back' to go back.")
         while True:
             try:
+                if user_input == "back":
+                    from configuration import main
+                    return main(options)
+
                 user_input = int(input("Enter a number: "))
-                if user_input > 5:
+                if user_input >= 6:
                     break
                 else:
                     print("Minimum number of sites must be greater than 5")
@@ -88,28 +92,7 @@ def read_edges_from_file(file_path: str) -> List[Tuple[int, int]]:
 
     return edges
 
-def generate_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, float]]:
-    """
-    Generates positions for each vertex in the given edges.
-
-    Parameters:
-    edges (List[Tuple[int, int]]): A list of edges.
-
-    Returns:
-    positions - Dict[int, Tuple[float, float]]: A dictionary mapping each vertex to a position. Each position is a tuple of two floats.
-    """
-    edges_lists = [list(edge) for edge in edges]
-    
-    all_nodes = list(set.union(*[set(edge) for edge in edges_lists])) #Merges a new set of nodes
-
-    scaler = 1 / (len(all_nodes) - 1)
-
-    positions = [(scaler*node[0], scaler*node[1]) for node in edges_lists]
-
-    return positions
-
-
-def initialize_patches(edges: List[Tuple[int, int]], positions: Dict[int, Tuple[float, float]], options: Dict[str, Union[str, int]]) -> Dict[int, Union[TreePatch, RockPatch]]:
+def initialize_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
     """
     Initializes patches based on the given edges, positions, and options.
 
@@ -121,7 +104,10 @@ def initialize_patches(edges: List[Tuple[int, int]], positions: Dict[int, Tuple[
     Returns:
     patches - Dict[int, Union[TreePatch, RockPatch]]: A dictionary of patch objects.
     """
-    all_nodes = list(positions.keys()) #Merges a new set of nodes
+    if positions is not None:
+        all_nodes = list(positions.keys()) #Merges a new set of nodes
+    else:
+        all_nodes = set.union(*[set(edge) for edge in edges])
 
     #Initialize ration of woods and fires
     wood_ratio = options.get("ini_woods") * 0.01
