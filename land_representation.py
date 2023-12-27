@@ -216,6 +216,12 @@ class RockPatch(LandPatch):
         """
         raise ValueError('RockPatch has no color')
     
+    def spread_fire(self) -> None:
+        """
+        Raises a ValueError, since RockPatch cannot spread fire.
+        """
+        raise ValueError('RockPatch cannot spread fire')
+    
     def random_forrest(self) -> TreePatch:
         """
         Calculates probability of new forrest and mutates the patch if the probability is met.

@@ -1,5 +1,4 @@
 from typing import Dict
-from graph_forrest import GraphInfo
 from land_representation import RockPatch
 import random
 # to do: fix entire module to fit rest.
@@ -11,7 +10,7 @@ class Simulation:
     graphinfo (GraphInfo): Stores information about the graph.
     history (Dict[int, Dict[str, int]]): A dictionary of simulation history.
     """
-    def __init__(self, graphinfo: GraphInfo, options: Dict[str, int] = dict()):
+    def __init__(self, graphinfo: 'GraphInfo', options: Dict[str, int] = dict()):
         self.graphinfo = graphinfo
         self.history = {}  # Store simulation history
         # Initialize other simulation-specific attributes

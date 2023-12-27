@@ -7,20 +7,21 @@ Which option would you like to change?
 
 1. Generation Method ({options.get("gen_method")})
 2. Initial landscape pattern ({options.get("ini_woods")} %)
-3. Firefighter number ({options.get("firefighter_num")})
-4. Firefighter skill level ({options.get("firefighter_level")})
-5. Iteration steps ({options.get("iter_num")})
-6. All basic options. Restart the configuration.
+3. Initial amount of fires ({options.get("ini_fires")} %)
+4. Firefighter number ({options.get("firefighter_num")})
+5. Firefighter skill level ({options.get("firefighter_level")})
+6. Iteration steps ({options.get("iter_num")})
+7. All basic options. Restart the configuration.
 
 Advanced options:
-7. Set all advanced options.
-8. Tree growth (+{options.get("growth_rate")})
-9. Burn rate (-{options.get("burn_rate")})
-10. New random forrest probability ({options.get("new_forrest_probability")/100} %)
-11. Fire spread rate ({options.get("fire_spread_rate")} %)
+8. Set all advanced options.
+9. Tree growth (+{options.get("growth_rate")})
+10. Burn rate (-{options.get("burn_rate")})
+11. New random forrest probability ({options.get("new_forrest_probability")/100} %)
+12. Fire spread rate ({options.get("fire_spread_rate")} %)
 
 Proceed:
-12. Proceed with graph generation
+13. Proceed with graph generation
 
 """
 

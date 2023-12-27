@@ -200,44 +200,48 @@ def change_setting(options):
         elif user_input == "2":
             options.update({"ini_woods" : None})
             return ini_woods(options)
-
+        
         elif user_input == "3":
+            options.update({"ini_fires" : None})
+            return ini_fires(options)
+
+        elif user_input == "4":
             options.update({"firefighter_num" : None})
             return firefighter_num(options)
     
-        elif user_input == "4":
+        elif user_input == "5":
             options.update({"firefighter_level" : None})
             return firefighter_level(options)
 
-        elif user_input == "5":
+        elif user_input == "6":
             options.update({"iter_num" : None})
             return iter_num(options)
         
-        elif user_input == "6":
+        elif user_input == "7":
             options = dict()
             return welcome(options)
         
-        elif user_input == "7":
+        elif user_input == "8":
             options.update({"growth_rate" : None, "burn_rate" : None, "new_forrest_probability" : None, "fire_spread_rate" : None})
             return growth_rate(options)
         
-        elif user_input == "8":
+        elif user_input == "9":
             options.update({"growth_rate" : None})
             return growth_rate(options)
 
-        elif user_input == "9":
+        elif user_input == "10":
             options.update({"burn_rate" : None})
             return burn_rate(options)
         
-        elif user_input == "10":
+        elif user_input == "11":
             options.update({"new_forrest_probability" : None})
             return new_forrest_probability(options)
         
-        elif user_input == "11":
+        elif user_input == "12":
             options.update({"fire_spread_rate" : None})
             return fire_spread_rate(options)
         
-        elif user_input == "12":
+        elif user_input == "13":
             return config_final(options)
         
         else:
