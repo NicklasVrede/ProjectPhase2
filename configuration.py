@@ -3,7 +3,7 @@ Config Module
 """
 import random
 from menu_strings import line, menu_strings
-from options_utilities import advanced_defaults, read_file, convert_to_int, options_checker
+from options_utilities import advanced_defaults, read_options, convert_to_int, options_checker
 from configuration_advanced import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
 
 def welcome(options):
@@ -28,7 +28,7 @@ def read_options_from_file(options):
             print("Wrong input, please try agian")
 
     #Correct and check options
-    options = read_file(options)
+    options = read_options(options)
     options = convert_to_int(options)
     try:
         options_checker(options)

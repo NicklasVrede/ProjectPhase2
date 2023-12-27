@@ -1,3 +1,5 @@
+from typing import List, Dict, Tuple, Set, Union
+from land_representation import TreePatch, RockPatch
 import random
 import time
 
@@ -23,6 +25,9 @@ class Firefighter:
         self._initialise_skill(skill_level)
 
     def _initialise_skill(self, skill_level):
+        """
+        Initialises the skill level of the firefighter.
+        """
         if skill_level == 1:
             self.power = 25  # Default value
         if skill_level == 2:
@@ -33,26 +38,41 @@ class Firefighter:
             self.path = []
 
     def __repr__(self) -> str:
+        """
+        Returns the representation of a firefighter.    
+        """
         return f"Firefighter {self.id} at {self.get_pos_object()}, with power: {self.power}"
     
-    def get_pos_object(self):
+    def get_pos_object(self) -> TreePatch:
+        """
+        Returns the patch object of the firefighter's position.
+        """
         return self.graph_info.patches.get(self.position)
     
-    def get_neighbours(self):
+    def get_neighbours(self) -> List[Union[TreePatch, RockPatch]]:
+        """
+        Returns a list of neighbouring patches.
+        """
         neighbours_ids = self.get_pos_object().get_neighbours_ids()
         res = []
         for i in neighbours_ids:
             res.append(self.graph_info.patches.get(i))
         return res
     
-    def extinguish_fire(self, patch):
+    def extinguish_fire(self, patch: Union[TreePatch, RockPatch]):
+        """
+        Extinguishes fire at a patch.
+        """
         patch.firestat -= self.power
         if patch.firestat < 0:
             patch.burning = False
             patch.update_color()
-            return print(f'Firefighter {self.id} extinguished fire at {patch}')
+            print(f'Firefighter {self.id} extinguished fire at {patch}')
 
     def move(self):
+        """
+        Moves the firefighter based on the brain variable.
+        """
         position = self.get_pos_object()
         if position.burning:
             return self.extinguish_fire(position) #If firefighter is at fire, he will fight the fire and not move.
@@ -76,7 +96,13 @@ class Firefighter:
         self.position = new_position.patch_id
         self.extinguish_fire(new_position)  #fight fire at new position
 
-    def smart_move(self, position):
+    def smart_move(self, position: Union[TreePatch, RockPatch]):
+        """
+        Intelligent move function for firefighters with brain.
+
+        Parameters:
+        position (object): patch object for the current position of the firefighter.
+        """
         all_fires = []
         for patch in list(self.graph_info.patches.values()):
             if patch.burning:
@@ -118,13 +144,13 @@ class Firefighter:
         self.target = target
         print(f'Firefighter at {position} moving to {closest_fire} with path {self.path}')
 
-    def find_least_steps(self, position, target):
+    def find_least_steps(self, position: Union[TreePatch, RockPatch], target: TreePatch):
         """
         Returns the least steps to a target patch
 
         Parameters:
-        patch (object): patch object
-        target_id (int): target patch id
+        position (object): patch object for the current position of the firefighter.
+        target (object): patch object for the target patch.
 
         Returns:
         int: least steps to target patch
@@ -151,16 +177,16 @@ class Firefighter:
         return steps
     
 
-    def find_path(self, closest_fire, distance):
+    def find_path(self, closest_fire:TreePatch, distance:int):
         """
-        Returns the shortest path to a target patch
+        Returns a short path to a target patch
 
         Parameters:
-        patch (object): patch object
-        target_id (int): target patch id
+        closest_fire (object): the closest fire patch object.
+        distance (int): the max distance for the path.
 
         Returns:
-        path: least steps to target patch
+        path (List[int]): least steps to target patch
         """
         dead_ends = {} #dict with dead ends as values and steps as keys.
         for i in range(1,distance+2):

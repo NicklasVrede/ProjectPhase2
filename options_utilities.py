@@ -1,8 +1,18 @@
 #options_utilities.py
+from typing import Dict
 from menu_strings import menu_strings
 from configuration_advanced import growth_rate
 
-def read_file(options:dict):
+def read_options(options: Dict[int, str]) -> Dict[int, str]:
+    """
+    Prompts the user to enter the path to a file, and reads the options from the file.
+
+    Parameters:
+    options (Dict[int, str]): A dictionary of options.
+
+    Returns:
+    options (Dict[int, str]): A dictionary of options.
+    """
     print()
     while True:
         user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
@@ -31,7 +41,16 @@ def read_file(options:dict):
 
     return options
 
-def convert_to_int(options:dict):
+def convert_to_int(options: Dict[int, str]) -> Dict[int, str]:
+    """
+    Converts the values of the options to int, if possible.
+
+    Parameters:
+    options (Dict[int, str]): A dictionary of options.
+
+    Returns:
+    options (Dict[int, str]): A dictionary of options.
+    """
     for key, value in options.items():
         try:
             options[key] = int(value)
@@ -40,11 +59,16 @@ def convert_to_int(options:dict):
 
     return options
 
-def options_checker(options:dict):
+def options_checker(options: Dict[int, str]) -> bool:
     """
     Checks if the options are valid
-
     Only checks, if the option is defined.
+
+    Parameters:
+    options (Dict[int, str]): A dictionary of options.
+
+    Returns:
+    bool: True if all options are valid, otherwise raises ValueError.
     """
     if "gen_method" not in options:
         print("Generation method not read from file.")
@@ -80,9 +104,15 @@ def options_checker(options:dict):
 
     return True
 
-def advanced_defaults(options:dict):
+def advanced_defaults(options: Dict[int, str]) -> Dict[int, str]:
     """
-    Sets the advanced options to default values, if not set.
+    Sets default values for the advanced options.
+
+    Parameters:
+    options (Dict[int, str]): A dictionary of options.
+
+    Returns:
+    options (Dict[int, str]): A dictionary of options.
     """
     if "growth_rate" not in options:
         options.update({"growth_rate" : 10})

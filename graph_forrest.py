@@ -128,6 +128,12 @@ class GraphInfo:
 def initiate_simulation(edges, positions, options, graph_info):
     """
     Initiates the simulation.
+
+    Parameters:
+    edges (List[Tuple[int, int]]): A list of edges.
+    positions (Dict[int, Tuple[float, float]]): A dictionary of patch IDs and their positions.
+    options (Dict[str, int]): A dictionary of options.
+    graph_info (GraphInfo): Stores information about the graph.
     """
     #Initialise graph object:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
@@ -149,6 +155,7 @@ def initiate_simulation(edges, positions, options, graph_info):
     return None
 
 
+#Run the program
 if __name__ == "__main__":
     options = {"gen_method" : "random",
             "ini_woods" : 100, #Percentage of forrests in the graph, rest = rocks
