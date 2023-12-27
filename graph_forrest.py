@@ -134,7 +134,7 @@ def initiate_simulation(edges, positions, options, graph_info):
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
     
-    #Initialize simulation:
+    #Initiate simulation
     current_simulation = Simulation(graph_info, options)
     for _ in range(options.get("iter_num")):
         current_simulation.evolve() #Evolve the simulation
