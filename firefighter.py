@@ -122,7 +122,7 @@ class Firefighter:
             
             if self.path:  #More if path is not reset
                 self.position = self.path.pop(0)
-                return print(f'Firefighter is moving towars a fire at {self.target}')
+                return None #important we dont continue.
 
 
         #find closest fire:

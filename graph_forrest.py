@@ -147,7 +147,8 @@ def initiate_simulation(edges, positions, options, graph_info):
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
 
-        time.sleep(1)
+        sleep_time = 10 / options.get("iter_num")
+        time.sleep(sleep_time)
 
     print("Simulation finished.")
 
@@ -159,7 +160,7 @@ def initiate_simulation(edges, positions, options, graph_info):
 if __name__ == "__main__":
     options = {"gen_method" : "random",
             "ini_woods" : 80, #Percentage of forrests in the graph, rest = rocks
-            "firefighter_num" : 2, #Number of firefighters
+            "firefighter_num" : 10, #Number of firefighters
             "firefighter_level" : 3, #low, medium, high
             "ini_fires" : 10, #Percentage of fires in forrests
             "iter_num" : 40, #Number of sumulation iterations
