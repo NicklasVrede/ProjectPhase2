@@ -109,18 +109,18 @@ class Firefighter:
                 all_fires.append(patch)
         
         if not all_fires:
-            return print(f'Firefighter {self.id} could not find any fire')
+            return None #If no fire, firefighter stand still
         
         #check if any fires are closer than target:
         if self.path and self.target.burning:
             for fire in all_fires:
                 distance = self.find_least_steps(position, fire)
                 if distance < len(self.path):
-                    self.path = []
+                    self.path = []  #Reset path
                     print(f'Firefighter {self.id} found closer fire at {fire} and reset path')
                     break
             
-            if self.path:
+            if self.path:  #More if path is not reset
                 self.position = self.path.pop(0)
                 return print(f'Firefighter is moving towars a fire at {self.target}')
 

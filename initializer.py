@@ -44,7 +44,11 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
         while True:
             try:
                 user_input = int(input("Enter a number: "))
-                break
+                if user_input > 5:
+                    break
+                else:
+                    print("Minimum number of sites must be greater than 5")
+                    continue
                 
             except ValueError:
                 print("Input must be a number")
