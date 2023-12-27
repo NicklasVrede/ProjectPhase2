@@ -94,7 +94,6 @@ def generate_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, f
     Returns:
     positions - Dict[int, Tuple[float, float]]: A dictionary mapping each vertex to a position. Each position is a tuple of two floats.
     """
-    print(f'edges = {edges}')
     edges_lists = [list(edge) for edge in edges]
     
     all_nodes = list(set.union(*[set(edge) for edge in edges_lists])) #Merges a new set of nodes
@@ -169,7 +168,6 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
     """
     res = {}
-    print(f'firefighter_num = {options.get("firefighter_num")}')
     for i in range(1, options.get("firefighter_num") + 1):
         random_id = random.choice(list(patches.keys()))
         level = options.get("firefighter_level")
