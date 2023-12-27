@@ -116,7 +116,6 @@ class TreePatch(LandPatch):
             for neighbour in neighbours:
                 if not neighbour.burning and neighbour.treestat > 0:
                     if random.randint(0, 100) < self.spread_rate:  #30 by defualt
-                        print(f'Fire spread from {self} to {neighbour}')
                         neighbour.ignite()
 
     def evolve_firestat(self) -> None:
