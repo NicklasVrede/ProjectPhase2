@@ -1,7 +1,6 @@
 from typing import Dict
 from land_representation import RockPatch
-import random
-# to do: fix entire module to fit rest.
+
 class Simulation:
     """
     Simulation class.
@@ -43,10 +42,9 @@ class Simulation:
         self.activate_firefighters()
         for i in patches:
             patch = patches.get(i)
-            if isinstance(patch, RockPatch):   #More this to Rocks?
+            if patch.treestat == 0:  
                 patch.random_forrest()
             else:
-                patch.spread_fire()
                 patch.evolve_tree()
         
     def get_history(self):

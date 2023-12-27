@@ -141,6 +141,8 @@ class TreePatch(LandPatch):
             self.treestat -= self.burnrate
             if self.treestat < 0:
                 self.mutate()
+            else:
+                self.spread_fire()
 
         else:
             self.treestat += self.growthrate
