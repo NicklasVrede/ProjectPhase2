@@ -217,7 +217,7 @@ class RockPatch(LandPatch):
         raise ValueError('RockPatch has no color')
     
     
-    def mutate(self) -> Union['TreePatch', 'RockPatch']:
+    def mutate(self) -> 'TreePatch':
         """
         Mutates the patch into a TreePatch or RockPatch.
         """
