@@ -51,7 +51,7 @@ def main(options: Dict[str, int] = dict()) -> None:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
-    
+
     #Initiate simulation
     current_simulation = Simulation(graph_info)
     for _ in range(options.get("iter_num")):

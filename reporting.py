@@ -1,6 +1,12 @@
 import matplotlib.pyplot as plt
 
 def reporting(history):
+    """
+    Displays a plot of the population over iterations.
+
+    Parameters:
+    history (Dict[int, Dict[str, int]]): A dictionary of simulation history.
+    """
     print("Reporting")
     iterations = list(history.keys())
     tree_populations = [history[i]["Tree_population"] for i in iterations]
