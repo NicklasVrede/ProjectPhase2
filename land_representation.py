@@ -4,13 +4,21 @@ import random
 # land_representation.py
 
 class LandPatch:
+    """
+    Base class for patches, TreePatch and RockPatch.
+
+    Attributes:
+    patch_id (int): Identifies the LandPatch.
+    treestat (int): Variable identifying its health status.
+    burning (bool): Variable identifying if the patch is burning.
+    graph_info (GraphInfo): Stores information about the graph.
+
+    """
     def __init__(self, patch_id, treestat, burning, graph_info=None):
         self.patch_id = patch_id  # Identifies the LandPatch
         self.treestat = treestat  # Variable identifying its health status
         self.burning = burning
-        self.firefighters = {}
         self.graph_info = graph_info
-
 
     def get_neighbours_ids(self) -> List[int]:
         """
@@ -42,6 +50,20 @@ class LandPatch:
         raise NotImplementedError
 
 class TreePatch(LandPatch):
+    """
+    Class for patches with trees.
+    Inherits from LandPatch.
+
+    Attributes:
+    patch_id (int): Identifies the LandPatch.
+    treestat (int): Variable identifying its health status.
+    burning (bool): Variable identifying if the patch is burning.
+    firestat (int): Variable identifying the fire status.
+    graph_info (GraphInfo): Stores information about the graph.
+    growthrate (int): Variable identifying the growth rate of the patch.
+    burnrate (int): Variable identifying the burn rate of the patch.
+    spread_rate (int): Variable identifying the spread rate of the patch.
+    """
     def __init__(self, patch_id, treestat, burning=False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
 
@@ -159,12 +181,21 @@ class TreePatch(LandPatch):
         return new_patch
     
 class RockPatch(LandPatch):
-    def __init__(self, patch_id, treestat, forrest_prob=1, graph_info=None):
-        super().__init__(patch_id, treestat, False, graph_info)
-        self.forrest_prob = forrest_prob
+    """
+    Class for stone patches.
+    Inherits from LandPatch.
+
+    Attributes:
+    patch_id (int): Identifies the LandPatch.
+    treestat (int): Variable identifying its health status.
+    burning (bool): Variable identifying if the patch is burning.
+    graph_info (GraphInfo): Stores information about the graph.
+    """
+    def __init__(self, patch_id, treestat, graph_info=None):
+        super().__init__(patch_id, treestat, False, graph_info) #burning = False
 
         if self.graph_info:
-            self.update_color()
+            self._update_color()
         
     def __repr__(self) -> str:
         """
@@ -172,18 +203,19 @@ class RockPatch(LandPatch):
         """
         return f"RockPatch {self.patch_id}"
     
-    def get_color(self) -> ValueError:
-        """
-        Returns a error, since RockPatch has no color.
-        """
-        return ValueError('RockPatch has no color')
-    
-    def update_color(self) -> None:
+    def _update_color(self) -> None:
         """
         Removes the color from color_map.
         Note: This must only run once, when the patch is created.
         """
         del self.graph_info.color_map[self.patch_id]
+    
+    def get_color(self) -> None:
+        """
+        Returns a error, since RockPatch has no color.
+        """
+        raise ValueError('RockPatch has no color')
+    
     
     def mutate(self) -> Union['TreePatch', 'RockPatch']:
         """
