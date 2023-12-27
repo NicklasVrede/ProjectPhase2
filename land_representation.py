@@ -64,7 +64,7 @@ class TreePatch(LandPatch):
     burnrate (int): Variable identifying the burn rate of the patch.
     spread_rate (int): Variable identifying the spread rate of the patch.
     """
-    def __init__(self, patch_id: int, treestat: int, burning: bool =False, graph_info=None):
+    def __init__(self, patch_id: int, treestat: int, burning: bool=False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
 
         if self.burning:
@@ -176,7 +176,7 @@ class TreePatch(LandPatch):
         Mutates the patch into a RockPatch.
         """
         self.burning = False #for firefigthers functionallity, since they store target patches
-        new_patch = RockPatch(self.patch_id, 0, self.get_neighbours(), graph_info=self.graph_info)
+        new_patch = RockPatch(self.patch_id, 0, graph_info=self.graph_info)
         self.graph_info.update_patch(new_patch)
         return new_patch
     
@@ -236,7 +236,7 @@ class RockPatch(LandPatch):
         """
         Mutates the patch into a TreePatch or RockPatch.
         """
-        new_patch = TreePatch(self.patch_id, 40, self.get_neighbours, graph_info=self.graph_info)
+        new_patch = TreePatch(self.patch_id, 40, graph_info=self.graph_info)
         self.graph_info.update_patch(new_patch)
 
         return new_patch

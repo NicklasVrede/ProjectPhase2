@@ -158,7 +158,7 @@ def initiate_simulation(edges, positions, options, graph_info):
 #Run the program
 if __name__ == "__main__":
     options = {"gen_method" : "random",
-            "ini_woods" : 100, #Percentage of forrests in the graph, rest = rocks
+            "ini_woods" : 80, #Percentage of forrests in the graph, rest = rocks
             "firefighter_num" : 2, #Number of firefighters
             "firefighter_level" : 3, #low, medium, high
             "ini_fires" : 10, #Percentage of fires in forrests

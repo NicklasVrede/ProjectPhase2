@@ -14,6 +14,7 @@ def read_options(options: Dict[int, str]) -> Dict[int, str]:
     options (Dict[int, str]): A dictionary of options.
     """
     print()
+    print("Please note, that the option file is case-sentitive.")
     while True:
         user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
         if user_input == "":
