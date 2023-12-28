@@ -19,6 +19,7 @@ def read_options(options: Dict[int, str]) -> Dict[int, str]:
         user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
         if user_input == "":
             user_input = "options.txt"
+            print(f'user_input: {user_input}')
         try:
             with open(user_input, "r") as file:
                 lines = file.readlines()
@@ -89,9 +90,18 @@ def options_validater(options: Dict[int, str]) -> bool:
         
     if "firefighter_num" not in options:
         print("Firefighter number not read from file.")
-    elif not isinstance(options.get("firefighter_num"), int):
-        raise ValueError("Wrong value for firefighter_num")
-    
+    else:
+        if isinstance(options.get("firefighter_num"), str): #if str
+            num = options.get("firefighter_num")
+            num = num.split("%")[0]
+            try:
+                num = int(num)
+            except ValueError:
+                raise ValueError("Wrong value for firefighter_num")
+        else:
+            if not isinstance(options.get("firefighter_num"), int): #if not str check if int
+                raise ValueError("Wrong value for firefighter_num")
+
     if "firefighter_level" not in options:
         print("Firefighter level not read from file.")
     elif not isinstance(options.get("firefighter_level"), int):

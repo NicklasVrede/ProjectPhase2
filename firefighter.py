@@ -67,7 +67,6 @@ class Firefighter:
         if patch.firestat < 0:
             patch.burning = False
             patch.update_color()
-            print(f'Firefighter {self.id} extinguished fire at {patch}')
 
     def move(self):
         """
