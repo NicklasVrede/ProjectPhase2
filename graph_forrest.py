@@ -95,7 +95,7 @@ class GraphInfo:
         self.options = options #dict of options
         self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
         self.neighbour_id_register = neighbour_id_register #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
-        self.neighbour_register = {} #Not used yet.
+        self.neighbour_register = {} #Not implemented.
         self.color_map =  color_map
         self.firefighters =  firefighters
         self._initialise_links()
