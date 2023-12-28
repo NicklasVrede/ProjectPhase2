@@ -43,10 +43,15 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
         print("Specify the minimal number of sites for the graph (Min. 4). Or type 'back' to go back.")
         while True:
             try:
-                user_input = input('Enter a number or "back": ')
+                user_input = input('Enter a number, "r" or "back": ')
                 if user_input == "back":
                     from graph_forrest import main
                     return main(options)
+                
+                if user_input == "r":
+                    user_input = random.randint(12, 100)
+                    print(f'Randomly generated {user_input} sites.')
+                    break
                 
                 user_input = int(user_input)
                 if user_input >= 4:

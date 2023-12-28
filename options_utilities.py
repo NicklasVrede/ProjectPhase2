@@ -70,6 +70,8 @@ def options_validater(options: Dict[int, str]) -> bool:
     Returns:
     bool: True if all options are valid, otherwise raises ValueError.
     """
+    
+
     if "gen_method" not in options:
         print("Generation method not read from file.")
     elif options.get("gen_method") not in ["read", "random"]:
