@@ -1,6 +1,6 @@
 {"gen_method" : "random", #Generation method for patches. "random" or "read"
 "ini_woods" : 100, # Percentage of forrests in the graph, rest = rocks
-"firefighter_num" : "20%", # Number of firefighters
+"firefighter_num" : "20%", # Number of firefighters a percentage have to be in quotation marks like "20%"
 "firefighter_level" : 3, # 1 (low), 2 (medium) or 3 (high)
 "ini_fires" : 20, # Percentage of fires in forrests
 "iter_num" : 40, # Number of sumulation iterations

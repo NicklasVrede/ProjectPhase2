@@ -81,6 +81,8 @@ def options_validater(options: Dict[int, str]) -> bool:
     elif options.get("ini_woods") not in ["default", "random"]:
         if not isinstance(options.get("ini_woods"), int):
             raise ValueError("Wrong value for ini_woods")
+        if options.get("ini_woods") < 0 or options.get("ini_woods") > 100:
+            raise ValueError("Value for ini_woods must be between 0 and 100")
         
     if "ini_fires" not in options:
         print("Initial fires not read from file.")
