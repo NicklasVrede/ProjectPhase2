@@ -88,6 +88,9 @@ def options_validater(options: Dict[int, str]) -> bool:
     elif options.get("ini_fires") not in ["default", "random"]:
         if not isinstance(options.get("ini_fires"), int):
             raise ValueError("Wrong value for ini_fires")
+        else:
+            if options.get("ini_fires") < 0 or options.get("ini_fires") > 100:
+                raise ValueError("Value for ini_fires must be between 0 and 100")
         
     if "firefighter_num" not in options:
         print("Firefighter number not read from file.")
@@ -97,21 +100,45 @@ def options_validater(options: Dict[int, str]) -> bool:
             num = num.split("%")[0]
             try:
                 num = int(num)
+                if num < 0:
+                    raise ValueError("Value for firefighter_num must be between 0 and 100")
             except ValueError:
                 raise ValueError("Wrong value for firefighter_num")
         else:
             if not isinstance(options.get("firefighter_num"), int): #if not str check if int
                 raise ValueError("Wrong value for firefighter_num")
+            else: 
+                if options.get("firefighter_num") < 0:
+                    raise ValueError("Value for firefighter_num must be positive")
 
     if "firefighter_level" not in options:
         print("Firefighter level not read from file.")
     elif not isinstance(options.get("firefighter_level"), int):
         raise ValueError("Wrong value for firefighter_level")
+    else:
+        if options.get("firefighter_level") < 1 or options.get("firefighter_level") > 3:
+            raise ValueError("Value for firefighter_level must be between 1 and 3")
     
     if "iter_num" not in options:
         print("Iteration steps not read from file.")
     elif not isinstance(options.get("iter_num"), int): #not needed?
         raise ValueError("Wrong value for iter_num")
+    else:
+        if options.get("iter_num") < 1:
+            raise ValueError("Value for iter_num must be positive")
+    
+    #Defaults are set prior to read, so checks are different.
+    if options.get("growth_rate") < 1:
+        raise ValueError("Value for growth_rate must be positive")
+    
+    if options.get("burn_rate") < 1:
+        raise ValueError("Value for burn_rate must be positive")
+        
+    if options.get("new_forrest_probability") < 1 or options.get("new_forrest_probability") > 100:
+        raise ValueError("Value for new_forrest_probability must be between 1 and 100")
+        
+    if options.get("fire_spread_rate") < 1:
+        raise ValueError("Value for fire_spread_rate must be positive")
 
     return True
 
