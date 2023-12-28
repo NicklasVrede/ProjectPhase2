@@ -91,12 +91,14 @@ r. Random amount of woods (between 0% and 100 %)
 """,
 
     "firefigter_num" : line + """
-Choose the number of firefighter.
+Choose the number or percentage of firefighter.
+The percentage will be of the minimum number of patches.
+(Can exceed the number of patches)
 """,
 
     "ini_fires" : line + """
 Enter the initial percentage of fires. (As a whole number)
-d. Default (10% percent of woods)
+d. Default (20% percent of woods)
 
 r. Random number (between 0% and 100 %)
 """,

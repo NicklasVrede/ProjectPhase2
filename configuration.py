@@ -105,7 +105,7 @@ def ini_fires(options:dict):
             break
 
         elif user_input == "d":
-            choice = 10
+            choice = 20
             break
 
         try:
@@ -128,7 +128,20 @@ def firefighter_num(options:dict):
     print(menu_strings.get("firefigter_num"))
 
     while True:
-        user_input = input('Enter a number or "r" for random: ')
+        user_input = input('Enter a number, "r" for random or a percentage like "20%": ')
+        if user_input.endswith("%"):
+            number = user_input.split("%")[0]
+            try:
+                number = int(number)
+                if len(user_input.split("%")) > 2: #check if there is more than one %
+                    print("Wrong % format, please try agian")
+                    continue
+                choice = user_input
+                break
+            except ValueError:
+                print("Wrong input, please try agian")
+                continue
+
         if user_input == "r":
             choice = random.randint(1, 100)
             break

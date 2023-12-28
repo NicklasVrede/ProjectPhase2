@@ -45,14 +45,14 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
             try:
                 user_input = input('Enter a number or "back": ')
                 if user_input == "back":
-                    from configuration import main
+                    from graph_forrest import main
                     return main(options)
                 
                 user_input = int(user_input)
                 if user_input >= 4:
                     break
                 else:
-                    print("Minimum number of sites must be greater than 5")
+                    print("Minimum number of sites must be greater than 4")
                     continue
                 
             except ValueError:
@@ -179,12 +179,17 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     Returns:
     firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
     """
+    number = options.get("firefighter_num")
+    if number.endswith("%"):
+        number = int(number.split("%")[0]) #we split at % and calculate the final number:
+        number = int(number * len(patches) * 0.01)
+        print(f'Scaled the number of firefighters to {number} based on the number of patches and the firefighter percentage.')
     res = {}
-    for i in range(1, options.get("firefighter_num") + 1):
+    for i in range(number):
         random_id = random.choice(list(patches.keys()))
         level = options.get("firefighter_level")
         new_fire_fighter = Firefighter(i, level, random_id)
-        res[i] = new_fire_fighter   #Instances of fire
+        res[i+1] = new_fire_fighter
     
     return res
 
