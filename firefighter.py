@@ -94,7 +94,8 @@ class Firefighter:
             
         new_position = random.choice(move_pool)
         self.position = new_position.patch_id
-        self.extinguish_fire(new_position)  #fight fire at new position
+        if new_position.burning:
+            self.extinguish_fire(new_position)  #fight fire at new position
 
     def smart_move(self, position: Union[TreePatch, RockPatch]):
         """
