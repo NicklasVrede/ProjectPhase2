@@ -128,17 +128,29 @@ def options_validater(options: Dict[int, str]) -> bool:
             raise ValueError("Value for iter_num must be positive")
     
     #Defaults are set prior to read, so checks are different.
-    if options.get("growth_rate") < 1:
-        raise ValueError("Value for growth_rate must be positive")
+    if not isinstance(options.get("growth_rate"), int):
+        raise ValueError("Wrong value for growth_rate")
+    else:
+        if options.get("growth_rate") < 1:
+            raise ValueError("Value for growth_rate must be positive")
     
-    if options.get("burn_rate") < 1:
-        raise ValueError("Value for burn_rate must be positive")
-        
-    if options.get("new_forrest_probability") < 1 or options.get("new_forrest_probability") > 100:
-        raise ValueError("Value for new_forrest_probability must be between 1 and 100")
-        
-    if options.get("fire_spread_rate") < 1:
-        raise ValueError("Value for fire_spread_rate must be positive")
+    if not isinstance(options.get("burn_rate"), int):
+        raise ValueError("Wrong value for burn_rate")
+    else:
+        if options.get("burn_rate") < 1:
+            raise ValueError("Value for burn_rate must be positive")
+    
+    if not isinstance(options.get("new_forrest_probability"), int):
+        raise ValueError("Wrong value for new_forrest_probability")
+    else:
+        if options.get("new_forrest_probability") < 1 or options.get("new_forrest_probability") > 100:
+            raise ValueError("Value for new_forrest_probability must be between 1 and 100")
+    
+    if not isinstance(options.get("fire_spread_rate"), int):
+        raise ValueError("Wrong value for fire_spread_rate")
+    else:
+        if options.get("fire_spread_rate") < 1:
+            raise ValueError("Value for fire_spread_rate must be positive")
 
     return True
 
