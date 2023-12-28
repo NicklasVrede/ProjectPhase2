@@ -77,6 +77,10 @@ def ini_woods(options:dict):
             choice = 0
             break
 
+        elif user_input == "d":
+            choice = 80
+            break
+
         elif user_input == "r":
             choice = random.randint(1, 100)
             break

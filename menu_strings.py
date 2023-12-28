@@ -85,6 +85,8 @@ Choose an option for the initial landscape pattern:
 
 2. All rocks
 
+d. Default (80% percent of woods, 20% rock)
+
 r. Random amount of woods (between 0% and 100 %)
 """,
 
