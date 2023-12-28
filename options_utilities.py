@@ -59,7 +59,7 @@ def convert_to_int(options: Dict[int, str]) -> Dict[int, str]:
 
     return options
 
-def options_checker(options: Dict[int, str]) -> bool:
+def options_validater(options: Dict[int, str]) -> bool:
     """
     Checks if the options are valid
     Only checks, if the option is defined.

@@ -3,7 +3,8 @@ from land_representation import RockPatch
 
 class Simulation:
     """
-    Simulation class.
+    Initiates the simulation.
+    storing a history of the simulation.
 
     Attributes:
     graphinfo (GraphInfo): Stores information about the graph.

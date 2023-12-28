@@ -21,40 +21,43 @@ def main(options: Dict[str, int] = dict()) -> None:
     5. Initialises color map. - color_map Dict[int, int]
     6. Initialises firefighter objects. - firefighters Dict[int, Firefighter]
     7. Initialises graph info object. - graph_info GraphInfo
-    8. Initiates simulation. 
+    8. Initiates the graph object. - graph_object visualiser_random_forest_graph.Visualiser
+    9. Initiates simulation. 
+    10. Initiates reporting.
     """
-    #initiate configuration:
+    #1. initiate configuration - Configuration.py:
     if options is None or len(options) < 6:
         if options is None:
             return welcome()
         else:
             return welcome(options)
     
+    #2. Generate edges and positions - Initialiser.py:
     edges, positions = generate_edges(options)
 
-    #Initialise patch objects:
+    #3. Initialise patch objects - Initialiser.py:
     patches = initialize_patches(edges, positions, options)
 
-    #Initialise neighbour register:
+    #4. Initialise neighbour register - Initialiser.py:
     neighbour_id_register = initialise_neighbours(edges)
     
-    #Initialise color map:
+    #5. Initialise color map - Initialiser.py:
     color_map = initialise_color_map(patches)
 
-    #Initialise firefighter objects:
+    #6. Initialise firefighter objects - Initialiser.py:
     firefighters = initialise_firefighters(patches, options)
 
-    #Initialise graph info object:
+    #7. Initialise graph info object - Graph_forrest.py:
     graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
     
-    #Initialise graph object:
+    #8. Initialise graph object - Visualiser_random_forest_graph.py:
     graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
 
-    #Initiate simulation
+    #9. Initiate simulation - Simulation.py:
     current_simulation = Simulation(graph_info)
-    for _ in range(options.get("iter_num")):
+    for _ in range(options.get("iter_num")):  #Move this to simulation.py?
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
@@ -64,7 +67,7 @@ def main(options: Dict[str, int] = dict()) -> None:
 
     print("Simulation finished.")
 
-    #Initiate reporting
+    #10. Initiate reporting - Reporting.py:
     reporting(current_simulation.get_history())
     
     return main()

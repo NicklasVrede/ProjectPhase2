@@ -24,7 +24,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     from configuration import main
                     return main(options)
                 
-                edges = read_edges_from_file(user_input)
+                edges = read_edges(user_input)
                 positions = None
 
                 if len(edges) == 0:
@@ -64,7 +64,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
     return edges, positions
     
 
-def read_edges_from_file(file_path: str) -> List[Tuple[int, int]]:
+def read_edges(file_path: str) -> List[Tuple[int, int]]:
     """
     Reads graph edges from a file.
 
@@ -130,7 +130,28 @@ def initialize_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict
         patches[i] = TreePatch(i, 100, burning=True)
   
     return patches
-    
+
+def initialise_neighbours(edges) -> Dict[int, List[int]]:
+    """
+    Initializes neighbour_id_register based on the given edges.
+
+    Returns:
+    neighbour_id_register - Dict[int, List[int]]: A dictionary mapping each patch to a list of its neighbours.
+    """
+    all_patches = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
+    edges = [set(edge) for edge in edges]
+    res = {}
+
+    for i in all_patches:
+        vertex_value_set = {i}
+        neighbours = []
+        for edge in edges:
+            if vertex_value_set.intersection(edge): #There is no self loops, so we dont check.
+                neighbours.append(edge.difference(vertex_value_set).pop())
+        
+        res[i] = neighbours
+
+    return res
 
 def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dict[int, int]:
     """
@@ -167,25 +188,5 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     
     return res
 
-def initialise_neighbours(edges) -> Dict[int, List[int]]:
-    """
-    Initializes neighbours for each patch.
 
-    Returns:
-    neighbour_id_register - Dict[int, List[int]]: A dictionary mapping each patch to a list of its neighbours.
-    """
-    all_patches = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
-    edges = [set(edge) for edge in edges]
-    res = {}
-
-    for i in all_patches:
-        vertex_value_set = {i}
-        neighbours = []
-        for edge in edges:
-            if vertex_value_set.intersection(edge): #There is no self loops, so we dont check.
-                neighbours.append(edge.difference(vertex_value_set).pop())
-        
-        res[i] = neighbours
-
-    return res
 
