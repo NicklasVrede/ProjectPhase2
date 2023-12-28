@@ -19,7 +19,6 @@ def read_options(options: Dict[int, str]) -> Dict[int, str]:
         user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
         if user_input == "":
             user_input = "options.txt"
-            print(f'user_input: {user_input}')
         try:
             with open(user_input, "r") as file:
                 lines = file.readlines()

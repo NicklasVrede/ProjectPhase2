@@ -50,7 +50,7 @@ def gen_method(options:dict=dict()):
             choice = "read"
             break
 
-        elif user_input == "r":
+        elif user_input == "r" or user_input == "d":
             choice = "random"
             break
 
@@ -110,6 +110,9 @@ def ini_fires(options:dict):
 
         try:
             choice = int(user_input)
+            if choice < 0:
+                print("Enter a number greater than 0")
+                continue
             break
 
         except ValueError:
@@ -133,6 +136,9 @@ def firefighter_num(options:dict):
             number = user_input.split("%")[0]
             try:
                 number = int(number)
+                if number < 0:
+                    print("Enter a number greater than 0")
+                    continue
                 if len(user_input.split("%")) > 2: #check if there is more than one %
                     print("Wrong % format, please try agian")
                     continue
@@ -148,6 +154,9 @@ def firefighter_num(options:dict):
 
         try:
             choice = int(user_input)
+            if choice < 0:
+                print("Enter a number greater than 0")
+                continue
             break
 
         except ValueError:
@@ -172,6 +181,9 @@ def firefighter_level(options:dict):
 
         try:
             choice = int(user_input)
+            if choice < 1 or choice > 3:
+                print("Enter a number between 1 and 3")
+                continue
             break
 
         except ValueError:
@@ -196,6 +208,9 @@ def iter_num(options:dict):
 
         try:
             choice = int(user_input)
+            if choice < 1:
+                print("Enter a number greater than 0")
+                continue
             break
 
         except ValueError:

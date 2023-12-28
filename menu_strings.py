@@ -75,7 +75,7 @@ Please pick a generation method of the graph.
 
 1. From file
 
-r. Random
+d or r. Random
 """,
 
     "ini_woods" : line + """

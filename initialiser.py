@@ -180,7 +180,7 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
     """
     number = options.get("firefighter_num")
-    if number.endswith("%"):
+    if isinstance(number, str):
         number = int(number.split("%")[0]) #we split at % and calculate the final number:
         number = int(number * len(patches) * 0.01)
         print(f'Scaled the number of firefighters to {number} based on the number of patches and the firefighter percentage.')
