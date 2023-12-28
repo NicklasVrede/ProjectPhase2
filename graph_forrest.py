@@ -81,7 +81,6 @@ class GraphInfo:
     options (Dict[str, int]): A dictionary of options.
     patches (Dict[int, Union[TreePatch, RockPatch]]): A dictionary of patch objects.
     neighbour_id_register (Dict[int, List[int]]): A dictionary of patch IDs and their neighbour IDs.
-    neighbour_register (Dict[int, List[Union[TreePatch, RockPatch]]]): A dictionary of patch IDs and their neighbours.
     color_map (Dict[int, int]): A dictionary of patch IDs and their colors.
     firefighters (Dict[int, Firefighter]): A dictionary of firefighters.
 
