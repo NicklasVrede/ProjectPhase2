@@ -42,7 +42,6 @@ class Simulation:
         for i in patches:
             patch = patches.get(i)
             if patch.treestat == 0:
-                print(f'{patch} is a rock.?')  
                 patch.random_forrest()
             else:
                 patch.evolve_tree()
