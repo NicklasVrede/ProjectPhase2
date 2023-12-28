@@ -101,7 +101,7 @@ def ini_fires(options:dict):
             break
 
         elif user_input == "d":
-            choice = "default"
+            choice = 10
             break
 
         try:

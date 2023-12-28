@@ -100,7 +100,7 @@ class GraphInfo:
         self.firefighters =  firefighters
         self._initialise_links()
 
-    def _initialise_links(self):
+    def _initialise_links(self) -> None:
         """
         Initialises links between objects, and updates rates based on options
         """
@@ -115,26 +115,26 @@ class GraphInfo:
         for firefighter in list(self.firefighters.values()):
             firefighter.graph_info = self
 
-    def update_patch(self, patch:object):
+    def update_patch(self, patch:object) -> None:
         """
         Updates a patch in the patches dict.
         Used when a patch mutates.
         """
         self.patches[patch.patch_id] = patch
 
-    def get_color_map(self):
+    def get_color_map(self) -> Dict[int, int]:
         """
         Returns the color map.
         """
         return self.color_map
     
-    def get_patches(self):
+    def get_patches(self) -> Dict[int, object]:
         """
         returns the patches dict.
         """
         return self.patches
         
-    def get_firefighter_positions(self):
+    def get_firefighter_positions(self) -> List[int]:
         """
         Returns a list of firefighter positions.
         """

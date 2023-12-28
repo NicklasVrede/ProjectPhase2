@@ -94,7 +94,7 @@ Choose the number of firefighter.
 
     "ini_fires" : line + """
 Enter the initial percentage of fires. (As a whole number)
-d. Default (3% percent of woods)
+d. Default (10% percent of woods)
 
 r. Random number (between 0% and 100 %)
 """,
