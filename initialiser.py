@@ -40,7 +40,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 print("File not found. Please enter a valid file path.")
 
     elif options.get("gen_method") == "random":
-        print("Specify the minimal number of sites for the graph (Min. 6). Or type 'back' to go back.")
+        print("Specify the minimal number of sites for the graph (Min. 4). Or type 'back' to go back.")
         while True:
             try:
                 user_input = input('Enter a number or "back": ')
@@ -49,7 +49,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     return main(options)
                 
                 user_input = int(user_input)
-                if user_input >= 6:
+                if user_input >= 4:
                     break
                 else:
                     print("Minimum number of sites must be greater than 5")
