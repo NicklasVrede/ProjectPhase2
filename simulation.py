@@ -1,5 +1,4 @@
 from typing import Dict
-from land_rep import RockPatch
 
 class Simulation:
     """
@@ -45,11 +44,11 @@ class Simulation:
             if patch.treestat == 0:
                 patch.random_forrest()
             else:
-                patch.evolve_tree()
+                patch.updateland()
 
         self.activate_firefighters()
         
-    def get_history(self):
+    def get_history(self) -> Dict[int, Dict[str, int]]:
         """
         Returns the simulation history.
         """
@@ -61,5 +60,7 @@ class Simulation:
         """
         for fighter in list(self.graphinfo.firefighters.values()):
             fighter.move()
+
+        
             
 
