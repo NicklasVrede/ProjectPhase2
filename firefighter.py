@@ -117,7 +117,6 @@ class Firefighter:
                 distance = self.find_least_steps(position, fire)
                 if distance < len(self.path):
                     self.path = []  #Reset path
-                    print(f'Firefighter {self.id} found closer fire at {fire} and reset path')
                     break
             
             if self.path:  #More if path is not reset
