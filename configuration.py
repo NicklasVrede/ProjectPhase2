@@ -24,7 +24,7 @@ def read_options_from_file(options: Dict[int, Union[str, int]]):
 
         elif user_input == "2":
             return gen_method(options)
-
+        
         else:
             print("Wrong input, please try agian")
 
@@ -128,7 +128,9 @@ def firefighter_num(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("firefigter_num"))
 
     while True:
-        user_input = input('Enter a number, "r" for random or a percentage like "20%": ')
+        user_input = input('Enter a amount, "r" for random or "d" for 10%: ')
+        if user_input == "d":
+            user_input = "10%"
         if user_input.endswith("%"):
             number = user_input.split("%")[0]
             try:

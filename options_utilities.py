@@ -16,9 +16,13 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
     print()
     print("Please note, that the option file is case-sentitive.")
     while True:
-        user_input = input('Enter the path to the file, or press [Enter] to load "options.txt": ')
+        user_input = input('Enter the path to the file, press [Enter] to load "options.txt" or type "back": ')
         if user_input == "":
             user_input = "options.txt"
+
+        if user_input == "back":
+            from configuration import read_options_from_file
+            return read_options_from_file(options)
         try:
             with open(user_input, "r") as file:
                 lines = file.readlines()
