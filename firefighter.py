@@ -41,7 +41,7 @@ class Firefighter:
         """
         Returns the representation of a firefighter.    
         """
-        return f"Firefighter {self.id} at {self.get_pos_object()}, with power: {self.power}"
+        return f"Firefighter {self.id} at {self.get_pos_object()}"
     
     def get_pos_object(self) -> TreePatch:
         """
@@ -142,7 +142,7 @@ class Firefighter:
         #We add this path to the firefighter.
         self.path = shortest_path
         self.target = target
-        print(f'Firefighter at {position} moving to {closest_fire} with path {self.path}')
+        #print(f'Firefighter at {position} moving to {closest_fire} with path {self.path}')
 
     def find_least_steps(self, position: Union[TreePatch, RockPatch], target: TreePatch):
         """
@@ -172,7 +172,6 @@ class Firefighter:
             to_check = add_neigbours(to_check, checked)
             checked = checked.union(previouse_to_check)
             steps += 1
-
 
         return steps
     
@@ -228,10 +227,3 @@ class Firefighter:
             #check if we have reached the target:
             if current_position.patch_id == target.patch_id:
                 return path, target
-
-
-                
-    
-            
-
-            

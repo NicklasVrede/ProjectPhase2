@@ -56,14 +56,23 @@ def main(options: Dict[str, int] = dict()) -> None:
 
 
     #9. Initiate simulation - Simulation.py:
+    promt_interval = 0
+    sleep_time = 10 / options.get("iter_num")
     current_simulation = Simulation(graph_info)
-    for _ in range(options.get("iter_num")):  #Move this to simulation.py?
+    
+    for i in range(options.get("iter_num")):  #Move this to simulation.py?
+        if promt_interval >= 2:
+            promt_interval = 0
+            print(f"Iteration {i+1} of {options.get('iter_num')}")
+    
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions
+        
+        promt_interval += sleep_time
 
-        sleep_time = 10 / options.get("iter_num")
         time.sleep(sleep_time)
+
 
     print("Simulation finished.")
 

@@ -80,7 +80,7 @@ class TreePatch(LandPatch):
         """
         Return a string representation of the TreePatch.
         """
-        return f'Treepatch {self.patch_id} burning = {self.burning}'
+        return f'Treepatch {self.patch_id}'
     
     def get_color(self) -> int:
         """
