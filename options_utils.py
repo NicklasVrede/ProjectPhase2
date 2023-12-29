@@ -1,7 +1,7 @@
 #options_utilities.py
 from typing import Dict, Union
 from menu_strings import menu_strings
-from configuration_advanced import growth_rate
+from config_adv import growth_rate
 
 def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
     """
@@ -21,7 +21,7 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
             user_input = "options.txt"
 
         if user_input == "back":
-            from configuration import read_options_from_file
+            from config import read_options_from_file
             return read_options_from_file(options)
         try:
             with open(user_input, "r") as file:

@@ -124,5 +124,5 @@ def fire_spread_rate(options:dict):
             
     options.update({"fire_spread_rate" : choice})
     
-    from configuration import config_final
+    from config import config_final
     return config_final(options)

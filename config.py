@@ -2,10 +2,10 @@
 Config Module
 """
 import random
-from typing import Dict, Union, Callable
+from typing import Dict, Union
 from menu_strings import line, menu_strings
-from options_utilities import advanced_defaults, read_options, convert_to_int, options_validater
-from configuration_advanced import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
+from options_utils import advanced_defaults, read_options, convert_to_int, options_validater
+from config_adv import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
 
 def welcome(options: Dict[int, Union[str, int]] = dict()):
     options = advanced_defaults(options)

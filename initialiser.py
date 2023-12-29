@@ -21,7 +21,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 user_input = input('Enter file path to read edges from or type "back": ')
 
                 if user_input == "back":
-                    from configuration import main
+                    from config import main
                     return main(options)
                 
                 edges = read_edges(user_input)
