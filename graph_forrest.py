@@ -36,7 +36,7 @@ def main(options: Dict[str, int] = dict()) -> None:
     edges, positions = generate_edges(options)
 
     #3. Initialise patch objects - Initialiser.py:
-    patches = initialize_patches(edges, positions, options)
+    patches = initialise_patches(edges, positions, options)
 
     #4. Initialise neighbour register - Initialiser.py:
     neighbour_id_register = initialise_neighbours(edges)

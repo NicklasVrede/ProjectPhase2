@@ -98,7 +98,7 @@ def read_edges(file_path: str) -> List[Tuple[int, int]]:
 
     return edges
 
-def initialize_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
+def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
     """
     Initializes patches based on the given edges, positions, and options.
 
