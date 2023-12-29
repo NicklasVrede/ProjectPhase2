@@ -123,7 +123,7 @@ class GraphInfo:
                 patch.spread_rate= self.options.get('fire_spread_rate')
 
         for firefighter in list(self.firefighters.values()):
-            firefighter.graph_info = self
+            firefighter._graph_info = self
 
     def update_patch(self, patch:object) -> None:
         """
@@ -150,7 +150,7 @@ class GraphInfo:
         """
         res = []
         for fighter in list(self.firefighters.values()):
-            res.append(fighter.position)
+            res.append(fighter.get_position())
         
         return res
 

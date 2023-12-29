@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Any, Dict, List, Optional, Union
+from typing import List, Union
 import random
 # land_representation.py
 
@@ -20,7 +20,7 @@ class LandPatch(ABC):
         self.burning = burning 
         self.graph_info = graph_info
 
-    def get_neighbours_ids(self) -> List[int]:
+    def get_neighbours_ids(self) -> List[int]: #used by firefighters
         """
         Return a list of IDs of neighbouring patches.
         """
@@ -39,10 +39,6 @@ class LandPatch(ABC):
     
     @abstractmethod
     def get_color(self):
-        raise NotImplementedError
-    
-    @abstractmethod
-    def update_color(self):
         raise NotImplementedError
     
     @abstractmethod
