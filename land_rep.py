@@ -1,9 +1,9 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from typing import Any, Dict, List, Optional, Union
 import random
 # land_representation.py
 
-class LandPatch:
+class LandPatch(ABC):
     """
     Base class for patches, TreePatch and RockPatch.
 

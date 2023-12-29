@@ -115,19 +115,20 @@ def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict
     else:
         all_nodes = set.union(*[set(edge) for edge in edges])
 
-    #Initialize ration of woods and fires
-    wood_ratio = options.get("ini_woods") * 0.01
+    #Initialise ratio of woods and fires
+    tree_ratio = options.get("ini_woods") * 0.01
     fire_ratio = options.get("ini_fires") * 0.01
 
-    wood_nodes = random.sample(all_nodes, int(wood_ratio*len(all_nodes)))
-    rock_nodes = list(set(all_nodes).difference(wood_nodes))
-    num_fires = round(len(wood_nodes) * fire_ratio)
-    fire_nodes = random.sample(wood_nodes, num_fires)
-    wood_nodes = list(set(wood_nodes).difference(fire_nodes))
+    tree_nodes = random.sample(all_nodes, int(tree_ratio*len(all_nodes)))
+    rock_nodes = list(set(all_nodes).difference(tree_nodes))
+    num_fires = round(len(tree_nodes) * fire_ratio)
+    fire_nodes = random.sample(tree_nodes, num_fires)
+    tree_nodes = list(set(tree_nodes).difference(fire_nodes))
 
-    #Create patches
+
+    #Initialise patches
     patches = {}
-    for i in wood_nodes:
+    for i in tree_nodes:
         patches[i] = TreePatch(i, 100) #100 = treestat
     for i in rock_nodes:
         patches[i] = RockPatch(i, 0)

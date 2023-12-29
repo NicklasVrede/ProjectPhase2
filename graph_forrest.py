@@ -1,6 +1,6 @@
 from typing import List, Dict
 from config.config import welcome
-from initialiser import generate_edges, initialize_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
+from initialiser import generate_edges, initialise_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
 from simulation import Simulation
 from reporting import reporting
