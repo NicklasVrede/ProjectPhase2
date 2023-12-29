@@ -68,9 +68,6 @@ class TreePatch(LandPatch):
     
         if self.graph_info:
             self.update_color()
-            self.growthrate = graph_info.options.get('growth_rate') #10 by default
-            self.burnrate = graph_info.options.get('burn_rate') #10 by default
-            self.spread_rate= graph_info.options.get('fire_spread_rate') #30 by default
 
     def __repr__(self) -> str:
         """
@@ -111,7 +108,7 @@ class TreePatch(LandPatch):
             neighbours = self.get_neighbours()
             for neighbour in neighbours:
                 if not neighbour.burning and neighbour.treestat > 0:
-                    if random.randint(0, 100) < self.spread_rate:  #30 by defualt
+                    if random.randint(0, 100) < self.graph_info.options.get("fire_spread_rate"):  #30 by defualt
                         neighbour.ignite()
 
     def evolve_firestat(self) -> None:
@@ -134,14 +131,14 @@ class TreePatch(LandPatch):
         Evolves the treestat of the patch.
         """
         if self.burning:
-            self.treestat -= self.burnrate
+            self.treestat -= self.graph_info.options.get("burn_rate") #20 by default
             if self.treestat <= 0:
                 self.mutate()
             else:
                 self.spread_fire()
 
         else:
-            self.treestat += self.growthrate
+            self.treestat += self.graph_info.options.get("growth_rate") #10 by default
             if self.treestat >= 256:
                 self.treestat = 256
             self.update_color()
@@ -157,8 +154,9 @@ class TreePatch(LandPatch):
                 random_num = random.randint(0, 100)
                 if random_num < probability:
                     neighbour.mutate()
-    
-    def evolve_tree(self) -> None:
+
+
+    def updateland(self) -> None:
         """
         Initiates the evolution of the patch.
         """
