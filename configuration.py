@@ -2,18 +2,19 @@
 Config Module
 """
 import random
+from typing import Dict, Union, Callable
 from menu_strings import line, menu_strings
 from options_utilities import advanced_defaults, read_options, convert_to_int, options_validater
 from configuration_advanced import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
 
-def welcome(options):
+def welcome(options: Dict[int, Union[str, int]] = dict()):
     options = advanced_defaults(options)
     print(menu_strings.get("welcome"))
     input()
 
     return read_options_from_file(options)
 
-def read_options_from_file(options):
+def read_options_from_file(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("read_options_from_file"))
     while True:
         user_input = input('Enter "1" or "2": ')
@@ -30,15 +31,11 @@ def read_options_from_file(options):
     #Correct and check options
     options = read_options(options)
     options = convert_to_int(options)
-    try:
-        options_validater(options)
-    except ValueError as error:
-        print(str(error) + "\n" + "Please try again")
-        return read_options_from_file(options)
+    options = options_validater(options)
 
     return gen_method(options)
 
-def gen_method(options:dict=dict()):
+def gen_method(options: Dict[int, Union[str, int]]):
     if options.get("gen_method"):
         return ini_woods(options)
 
@@ -62,7 +59,7 @@ def gen_method(options:dict=dict()):
     return ini_woods(options)
 
 
-def ini_woods(options:dict):
+def ini_woods(options: Dict[int, Union[str, int]]):
     if options.get("ini_woods"):
         return ini_fires(options)
     print(menu_strings.get("ini_woods"))
@@ -92,7 +89,7 @@ def ini_woods(options:dict):
 
     return ini_fires(options)
     
-def ini_fires(options:dict):
+def ini_fires(options: Dict[int, Union[str, int]]):
     if options.get("ini_fires"):
         return firefighter_num(options)
     print(menu_strings.get("ini_fires"))
@@ -125,7 +122,7 @@ def ini_fires(options:dict):
     return firefighter_num(options)
 
 
-def firefighter_num(options:dict):
+def firefighter_num(options: Dict[int, Union[str, int]]):
     if options.get("firefighter_num"):
         return firefighter_level(options)
     print(menu_strings.get("firefigter_num"))
@@ -168,7 +165,7 @@ def firefighter_num(options:dict):
 
     return firefighter_level(options)
 
-def firefighter_level(options:dict):
+def firefighter_level(options: Dict[int, Union[str, int]]):
     if options.get("firefighter_level"):
         return iter_num(options)
     print(menu_strings.get("firefigter_level"))
@@ -195,7 +192,7 @@ def firefighter_level(options:dict):
 
     return iter_num(options)
 
-def iter_num(options:dict):
+def iter_num(options: Dict[int, Union[str, int]]):
     if options.get("iter_num"):
         return config_final(options)
     print(menu_strings.get("iter_num"))
@@ -220,7 +217,7 @@ def iter_num(options:dict):
 
     return config_final(options)
 
-def change_setting(options):
+def change_setting(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("change_setting")(options))
 
     while True:
@@ -280,7 +277,7 @@ def change_setting(options):
             print("Wrong input, please try agian")
 
       
-def config_final(options:dict=dict()):
+def config_final(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("config_final")(options))
     
     while True:

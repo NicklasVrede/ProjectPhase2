@@ -33,7 +33,7 @@ class Firefighter:
         if skill_level == 2:
             self.power = 35
         elif skill_level == 3:
-            self.power = 40
+            self.power = 35
             self.brain = True
             self.path = []
 

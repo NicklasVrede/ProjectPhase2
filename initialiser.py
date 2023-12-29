@@ -49,7 +49,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     return main(options)
                 
                 if user_input == "r":
-                    user_input = random.randint(12, 100)
+                    user_input = random.randint(12, 100)    
                     print(f'Randomly generated {user_input} sites.')
                     break
                 

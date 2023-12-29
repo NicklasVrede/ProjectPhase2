@@ -1,9 +1,9 @@
 #options_utilities.py
-from typing import Dict
+from typing import Dict, Union
 from menu_strings import menu_strings
 from configuration_advanced import growth_rate
 
-def read_options(options: Dict[int, str]) -> Dict[int, str]:
+def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
     """
     Prompts the user to enter the path to a file, and reads the options from the file.
 
@@ -41,7 +41,7 @@ def read_options(options: Dict[int, str]) -> Dict[int, str]:
 
     return options
 
-def convert_to_int(options: Dict[int, str]) -> Dict[int, str]:
+def convert_to_int(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
     """
     Converts the values of the options to int, if possible.
 
@@ -59,7 +59,7 @@ def convert_to_int(options: Dict[int, str]) -> Dict[int, str]:
 
     return options
 
-def options_validater(options: Dict[int, str]) -> bool:
+def options_validater(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
     """
     Checks if the options are valid
     Only checks, if the option is defined.
@@ -70,91 +70,50 @@ def options_validater(options: Dict[int, str]) -> bool:
     Returns:
     bool: True if all options are valid, otherwise raises ValueError.
     """
+    for option in ["ini_woods", "ini_fires"]:
+        if option in options:
+            if not isinstance(options.get(option), int) or not 0 <= options.get(option) <= 100:
+                print(f'Wrong value for {option}: {options.get(option)}')
+                print(f'Please reasign in basic config.')
+                options[option] = None #Reset, so user must pick in basic config
+
+
+    for option in ["iter_num", "growth_rate", "burn_rate", "new_forrest_probability", "fire_spread_rate"]:
+        if option in options:
+            if not isinstance(options.get(option), int) or options.get(option) < 0:
+                print(f'Value for {option}, must be positive')
+                print(f'Please reasign or use default')
+                options[option] = None
+
+    if "gen_method" in options and options.get("gen_method") not in ["read", "random"]:
+        print(f'Wrong value for gen_method: {options.get("gen_method")}')
+        print(f'Please reasign in basic config.')
+        options["gen_method"] = None
     
 
-    if "gen_method" not in options:
-        print("Generation method not read from file.")
-    elif options.get("gen_method") not in ["read", "random"]:
-        raise ValueError("Wrong value for gen_method")
+    if "firefighter_level" in options and not 0 < options.get("firefighter_level") < 4:
+        print(f'Wrong value for firefighter_level: {options.get("firefighter_level")}')
+        print(f'Please reasign in basic config.')
+        options["firefighter_level"] = None
     
-    if "ini_woods" not in options:
-        print("Initial woods not read from file.")
-    elif options.get("ini_woods") not in ["default", "random"]:
-        if not isinstance(options.get("ini_woods"), int):
-            raise ValueError("Wrong value for ini_woods")
-        if options.get("ini_woods") < 0 or options.get("ini_woods") > 100:
-            raise ValueError("Value for ini_woods must be between 0 and 100")
-        
-    if "ini_fires" not in options:
-        print("Initial fires not read from file.")
-    elif options.get("ini_fires") not in ["default", "random"]:
-        if not isinstance(options.get("ini_fires"), int):
-            raise ValueError("Wrong value for ini_fires")
-        else:
-            if options.get("ini_fires") < 0 or options.get("ini_fires") > 100:
-                raise ValueError("Value for ini_fires must be between 0 and 100")
-        
-    if "firefighter_num" not in options:
-        print("Firefighter number not read from file.")
-    else:
-        if isinstance(options.get("firefighter_num"), str): #if str
-            num = options.get("firefighter_num")
-            num = num.split("%")[0]
-            try:
-                num = int(num)
-                if num < 0:
-                    raise ValueError("Value for firefighter_num must be between 0 and 100")
-            except ValueError:
-                raise ValueError("Wrong value for firefighter_num")
-        else:
-            if not isinstance(options.get("firefighter_num"), int): #if not str check if int
-                raise ValueError("Wrong value for firefighter_num")
-            else: 
-                if options.get("firefighter_num") < 0:
-                    raise ValueError("Value for firefighter_num must be positive")
 
-    if "firefighter_level" not in options:
-        print("Firefighter level not read from file.")
-    elif not isinstance(options.get("firefighter_level"), int):
-        raise ValueError("Wrong value for firefighter_level")
+    if "firefighter_num" in options and isinstance(options.get("firefighter_num"), str):
+        num = options.get("firefighter_num")
+        num = num.split("%")[0]
+        try:
+            num = int(num)
+            if num < 0:
+                raise ValueError("Value for firefighter_num must be between 0 and 100")
+        except ValueError:
+            raise ValueError("Wrong value for firefighter_num")
     else:
-        if options.get("firefighter_level") < 1 or options.get("firefighter_level") > 3:
-            raise ValueError("Value for firefighter_level must be between 1 and 3")
-    
-    if "iter_num" not in options:
-        print("Iteration steps not read from file.")
-    elif not isinstance(options.get("iter_num"), int): #not needed?
-        raise ValueError("Wrong value for iter_num")
-    else:
-        if options.get("iter_num") < 1:
-            raise ValueError("Value for iter_num must be positive")
-    
-    #Defaults are set prior to read, so checks are different.
-    if not isinstance(options.get("growth_rate"), int):
-        raise ValueError("Wrong value for growth_rate")
-    else:
-        if options.get("growth_rate") < 1:
-            raise ValueError("Value for growth_rate must be positive")
-    
-    if not isinstance(options.get("burn_rate"), int):
-        raise ValueError("Wrong value for burn_rate")
-    else:
-        if options.get("burn_rate") < 1:
-            raise ValueError("Value for burn_rate must be positive")
-    
-    if not isinstance(options.get("new_forrest_probability"), int):
-        raise ValueError("Wrong value for new_forrest_probability")
-    else:
-        if options.get("new_forrest_probability") < 1 or options.get("new_forrest_probability") > 100:
-            raise ValueError("Value for new_forrest_probability must be between 1 and 100")
-    
-    if not isinstance(options.get("fire_spread_rate"), int):
-        raise ValueError("Wrong value for fire_spread_rate")
-    else:
-        if options.get("fire_spread_rate") < 1:
-            raise ValueError("Value for fire_spread_rate must be positive")
+        if "firefighter_num" in options:
+            if options.get("firefighter_num") < 0:
+                print(f'Value for "firefighter_num must be positive')
+                print(f'Please reasign in basic config.')
+                options["firefighter_num"] = None
 
-    return True
+    return options
 
 def advanced_defaults(options: Dict[int, str]) -> Dict[int, str]:
     """

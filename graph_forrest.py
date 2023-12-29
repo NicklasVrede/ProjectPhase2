@@ -26,7 +26,7 @@ def main(options: Dict[str, int] = dict()) -> None:
     10. Initiates reporting.
     """
     #1. initiate configuration - Configuration.py:
-    if options is None or len(options) < 6:
+    if options is None or len(options) < 10:
         if options is None:
             return welcome()
         else:
@@ -51,15 +51,16 @@ def main(options: Dict[str, int] = dict()) -> None:
     graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
     
     #8. Initialise graph object - Visualiser_random_forest_graph.py:
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=300, vis_labels=True)
+    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=200, vis_labels=True)
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
 
     #9. Initiate simulation - Simulation.py:
     promt_interval = 0
     sleep_time = 10 / options.get("iter_num")
+    print(f'sleep time: {sleep_time}')
     current_simulation = Simulation(graph_info)
-    
+
     for i in range(options.get("iter_num")):  #Move this to simulation.py?
         if promt_interval >= 2:
             promt_interval = 0
