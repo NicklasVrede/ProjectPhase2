@@ -19,7 +19,7 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
             user_input = "options.txt"
 
         if user_input == "back":
-            from config import read_options_from_file
+            from config.config import read_options_from_file
             return read_options_from_file(options)
         try:
             with open(user_input, "r") as file:

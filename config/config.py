@@ -4,8 +4,8 @@ Config Module
 import random
 from typing import Dict, Union
 from menu_str import line, menu_strings
-from config_utils import advanced_defaults, read_options, convert_to_int, options_validater
-from config_adv import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
+from config.config_utils import advanced_defaults, read_options, convert_to_int, options_validater
+from config.config_adv import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate
 
 def welcome(options: Dict[int, Union[str, int]] = dict()):
     options = advanced_defaults(options)
