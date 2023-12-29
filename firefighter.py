@@ -1,5 +1,5 @@
 from typing import List, Dict, Tuple, Set, Union
-from land_representation import TreePatch, RockPatch
+from land_rep import TreePatch, RockPatch
 import random
 import time
 

@@ -1,5 +1,5 @@
 from typing import Dict
-from land_representation import RockPatch
+from land_rep import RockPatch
 
 class Simulation:
     """

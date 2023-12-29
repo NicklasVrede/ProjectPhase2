@@ -1,6 +1,6 @@
 import random
 from typing import Dict, List, Tuple, Union
-from land_representation import TreePatch, RockPatch
+from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
 import graph_helper
 

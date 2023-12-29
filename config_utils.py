@@ -1,7 +1,5 @@
 #options_utilities.py
 from typing import Dict, Union
-from menu_strings import menu_strings
-from config_adv import growth_rate
 
 def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
     """
