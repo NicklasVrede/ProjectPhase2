@@ -58,7 +58,7 @@ class Simulation:
         """
         Activates firefighters.
         """
-        for fighter in list(self.graphinfo.firefighters.values()):
+        for fighter in list(self.graphinfo.get_firefighters().values()):
             fighter.move()
 
         

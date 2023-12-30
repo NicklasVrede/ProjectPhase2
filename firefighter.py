@@ -47,7 +47,7 @@ class Firefighter:
         """
         Returns the patch object of the firefighter's position.
         """
-        return self._graph_info.patches.get(self._position)
+        return self._graph_info.get_patch(self._position)
     
     def get_position(self) -> int: #Used to update firefighter position in graph_info
         """
@@ -103,7 +103,7 @@ class Firefighter:
         position (object): patch object for the current position of the firefighter.
         """
         all_fires = []
-        for patch in list(self._graph_info.patches.values()):
+        for patch in list(self._graph_info.get_patches().values()):
             if patch.is_burning():
                 all_fires.append(patch)
         

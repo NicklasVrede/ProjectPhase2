@@ -1,5 +1,6 @@
 from typing import List, Dict, Union
 from config.config import welcome
+from firefighter import Firefighter
 from initialiser import generate_edges, initialise_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
 from simulation import Simulation
@@ -58,7 +59,7 @@ def main(options: Dict[str, int] = dict()) -> None:
 
     #9. Initiate simulation - Simulation.py:
     promt_interval = 0
-    sleep_time = 5 / options.get("iter_num")
+    sleep_time = 20 / options.get("iter_num")
     current_simulation = Simulation(graph_info)
 
     for i in range(options.get("iter_num")):  #Move this to simulation.py?
@@ -103,55 +104,76 @@ class GraphInfo:
     """
     def __init__(self, options, patches, color_map, firefighters, neighbour_id_register):
         self.options = options #dict of options
-        self.patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
+        self._patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
         self.neighbour_id_register = neighbour_id_register #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
-        self.neighbour_register = {} #Not implemented.
-        self.color_map =  color_map
-        self.firefighters =  firefighters
+        self._color_map =  color_map
+        self._firefighters =  firefighters
         self._initialise_links()
 
     def _initialise_links(self) -> None:
         """
         Initialises links between objects, and updates rates based on options
         """
-        for patch in list(self.patches.values()): # list() is actually not needed, since we dont need indexes.
+        for patch in list(self._patches.values()): # list() is actually not needed, since we dont need indexes.
             patch._graph_info = self
 
-        for firefighter in list(self.firefighters.values()):
+        for firefighter in list(self._firefighters.values()):
             firefighter._graph_info = self
+
+    def get_patch(self, patch_id: int) -> Union[TreePatch, RockPatch]:
+        """
+        Returns a patch object.
+        """
+        return self._patches[patch_id]
+
+    def get_patches(self) -> Dict[int, Union[TreePatch, RockPatch]]:
+        """
+        Returns the patches dict.
+        """
+        return self._patches
 
     def update_patch(self, patch: Union[TreePatch, RockPatch]) -> None:
         """
         Updates a patch in the patches dict.
         Used when a patch mutates.
         """
-        self.patches[patch.get_id()] = patch
+        self._patches[patch.get_id()] = patch
+
+    def update_color(self, patch_id: int, color: int) -> None:
+        """
+        Updates the color map.
+        """
+        self._color_map[patch_id] = color
+
+    def remove_color(self, patch_id: int) -> None:
+        """
+        Removes a patch from the color map.
+        """
+        del self._color_map[patch_id]
 
     def get_color_map(self) -> Dict[int, int]:
         """
         Returns the color map.
         """
-        return self.color_map
-    
-    def get_patches(self) -> Dict[int, object]:
-        """
-        returns the patches dict.
-        """
-        return self.patches
+        return self._color_map
         
     def get_firefighter_positions(self) -> List[int]:
         """
         Returns a list of firefighter positions.
         """
         res = []
-        for fighter in list(self.firefighters.values()):
+        for fighter in list(self._firefighters.values()):
             res.append(fighter.get_position())
         
         return res
 
         #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())]
 
-
+    def get_firefighters(self) -> Dict[int, Firefighter]:
+        """
+        Returns the firefighters dict.
+        """
+        return self._firefighters
 
 
 #Run the program

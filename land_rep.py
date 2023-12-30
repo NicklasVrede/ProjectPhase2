@@ -51,12 +51,16 @@ class LandPatch(ABC):
         res = []
         neighbours_id = self.get_neighbours_ids()
         for i in neighbours_id:
-            res.append(self._graph_info.patches.get(i))
+            res.append(self._graph_info.get_patch(i))
 
         return res
     
     @abstractmethod
     def get_color(self):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def _update_color(self):
         raise NotImplementedError
     
     @abstractmethod
@@ -102,18 +106,18 @@ class TreePatch(LandPatch):
             return color
         else:
             return self._treestat
+        
+    def _update_color(self) -> None:
+        """
+        Updates the color of the patch in the color_map
+        """
+        self._graph_info.update_color(self._patch_id, self.get_color())
 
     def modify_firestat(self, amount): #used by firefighter
         self._firestat += amount
         if self._firestat < 0:
             self._burning = False
             self._update_color()
-    
-    def _update_color(self) -> None:
-        """
-        Updates the color of the patch in the color_map
-        """
-        self._graph_info.color_map[self._patch_id] = self.get_color()
         
     def _ignite(self) -> None:
         """
@@ -223,7 +227,7 @@ class RockPatch(LandPatch):
         Removes the color from color_map.
         Note: This only run once, when the patch is created.
         """
-        del self._graph_info.color_map[self._patch_id]
+        self._graph_info.remove_color(self._patch_id)
     
     def get_color(self) -> None:
         """
