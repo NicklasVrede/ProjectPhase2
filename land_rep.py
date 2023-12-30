@@ -186,9 +186,9 @@ class TreePatch(LandPatch):
         """
         if self.is_burning():
             self._evolve_firestat()
-        
-        self._evolve_treestat()
-        self._spread_forrest()
+        else:
+            self._evolve_treestat()
+            self._spread_forrest()
         
     def _mutate(self) -> 'RockPatch':
         """
