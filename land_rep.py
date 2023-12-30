@@ -113,8 +113,12 @@ class TreePatch(LandPatch):
         """
         self._graph_info.update_color(self._patch_id, self.get_color())
 
-    def modify_firestat(self, amount): #used by firefighter
-        self._firestat += amount
+    def reduce_firestat(self, amount): #used by firefighter
+        """
+        reduces firestat
+        """
+        assert amount < 0
+        self._firestat += -amount
         if self._firestat < 0:
             self._burning = False
             self._update_color()
@@ -186,7 +190,7 @@ class TreePatch(LandPatch):
         """
         if self.is_burning():
             self._evolve_firestat()
-            
+
         self._evolve_treestat()
         self._spread_forrest()
         

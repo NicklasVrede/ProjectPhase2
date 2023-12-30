@@ -65,7 +65,7 @@ class Firefighter:
         """
         Extinguishes fire at a patch.
         """
-        patch.modify_firestat(-self._power)
+        patch.reduce_firestat(self._power)
 
     def move(self): #Main action, used in simulation.
         """

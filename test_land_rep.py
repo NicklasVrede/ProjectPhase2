@@ -18,22 +18,19 @@ class TestTreePatch(unittest.TestCase):
     def test_get_color(self):
         self.assertEqual(self.patch.get_color(), 100)
         self.patch._ignite()
-        for _ in range(10):
-            self.patch.updateland()
+        self.patch._firestat = 100
         self.assertEqual(self.patch.get_color(), -256)
 
     def test_update_color(self):
         self.graph_info.update_color(1, 42)
         self.assertEqual(self.graph_info.get_color_map().get(1), 42)
 
-    def test_modify_firestat(self):
+    def test_reduce_firestat(self):
         self.patch._ignite()
         self.assertEqual(self.patch._firestat, 10)
-        self.patch.modify_firestat(10)
-        self.assertEqual(self.patch._firestat, 20)
+        self.patch.reduce_firestat(10)
         self.assertTrue(self.patch._burning)
-        self.patch.modify_firestat(-42)
-        self.assertFalse(self.patch._burning)
+        self.assertEqual(self.patch._firestat, 0)
 
     def test_ignite(self):
         self.patch._ignite()
