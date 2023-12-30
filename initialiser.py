@@ -40,17 +40,21 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 print("File not found. Please enter a valid file path.")
 
     elif options.get("gen_method") == "random":
-        print("Specify the minimal number of sites for the graph (Min. 4). Or type 'back' to go back.")
+        print("Specify the minimal number of patches for the graph (Min. 4). Or type 'back' to go back.")
         while True:
             try:
-                user_input = input('Enter a number, "r" or "back": ')
+                user_input = input('Enter a number, "r" (40-120), "d" (80) or "back": ')
                 if user_input == "back":
                     from graph_forrest import main
                     return main(options)
                 
                 if user_input == "r":
-                    user_input = random.randint(12, 100)    
-                    print(f'Randomly generated {user_input} sites.')
+                    user_input = random.randint(40, 120)    
+                    print(f'Minimum patches = {user_input}.')
+                    break
+
+                if user_input == "d":
+                    user_input = 80
                     break
                 
                 user_input = int(user_input)
@@ -113,7 +117,7 @@ def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict
     if positions is not None:
         all_nodes = list(positions.keys()) #Merges a new set of nodes
     else:
-        all_nodes = set.union(*[set(edge) for edge in edges])
+        all_nodes = list(set.union(*[set(edge) for edge in edges]))
 
     #Initialise ratio of woods and fires
     tree_ratio = options.get("ini_woods") * 0.01

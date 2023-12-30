@@ -41,7 +41,7 @@ def gen_method(options: Dict[int, Union[str, int]]):
 
     print(menu_strings.get("gen_method"))
     while True:
-        user_input = input('Enter "1" or "r": ')
+        user_input = input('Enter "1", "r" or "d": ')
 
         if user_input == "1":
             choice = "read"
