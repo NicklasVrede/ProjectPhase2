@@ -42,7 +42,7 @@ class LandPatch(ABC):
         """
         Return a list of IDs of neighbouring patches.
         """
-        return self._graph_info.neighbour_id_register.get(self._patch_id)
+        return self._graph_info.get_neighbours_ids(self.get_id())
     
     def get_neighbours(self) -> List[Union['TreePatch', 'RockPatch']]: #used by firefighters
         """

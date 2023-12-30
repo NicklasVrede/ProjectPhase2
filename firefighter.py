@@ -106,7 +106,6 @@ class Firefighter:
         for patch in list(self._graph_info.get_patches().values()):
             if patch.is_burning():
                 all_fires.append(patch)
-        
         if not all_fires:
             return None #If no fire, firefighter stand still
         

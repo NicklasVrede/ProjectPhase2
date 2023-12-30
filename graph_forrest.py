@@ -105,7 +105,7 @@ class GraphInfo:
     def __init__(self, options, patches, color_map, firefighters, neighbour_id_register):
         self.options = options #dict of options
         self._patches = patches #dict of patch ids and their objects. Has to be updated, when mutations happens
-        self.neighbour_id_register = neighbour_id_register #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
+        self._neighbour_id_register = neighbour_id_register #dict of patch ids and their neighbour ids. Once initialise it remiains constant.
         self._color_map =  color_map
         self._firefighters =  firefighters
         self._initialise_links()
@@ -138,6 +138,12 @@ class GraphInfo:
         Used when a patch mutates.
         """
         self._patches[patch.get_id()] = patch
+
+    def get_neighbours_ids(self, patch_id: int) -> List[Union[TreePatch, RockPatch]]:
+        """
+        Returns a list of neighbouring patches objects.
+        """
+        return self._neighbour_id_register[patch_id]
 
     def update_color(self, patch_id: int, color: int) -> None:
         """
