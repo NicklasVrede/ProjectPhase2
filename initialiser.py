@@ -175,10 +175,10 @@ def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dic
     """
     res = {}
     for patch in list(patches.values()):
-        if patch.treestat == 0:
+        if patch.get_treestat() == 0:
             continue
         else:
-            res[patch.patch_id] = patch.get_color()
+            res[patch.get_id()] = patch.get_color()
     
     return res
 

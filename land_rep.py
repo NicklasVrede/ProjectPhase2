@@ -15,25 +15,43 @@ class LandPatch(ABC):
 
     """
     def __init__(self, patch_id: int, treestat: int, burning: bool, graph_info = None):
-        self.patch_id = patch_id
-        self.treestat = treestat
-        self.burning = burning 
-        self.graph_info = graph_info
+        self._patch_id = patch_id
+        self._treestat = treestat
+        self._burning = burning 
+        self._graph_info = graph_info
 
-    def get_neighbours_ids(self) -> List[int]: #used by firefighters
+    def get_id(self) -> int: #Used by firefighter, simulation and graph_info
+        """
+        Return the ID of the patch.
+        """
+        return self._patch_id
+    
+    def is_burning(self) -> bool: #Used by firefighter and simulation
+        """
+        Return True if the patch is burning.
+        """
+        return self._burning
+    
+    def get_treestat(self) -> int: #Used by simulation
+        """
+        Return the treestat of the patch.
+        """
+        return self._treestat
+
+    def get_neighbours_ids(self) -> List[int]: 
         """
         Return a list of IDs of neighbouring patches.
         """
-        return self.graph_info.neighbour_id_register.get(self.patch_id)
+        return self._graph_info.neighbour_id_register.get(self._patch_id)
     
-    def get_neighbours(self) -> List[Union['TreePatch', 'RockPatch']]:
+    def get_neighbours(self) -> List[Union['TreePatch', 'RockPatch']]: #used by firefighters
         """
-        Return a list the neighbouring patches.
+        Return a list the neighbouring patches objects.
         """
         res = []
         neighbours_id = self.get_neighbours_ids()
         for i in neighbours_id:
-            res.append(self.graph_info.patches.get(i))
+            res.append(self._graph_info.patches.get(i))
 
         return res
     
@@ -42,7 +60,7 @@ class LandPatch(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    def mutate(self):
+    def _mutate(self):
         raise NotImplementedError
 
 class TreePatch(LandPatch):
@@ -63,116 +81,118 @@ class TreePatch(LandPatch):
     def __init__(self, patch_id: int, treestat: int, burning: bool=False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
 
-        if self.burning:
-            self.firestat = 10
+        if self._burning:
+            self._firestat = 10
     
-        if self.graph_info:
-            self.update_color()
+        if self._graph_info:
+            self._update_color()
 
     def __repr__(self) -> str:
         """
         Return a string representation of the TreePatch.
         """
-        return f'Treepatch {self.patch_id}'
+        return f'Treepatch {self._patch_id}'
     
-    def get_color(self) -> int:
+    def get_color(self) -> int: #Used when initializing color_map
         """
         Return a color for the TreePatch.
         """
-        if self.burning:
-            color = -int(self.firestat * 2.56)  #int is important. otherwise visualiser fucks up the color
+        if self.is_burning():
+            color = -int(self._firestat * 2.56)  #int is important. otherwise visualiser fucks up the color
             return color
         else:
-            return self.treestat
+            return self._treestat
+
+    def modify_firestat(self, amount): #used by firefighter
+        self._firestat += amount
+        if self._firestat < 0:
+            self._burning = False
+            self._update_color()
     
-    def update_color(self) -> None:
+    def _update_color(self) -> None:
         """
         Updates the color of the patch in the color_map
         """
-        self.graph_info.color_map[self.patch_id] = self.get_color()
+        self._graph_info.color_map[self._patch_id] = self.get_color()
         
-    def ignite(self) -> None:
+    def _ignite(self) -> None:
         """
         Ignites the patch.
         Changing the state of the patch.
         """
-        self.burning = True
-        self.firestat = 10
-        self.update_color()
+        self._burning = True
+        self._firestat = 10
+        self._update_color()
 
-    def spread_fire(self) -> None:
+    def _spread_fire(self) -> None:
         """
         Spread fire to neighbouring patches based on spread rate
         """
-        if self.burning:
+        if self._burning:
             neighbours = self.get_neighbours()
             for neighbour in neighbours:
-                if not neighbour.burning and neighbour.treestat > 0:
-                    if random.randint(0, 100) < self.graph_info.options.get("fire_spread_rate"):  #30 by defualt
-                        neighbour.ignite()
+                if not neighbour._burning and neighbour._treestat > 0:
+                    if random.randint(0, 100) < self._graph_info.options.get("fire_spread_rate"):  #30 by defualt
+                        neighbour._ignite()
 
-    def evolve_firestat(self) -> None:
+    def _evolve_firestat(self) -> None:
         """
         Evolves the firestat of the patch.
         """
-        self.firestat += int(self.firestat * 0.1 + 10)
-        
-        if self.firestat > 100:
-            self.firestat = 100
-            return
-        
-        if self.firestat < 0:
-            self.burning = False
-            print(f'Fire was extinguished at {self}, treestat = {self.treestat}')
-        self.update_color()
+        self._firestat += self._firestat * 0.1 + 10 #10 base rate + 0.1 * firestat
 
-    def evolve_treestat(self) -> None:
+        if self._firestat > 100:
+            self._firestat = 100
+        else:
+            self._update_color()
+
+    def _evolve_treestat(self) -> None: 
         """
         Evolves the treestat of the patch.
         """
-        if self.burning:
-            self.treestat -= self.graph_info.options.get("burn_rate") #20 by default
-            if self.treestat <= 0:
-                self.mutate()
+        if self._burning:
+            self._treestat -= self._graph_info.options.get("burn_rate") #20 by default
+            if self._treestat <= 0:
+                self._mutate()
             else:
-                self.spread_fire()
+                self._spread_fire()
 
         else:
-            self.treestat += self.graph_info.options.get("growth_rate") #10 by default
-            if self.treestat >= 256:
-                self.treestat = 256
-            self.update_color()
+            self._treestat += self._graph_info.options.get("growth_rate") #10 by default
+            if self._treestat >= 256:
+                self._treestat = 256
+            self._update_color()
 
-    def spread_forrest(self) -> None:
+    def _spread_forrest(self) -> None:
         """
         Spreads forrest to neighbouring patches with variable probability based on treestat
         """
         neighbours = self.get_neighbours()
         for neighbour in neighbours:
             if isinstance(neighbour, RockPatch):
-                probability = int(5 + 20 * (self.treestat / 256))   #variable probability 5-20%
+                probability = int(5 + 20 * (self._treestat / 256))   #variable probability 5-20%
                 random_num = random.randint(0, 100)
                 if random_num < probability:
-                    neighbour.mutate()
+                    neighbour._mutate()
 
 
-    def updateland(self) -> None:
+    def updateland(self) -> None:  #used in simulation
         """
         Initiates the evolution of the patch.
         """
-        if self.burning:
-            self.evolve_firestat()
+        if self.is_burning():
+            self._evolve_firestat()
         
-        self.evolve_treestat()
-        self.spread_forrest()
+        self._evolve_treestat()
+        self._spread_forrest()
         
-    def mutate(self) -> 'RockPatch':
+    def _mutate(self) -> 'RockPatch':
         """
         Mutates the patch into a RockPatch.
         """
-        self.burning = False #for firefigthers functionallity, since they store target patches
-        new_patch = RockPatch(self.patch_id, 0, graph_info=self.graph_info)
-        self.graph_info.update_patch(new_patch)
+        self._burning = False #for firefigthers functionallity, since they store target patches
+        new_patch = RockPatch(self._patch_id, 0, graph_info=self._graph_info)
+        self._graph_info.update_patch(new_patch)
         return new_patch
     
 class RockPatch(LandPatch):
@@ -189,21 +209,21 @@ class RockPatch(LandPatch):
     def __init__(self, patch_id: int, treestat: int, graph_info=None):
         super().__init__(patch_id, treestat, False, graph_info) #burning = False
 
-        if self.graph_info:
+        if self._graph_info:
             self._update_color()
         
     def __repr__(self) -> str:
         """
         Return a string representation of the RockPatch.
         """
-        return f"RockPatch {self.patch_id}"
+        return f"RockPatch {self._patch_id}"
     
     def _update_color(self) -> None:
         """
         Removes the color from color_map.
         Note: This only run once, when the patch is created.
         """
-        del self.graph_info.color_map[self.patch_id]
+        del self._graph_info.color_map[self._patch_id]
     
     def get_color(self) -> None:
         """
@@ -211,28 +231,22 @@ class RockPatch(LandPatch):
         """
         raise ValueError('RockPatch has no color')
     
-    def spread_fire(self) -> None:
-        """
-        Raises a ValueError, since RockPatch cannot spread fire.
-        """
-        raise ValueError('RockPatch cannot spread fire')
-    
-    def random_forrest(self) -> TreePatch:
+    def random_forrest(self) -> TreePatch: #used from simulation class
         """
         Calculates probability of new forrest and mutates the patch if the probability is met.
         """
-        probability = self.graph_info.options.get("new_forrest_probability")  #move to self?
+        probability = self._graph_info.options.get("new_forrest_probability")
         random_num = random.randint(0, 10000)  #Making the probability act as permille.
         if random_num < probability:  #Newforrest
             print(f'Random forrest appeared at {self}!') #For testing
-            self.mutate()
+            self._mutate()
     
-    def mutate(self) -> 'TreePatch':
+    def _mutate(self) -> 'TreePatch':
         """
         Mutates the patch into a TreePatch or RockPatch.
         """
-        new_patch = TreePatch(self.patch_id, 40, graph_info=self.graph_info)
-        self.graph_info.update_patch(new_patch)
+        new_patch = TreePatch(self._patch_id, 40, graph_info=self._graph_info)
+        self._graph_info.update_patch(new_patch)
 
         return new_patch
         

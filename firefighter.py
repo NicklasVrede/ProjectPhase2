@@ -49,7 +49,7 @@ class Firefighter:
         """
         return self._graph_info.patches.get(self._position)
     
-    def get_position(self) -> int:
+    def get_position(self) -> int: #Used to update firefighter position in graph_info
         """
         Returns the position of the firefighter.
         """
@@ -57,35 +57,28 @@ class Firefighter:
     
     def _get_neighbours(self) -> List[Union[TreePatch, RockPatch]]:
         """
-        Returns a list of neighbouring patches.
+        Returns a list of neighbouring patches objects.
         """
-        neighbours_ids = self._get_pos_object().get_neighbours_ids()
-        res = []
-        for i in neighbours_ids:
-            res.append(self._graph_info.patches.get(i))
-        return res
+        return self._get_pos_object().get_neighbours()
     
     def _extinguish_fire(self, patch: Union[TreePatch, RockPatch]):
         """
         Extinguishes fire at a patch.
         """
-        patch.firestat -= self._power
-        if patch.firestat < 0:
-            patch.burning = False
-            patch.update_color()
+        patch.modify_firestat(-self._power)
 
-    def move(self):
+    def move(self): #Main action, used in simulation.
         """
         Moves the firefighter based on the brain variable.
         """
         position = self._get_pos_object()
-        if position.burning:
+        if position.is_burning():
             return self._extinguish_fire(position) #If firefighter is at fire, he will fight the fire and not move.
 
         move_pool = []
         neighbours = self._get_neighbours()
         for neighbour in neighbours:
-            if neighbour.burning:
+            if neighbour.is_burning():
                 move_pool.append(neighbour)
 
         if not move_pool: #if no fire
@@ -98,8 +91,8 @@ class Firefighter:
             self._path = [] #if neighbour is fire, we reset the path.
             
         new_position = random.choice(move_pool)
-        self._position = new_position.patch_id
-        if new_position.burning:
+        self._position = new_position.get_id() #update position
+        if new_position.is_burning():
             self._extinguish_fire(new_position)  #fight fire at new position
 
     def _smart_move(self, position: Union[TreePatch, RockPatch]):
@@ -111,14 +104,14 @@ class Firefighter:
         """
         all_fires = []
         for patch in list(self._graph_info.patches.values()):
-            if patch.burning:
+            if patch.is_burning():
                 all_fires.append(patch)
         
         if not all_fires:
             return None #If no fire, firefighter stand still
         
         #check if any fires are closer than target:
-        if self._path and self._target.burning:
+        if self._path and self._target.is_burning():
             for fire in all_fires:
                 distance = self._find_least_steps(position, fire)
                 if distance < len(self._path):
@@ -215,7 +208,7 @@ class Firefighter:
             neighbours = current_position.get_neighbours()
             neighbours_to_check = []
             for neighbour in neighbours:
-                if neighbour not in dead_ends.get(steps) and neighbour.patch_id not in path and neighbour is not def_position: #Avoid dead ends and backtracking
+                if neighbour not in dead_ends.get(steps) and neighbour.get_id() not in path and neighbour is not def_position: #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
 
             #check for dead end:
@@ -227,8 +220,8 @@ class Firefighter:
             
             #Pick random neighbour:
             current_position = random.choice(neighbours_to_check)
-            path.append(current_position.patch_id)
+            path.append(current_position.get_id())
 
             #check if we have reached the target:
-            if current_position.patch_id == target.patch_id:
+            if current_position.get_id() == target.get_id():
                 return path, target

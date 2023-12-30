@@ -1,9 +1,10 @@
-from typing import List, Dict
+from typing import List, Dict, Union
 from config.config import welcome
 from initialiser import generate_edges, initialise_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
 from simulation import Simulation
 from reporting import reporting
+from land_rep import TreePatch, RockPatch
 import time
 
 def main(options: Dict[str, int] = dict()) -> None:
@@ -57,8 +58,7 @@ def main(options: Dict[str, int] = dict()) -> None:
 
     #9. Initiate simulation - Simulation.py:
     promt_interval = 0
-    sleep_time = 10 / options.get("iter_num")
-    print(f'sleep time: {sleep_time}')
+    sleep_time = 5 / options.get("iter_num")
     current_simulation = Simulation(graph_info)
 
     for i in range(options.get("iter_num")):  #Move this to simulation.py?
@@ -115,22 +115,17 @@ class GraphInfo:
         Initialises links between objects, and updates rates based on options
         """
         for patch in list(self.patches.values()): # list() is actually not needed, since we dont need indexes.
-            patch.graph_info = self
-
-            if patch.treestat > 0:
-                patch.growthrate = self.options.get('growth_rate')
-                patch.burnrate = self.options.get('burn_rate')
-                patch.spread_rate= self.options.get('fire_spread_rate')
+            patch._graph_info = self
 
         for firefighter in list(self.firefighters.values()):
             firefighter._graph_info = self
 
-    def update_patch(self, patch:object) -> None:
+    def update_patch(self, patch: Union[TreePatch, RockPatch]) -> None:
         """
         Updates a patch in the patches dict.
         Used when a patch mutates.
         """
-        self.patches[patch.patch_id] = patch
+        self.patches[patch.get_id()] = patch
 
     def get_color_map(self) -> Dict[int, int]:
         """
