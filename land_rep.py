@@ -117,7 +117,7 @@ class TreePatch(LandPatch):
         """
         reduces firestat
         """
-        assert amount < 0
+        assert amount > 0
         self._firestat += -amount
         if self._firestat < 0:
             self._burning = False

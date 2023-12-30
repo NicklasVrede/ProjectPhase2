@@ -73,7 +73,7 @@ class TestTreePatch(unittest.TestCase):
     def test_updateland(self):
         self.patch.updateland()
         self.assertEqual(self.patch._treestat, 110)
-        self.patch._burning = True
+        self.patch._ignite()
         self.patch.updateland()
         self.assertEqual(self.patch._treestat, 90)
 
