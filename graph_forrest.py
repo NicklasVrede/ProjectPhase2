@@ -1,5 +1,5 @@
 from typing import List, Dict, Union
-from config.config import welcome
+from config import config
 from firefighter import Firefighter
 from initialiser import generate_edges, initialise_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
 import visualiser_random_forest_graph
@@ -30,9 +30,9 @@ def main(options: Dict[str, int] = dict()) -> None:
     #1. initiate configuration - Configuration.py:
     if options is None or len(options) < 10:
         if options is None:
-            return welcome()
+            return config.welcome()
         else:
-            return welcome(options)
+            return config.welcome(options)
     
     #2. Generate edges and positions - Initialiser.py:
     edges, positions = generate_edges(options)
