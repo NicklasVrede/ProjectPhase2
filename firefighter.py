@@ -133,13 +133,18 @@ class Firefighter:
 
         #Now we have the closest fire. And the shortest distance to it.
         #We need to find the shortest path to it:
-        shortest_path, target = self._find_path(closest_fire, closest_distance)
+        shortest_path = self._find_path(closest_fire, closest_distance)
 
         #Now we have the shortest path to the closest fire.
         #We add this path to the firefighter.
         self._path = shortest_path
-        self._target = target
+        self._target = closest_fire
         #print(f'Firefighter at {position} moving to {closest_fire} with path {self._path}')
+
+        #We move to the first patch in the path:
+        if self._path:
+            self._position = self._path.pop(0)
+
 
     def _find_least_steps(self, position: Union[TreePatch, RockPatch], target: TreePatch):
         """
@@ -189,7 +194,6 @@ class Firefighter:
             dead_ends[i] = set()   #set default empty sets sets.
         def_position = self._get_pos_object()
         current_position = def_position
-        target = closest_fire
 
         steps = 0
         path = []
@@ -222,5 +226,5 @@ class Firefighter:
             path.append(current_position.get_id())
 
             #check if we have reached the target:
-            if current_position.get_id() == target.get_id():
-                return path, target
+            if current_position.get_id() == closest_fire.get_id():
+                return path

@@ -1,12 +1,12 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
 from graph_forrest import GraphInfo
 
 class TestTreePatch(unittest.TestCase):
     def setUp(self):
-        options = {"growth_rate": 10, "burn_rate": 20, "fire_spread_rate": 30}
+        options = {"growth_rate": 10, "burn_rate": 20, "fire_spread_rate": 30, "new_forrest_probability": 100}
         self.patch = TreePatch(1, 100)
         patches = {1: self.patch, 2: RockPatch(2, 0), 3: TreePatch(3, 100)}
         color_map = {1: 100, 3: 100}
@@ -39,13 +39,11 @@ class TestTreePatch(unittest.TestCase):
 
     def test_spread_fire(self):
         neighbour_mock = MagicMock()
-        neighbour_mock._burning = False
-        neighbour_mock._treestat = 100
         self.patch.get_neighbours = MagicMock(return_value=[neighbour_mock]) #mocking get_neighbours
 
-        #Mock random.randint to 42:
-        with self.patch('random.randint') as randint_mock:
-            randint_mock.return_value = 42
+        #Mock random.randint to 1:  #does this work as intended?
+        with patch('random.randint') as randint_mock:  #patch from unittest.mock!
+            randint_mock.return_value = 1
             self.patch._spread_fire()
             self.assertTrue(neighbour_mock._burning)
 
@@ -68,7 +66,10 @@ class TestTreePatch(unittest.TestCase):
         self.assertIsInstance(self.graph_info.get_patch(1), RockPatch)
 
     def test_spread_forrest(self):
-        pass
+        with patch('random.randint') as randint_mock:
+            randint_mock.return_value = 1
+            self.patch._spread_forrest()
+            self.assertIsInstance(self.graph_info.get_patch(2), TreePatch)
 
     def test_updateland(self):
         self.patch.updateland()

@@ -140,7 +140,7 @@ class TreePatch(LandPatch):
             neighbours = self.get_neighbours()
             for neighbour in neighbours:
                 if not neighbour._burning and neighbour._treestat > 0:
-                    if random.randint(0, 100) < self._graph_info.options.get("fire_spread_rate"):  #30 by defualt
+                    if random.randint(1, 100) < self._graph_info.options.get("fire_spread_rate"):  #30 by defualt
                         neighbour._ignite()
 
     def _evolve_firestat(self) -> None:
