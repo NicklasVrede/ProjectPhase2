@@ -2,6 +2,9 @@ options = {} #defined to express f-strings in menu_strings
 line =  "\n"*3 + "-" * 40 + "\n"*3
 
 def change_setting(options):
+    """
+    Returns the change setting menu string
+    """
     return line + f"""
 Which option would you like to change?
 
@@ -26,6 +29,9 @@ Proceed:
 """
 
 def config_final(options):
+    """
+    returns the final configuration menu string
+    """
     return line + f"""
 Current options:
 
