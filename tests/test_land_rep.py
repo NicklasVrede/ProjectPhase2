@@ -1,5 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, patch
+
+import sys
+sys.path.append('')
+
+from your_package.modules import your_module
+
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
 from graph_forrest import GraphInfo

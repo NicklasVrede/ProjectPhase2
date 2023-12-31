@@ -45,8 +45,8 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
             try:
                 user_input = input('Enter a number, "r" (40-120), "d" (80) or "back": ')
                 if user_input == "back":
-                    from graph_forrest import main
-                    return main(options)
+                    from config.config import config_final
+                    return config_final(options)
                 
                 if user_input == "r":
                     user_input = random.randint(40, 120)    
