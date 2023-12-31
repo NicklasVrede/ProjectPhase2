@@ -59,7 +59,7 @@ def main(options: Dict[str, int] = dict()) -> None:
 
     #9. Initiate simulation - Simulation.py:
     promt_interval = 0
-    sleep_time = 20 / options.get("iter_num")
+    sleep_time = 5 / options.get("iter_num") #Minor addition wait time to make the simulation more visible at low iterations
     current_simulation = Simulation(graph_info)
 
     for i in range(options.get("iter_num")):  #Move this to simulation.py?

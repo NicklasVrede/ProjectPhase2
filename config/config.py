@@ -173,7 +173,10 @@ def firefighter_level(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("firefigter_level"))
 
     while True:
-        user_input = input('Enter a "1", "2", "3", or "r" for random: ')
+        user_input = input('Enter a "1", "2", "3", "r" for random: ')
+        if user_input == "d":
+            user_input = 3
+
         if user_input == "r":
             choice = random.randint(1, 3)
             break
@@ -200,9 +203,12 @@ def iter_num(options: Dict[int, Union[str, int]]):
     print(menu_strings.get("iter_num"))
 
     while True:
-        user_input = input('Enter a number, or "r" for random: ')
+        user_input = input('Enter a number, "r" (20-100), d2 for 40: ')
+        if user_input == "d":
+            user_input = 20
+
         if user_input == "r":
-            choice = "r"
+            choice = random.randint(20, 100)
             break
 
         try:
