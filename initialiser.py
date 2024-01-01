@@ -21,7 +21,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
             user_input = input('Enter file path to read edges from or type "back": ')
 
             if user_input == "back":
-                from config.config import main
+                from graph_forrest import main
                 return main(options)
             
             try:
