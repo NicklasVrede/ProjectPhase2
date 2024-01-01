@@ -1,11 +1,22 @@
 import sys
 import os
+import io
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
 from config.config_utils import options_validater
 
 class TestOptionsValidater(unittest.TestCase):
+    def setUp(self) -> None:
+        # Before each test, we create a new StringIO object and assign it to sys.stdout.
+        # This means that all print statements in the tests will write to this object instead of the console.
+        self.held = sys.stdout
+        sys.stdout = io.StringIO()
+
+    def tearDown(self) -> None:
+        # After each test, we restore sys.stdout to its original value. Or it can affect other tests.
+        sys.stdout = self.held
+
     def test_valid_options(self):
         options = {
             "ini_woods": 80,
