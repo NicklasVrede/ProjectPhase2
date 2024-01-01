@@ -94,6 +94,7 @@ def read_edges(file_path: str) -> List[Tuple[int, int]]:
     edges - List[Tuple[int, int]]: A list of edges. Each edge is a tuple of two integers.
    """
     edges = []
+    empty_counter = 0
     with open(file_path, 'r') as file: 
         for line in file:
             if line.strip().startswith("#"):
@@ -108,9 +109,17 @@ def read_edges(file_path: str) -> List[Tuple[int, int]]:
                 except ValueError:
                     print(f'Ignoring line, invalid value, with input: "{line.strip()}"')
             if len(parts) > 2 or len(parts) < 2:
+                if line.strip() == "":
+                    if empty_counter is None:
+                        empty_counter = 0
+                    else:
+                        empty_counter += 1
+                    continue
                 print(f'Ignoring invalid line, cannot form edgde with input: "{line.strip()}"')
+    
+    if empty_counter:
+        print(f'Ignored {empty_counter} empty lines.')
 
-    print(f'Edges read from file: {edges}')
     return edges
 
 def check_connections(edges:List[tuple]) -> bool:

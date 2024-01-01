@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
 from unittest.mock import patch, Mock
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
@@ -35,13 +39,13 @@ class TestInitialiser(unittest.TestCase):
         self.assertIsNotNone(positions)
         
     def test_read_edges(self):
-        edges = read_edges("graph1.dat")
+        edges = read_edges("graphs/graph1.dat")
         self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
-        edges = read_edges("graph3.dat")
+        edges = read_edges("graphs/graph3.dat")
         self.assertEqual(edges, [(1,2), (2,8), (8,1), (6,7)])
-        edges = read_edges("graph4.dat")
+        edges = read_edges("graphs/graph4.dat")
         self.assertEqual(edges, [(1, 2), (2, 8), (8, 1)])
-        edges = read_edges("graph5.dat")
+        edges = read_edges("graphs/graph5.dat")
 
 
     def test_check_connections(self):
@@ -68,7 +72,6 @@ class TestInitialiser(unittest.TestCase):
         self.assertIsInstance(patches.get(10), RockPatch)
         self.assertTrue(patches.get(3).is_burning())
         self.assertTrue(patches.get(7).is_burning())
-
 
 
     def test_initialise_neighbours(self):
