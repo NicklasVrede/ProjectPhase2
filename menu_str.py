@@ -80,7 +80,7 @@ Note: Please see the template file "options.txt" in the config folder.
     "gen_method" : line + """
 Please pick a generation method of the graph.
 
-1. From file
+1. Read from file
 
 d or r. Random
 """,

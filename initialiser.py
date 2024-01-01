@@ -1,4 +1,5 @@
 import random
+from copy import copy
 from typing import Dict, List, Tuple, Union
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
@@ -17,27 +18,36 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
     """
     if options.get("gen_method") == "read":
         while True:
-            try:
-                user_input = input('Enter file path to read edges from or type "back": ')
+            user_input = input('Enter file path to read edges from or type "back": ')
 
-                if user_input == "back":
-                    from config.config import main
-                    return main(options)
-                
+            if user_input == "back":
+                from config.config import main
+                return main(options)
+            
+            try:
                 edges = read_edges(user_input)
                 positions = None
 
-                if len(edges) == 0:
-                    print("Could not generate edges from file, please try an other file.")
+            except FileNotFoundError:
+                try:
+                    edges = read_edges("graphs/" + user_input)
+                    positions = None
+
+                except FileNotFoundError:
+                    print("File not found, please try agian")
                     continue
 
-                if graph_helper.edges_planar(edges):
+            if len(edges) == 0:
+                print("Could not generate edges from file, please try an other file.")
+                continue
+
+            if graph_helper.edges_planar(edges):
+                if check_connections(edges):
                     break
-                else:
-                    print("The graph is not planar, please try an other file.")
-            
-            except FileNotFoundError:
-                print("File not found. Please enter a valid file path.")
+                print("The graph is not connected, please try an other file.")
+            else:
+                print("The graph is not planar, please try an other file.")
+
 
     elif options.get("gen_method") == "random":
         print("Specify the minimal number of patches for the graph (Min. 4). Or type 'back' to go back.")
@@ -101,6 +111,66 @@ def read_edges(file_path: str) -> List[Tuple[int, int]]:
                 print(f'Ignoring invalid line, cannot form edgde with input: "{line.strip()}"')
 
     return edges
+
+def check_connections(edges:List[tuple]) -> bool:
+    """
+    Check if a graph is connected.
+
+    Parameters:
+    - graph: The graph to check.
+
+    Returns:
+    - connected: True if the graph is connected, False otherwise.
+
+    Examples:
+    >>> get_connections([{1, 2}, {3, 4}])
+    [{1, 2}, {3, 4}]
+
+    >>> get_connections([{1, 2}, {2, 3}, {2,4}, {7}])
+    [{1, 2, 3, 4}, {7}]
+    """
+    edge_connections = [set(edge) for edge in edges]
+    
+    def has_intersection(edges_connections: list[set]) -> bool:
+        """
+        Check if there is an intersection between any two sets in the list.
+
+        Parameters:
+        - edges_connections (list[set]): The list of sets to check for intersections.
+
+        Returns:
+        - bool: True if there is an intersection, False otherwise.
+
+        Example:
+        >>> has_intersection([{1, 2}, {3, 4}])
+        False
+
+        >>>has_intersection([{1, 2}, {2, 3}, {3, 4}]
+        True
+        """
+        for a_set in edges_connections:
+            for b_set in edges_connections:
+                if a_set == b_set:
+                    continue
+                elif a_set.intersection(b_set):
+                    return True
+        return False
+
+    while has_intersection(edge_connections):
+        for a_set in edge_connections:
+            for b_set in edge_connections:
+                if a_set is b_set:
+                    continue
+                if a_set.intersection(b_set):
+                    a_set.update(b_set)
+                    edge_connections.remove(b_set)
+                    break
+    
+    if len(edge_connections) > 1:
+        return False
+    else:
+        return True
+
 
 def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
     """
