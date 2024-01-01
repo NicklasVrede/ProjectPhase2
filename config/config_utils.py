@@ -11,6 +11,30 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
     Returns:
     options (Dict[int, str]): A dictionary of options.
     """
+    def read_file(file_path: str) -> Dict[int, Union[str, int]]:
+        """
+        Reads the options from a file.
+
+        Parameters:
+        file_path (str): The path to the file.
+
+        Returns:
+        options (Dict[int, str]): A dictionary of options.
+        """
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+        
+        # Remove comments and strip whitespace
+        lines = [line.split('#')[0].strip() for line in lines]
+
+        # Join the lines back into a single string
+        file_content = ''.join(lines)
+
+        # Now you can evaluate the file content as before
+        options.update(eval(file_content))
+
+        return options
+
     print()
     print("Please note, that the option file is case-sentitive.")
     while True:
@@ -22,21 +46,16 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
             from config.config import read_options_from_file
             return read_options_from_file(options)
         try:
-            with open(user_input, "r") as file:
-                lines = file.readlines()
-            
-            # Remove comments and strip whitespace
-            lines = [line.split('#')[0].strip() for line in lines]
-
-            # Join the lines back into a single string
-            file_content = ''.join(lines)
-
-            # Now you can evaluate the file content as before
-            options.update(eval(file_content))
+            options = read_file(user_input)
             break
 
         except FileNotFoundError:
-            print("File not found, please try agian")
+            try:
+                options = read_file("config/" + user_input)
+                break
+
+            except FileNotFoundError:
+                print("File not found, please try agian")
 
         except SyntaxError:
             print('File syntax error, use the template "options.txt"')

@@ -70,7 +70,7 @@ Press [Enter] to embark on this exciting journey and configure the simulation pa
 
     "read_options_from_file" : line + """
 Would you like to read the options from a file?
-Note: Please see the template file in the same directory as this program.
+Note: Please see the template file "options.txt" in the config folder.
 
 1. Yes
 
