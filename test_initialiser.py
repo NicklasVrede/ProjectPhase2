@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch, Mock, mock_open
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
 from land_rep import TreePatch, RockPatch
+import random
 
 class TestInitialiser(unittest.TestCase):
     def setUp(self) -> None:
@@ -44,18 +45,25 @@ class TestInitialiser(unittest.TestCase):
         self.assertFalse(check_connections(edges))
 
     def test_initialise_patches(self):
-        edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9)]
+        edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)]
         positions = None
         options = {
             "ini_woods": 80,
             "ini_fires": 10,
         }
+        random.sample = Mock(side_effect = [[x for x in range(8)], [3,7]]) #mocking 2 different results
         patches = initialise_patches(edges, positions, options)
-        #print(f'patches: {patches}')
-        self.assertEqual(len(patches), 9)
+        print(f'patches: {patches}')
+        self.assertEqual(len(patches), 11)
         self.assertEqual(patches.get(1).get_id(), 1)
-        #mock sample..
-        pass
+        for i in range(8):
+            self.assertIsInstance(patches.get(i), TreePatch)
+        self.assertIsInstance(patches.get(9), RockPatch)
+        self.assertIsInstance(patches.get(10), RockPatch)
+        self.assertTrue(patches.get(3).is_burning())
+        self.assertTrue(patches.get(7).is_burning())
+
+
 
     def test_initialise_neighbours(self):
         edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9)]
@@ -87,14 +95,16 @@ class TestInitialiser(unittest.TestCase):
             "firefighter_level": 3,
             "firefighter_num": 5
         }
-        patches = {1: None, 2: None, 3: None, 4: None, 5: None}  #We dont need patch obects
+        patches = {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None}  #We dont need patch obects
+        random.sample = Mock(return_value=[1, 2, 3, 4, 5])
         firefighters = initialise_firefighters(patches, options)
         self.assertEqual(len(firefighters), 5)
         self.assertNotIn(0, firefighters)
         self.assertEqual(firefighters[1]._power, 35)
         self.assertTrue(firefighters[1]._brain)
-
-        #mock sample..
+        self.assertNotIn(6, firefighters)
+        self.assertNotIn(7, firefighters)
+        self.assertNotIn(8, firefighters)
 
 
 if __name__ == '__main__':
