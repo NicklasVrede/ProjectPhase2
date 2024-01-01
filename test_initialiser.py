@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, Mock, mock_open
+from unittest.mock import patch, Mock
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
 from land_rep import TreePatch, RockPatch
 import random
@@ -8,35 +8,41 @@ class TestInitialiser(unittest.TestCase):
     def setUp(self) -> None:
         pass
 
-    def test_generate_edges_read(self):
-        pass
+    @patch('initialiser.read_edges', return_value=[(1, 2), (2, 3), (3, 1)])
+    def test_generate_edges_read(self, mock_read_edges):
+        options = {
+            "gen_method": "read",
+            "edges_file": "test_edges.txt"
+        }
+        patch('builtins.input', return_value='test_edges.txt').start()
+        
+        edges, positions = generate_edges(options)
 
-    def test_generate_edges_random(self):
+        self.assertEqual(edges, [(1, 2), (2, 3), (3, 1)])
+        self.assertIsNone(positions)
+
+    @patch('graph_helper.voronoi_to_edges', return_value=([(1, 2), (2, 3), (3, 1), (4, 5)], {1: (0.1, 0.1), 2: (0.2, 0.2), 3: (0.3, 0.3), 4: (0.4, 0.4)}))
+    def test_generate_edges_random(self, mock_voronoi_to_edges):
         options = {
             "gen_method": "random"
         }
-        pass
+        patch('builtins.input', return_value='r').start()
+        random.randint = Mock(return_value=5)
+        edges, positions = generate_edges(options)
 
-    def test_generate_edges_invalid(self):
-        options = {
-            "gen_method": "invalid"
-        }
-        pass
-
-    def test_generate_edges_back(self):
-        options = {
-            "gen_method": "back"
-        }
-        pass
-
-    def test_generate_edges_file_not_found(self):
-        options = {
-            "gen_method": "read"
-        }
-        pass
-
+        self.assertEqual(len(edges), 4)
+        self.assertEqual(edges, [(1, 2), (2, 3), (3, 1), (4, 5)])
+        self.assertIsNotNone(positions)
+        
     def test_read_edges(self):
-        pass
+        edges = read_edges("graph1.dat")
+        self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
+        edges = read_edges("graph3.dat")
+        self.assertEqual(edges, [(1,2), (2,8), (8,1), (6,7)])
+        edges = read_edges("graph4.dat")
+        self.assertEqual(edges, [(1, 2), (2, 8), (8, 1)])
+        edges = read_edges("graph5.dat")
+
 
     def test_check_connections(self):
         edges = [(1, 2), (2, 3), (3, 1)]
@@ -53,7 +59,7 @@ class TestInitialiser(unittest.TestCase):
         }
         random.sample = Mock(side_effect = [[x for x in range(8)], [3,7]]) #mocking 2 different results
         patches = initialise_patches(edges, positions, options)
-        print(f'patches: {patches}')
+
         self.assertEqual(len(patches), 11)
         self.assertEqual(patches.get(1).get_id(), 1)
         for i in range(8):

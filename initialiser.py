@@ -110,6 +110,7 @@ def read_edges(file_path: str) -> List[Tuple[int, int]]:
             if len(parts) > 2 or len(parts) < 2:
                 print(f'Ignoring invalid line, cannot form edgde with input: "{line.strip()}"')
 
+    print(f'Edges read from file: {edges}')
     return edges
 
 def check_connections(edges:List[tuple]) -> bool:
