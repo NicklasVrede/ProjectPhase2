@@ -118,6 +118,8 @@ Choose the average skill level firefighters:
 2. Medium (High power, no intelligence)
 
 3. High (High power, intelligent)
+Can navigate to the nearest fire.
+
     """,
 
     "iter_num" : line + """
