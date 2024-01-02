@@ -37,6 +37,10 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                     print("File not found, please try agian")
                     continue
 
+                else:
+                    print("Wrong file path, please try again.")
+                    continue
+
             if len(edges) == 0:
                 print("Could not generate edges from file, please try an other file.")
                 continue
@@ -47,6 +51,8 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 print("The graph is not connected, please try an other file.")
             else:
                 print("The graph is not planar, please try an other file.")
+
+            print("Wrong input, please try again.")
 
 
     elif options.get("gen_method") == "random":
