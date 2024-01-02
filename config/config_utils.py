@@ -158,13 +158,14 @@ def advanced_defaults(options: Dict[int, str]) -> Dict[int, str]:
     Returns:
     options (Dict[int, str]): A dictionary of options.
     """
+
     if "growth_rate" not in options:
-        options.update({"growth_rate" : 10})
+        options["growth_rate"] = 10
     if "burn_rate" not in options:
-        options.update({"burn_rate" : 20})
+        options["burn_rate"] = 20
     if "new_forrest_probability" not in options:
-        options.update({"new_forrest_probability" : 100})
+        options["new_forrest_probability"] = 100
     if "fire_spread_rate" not in options:
-        options.update({"fire_spread_rate" : 30})
+        options["fire_spread_rate"] = 30
 
     return options

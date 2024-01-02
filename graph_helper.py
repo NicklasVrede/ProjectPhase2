@@ -14,7 +14,6 @@ Python 3.7 or higher.
 
 
 
-
 Notes
 -----
 This module provided as material for the phase 2 project for DM857, DS830 (2023). 
