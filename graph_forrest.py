@@ -36,7 +36,6 @@ def main(options: Dict[str, int] = dict()) -> None:
     
     #2. Generate edges and positions - Initialiser.py:
     edges, positions = generate_edges(options)
-    print(f'Positions: {positions}')
 
     #3. Initialise patch objects - Initialiser.py:
     patches = initialise_patches(edges, positions, options)
