@@ -56,10 +56,6 @@ class LandPatch(ABC):
         return res
     
     @abstractmethod
-    def get_color(self):
-        raise NotImplementedError
-    
-    @abstractmethod
     def _update_color(self):
         raise NotImplementedError
     
@@ -232,12 +228,6 @@ class RockPatch(LandPatch):
         Note: This only run once, when the patch is created.
         """
         self._graph_info.remove_color(self._patch_id)
-    
-    def get_color(self) -> None:
-        """
-        Raises a ValueError, since RockPatch has no value in color_map.
-        """
-        raise ValueError('RockPatch has no color')
     
     def random_forrest(self) -> TreePatch: #used from simulation class
         """
