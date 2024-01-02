@@ -118,7 +118,7 @@ class Firefighter:
                     break
             
             if self._path:  #More if path is not reset
-                self._position = self._path.pop(0)
+                self._position = self._path.pop(-1)
                 return None #important we dont continue.
 
 
@@ -143,7 +143,7 @@ class Firefighter:
 
         #We move to the first patch in the path:
         if self._path:
-            self._position = self._path.pop(0)
+            self._position = self._path.pop(-1)
 
 
     def _find_least_steps(self, position: Union[TreePatch, RockPatch], target: TreePatch):
@@ -192,7 +192,8 @@ class Firefighter:
         dead_ends = {} #dict with dead ends as values and steps as keys.
         for i in range(1,distance+2):
             dead_ends[i] = set()   #set default empty sets sets.
-        def_position = self._get_pos_object()
+        def_position = closest_fire
+        target_id = self._get_pos_object().get_id()
         current_position = def_position
 
         steps = 0
@@ -226,5 +227,6 @@ class Firefighter:
             path.append(current_position.get_id())
 
             #check if we have reached the target:
-            if current_position.get_id() == closest_fire.get_id():
+            time.sleep(1)
+            if current_position.get_id() == target_id:  #__eq__ could be implemented instead of using id.
                 return path

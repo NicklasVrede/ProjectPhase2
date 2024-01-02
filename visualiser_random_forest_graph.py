@@ -115,6 +115,7 @@ class Visualiser:
     nx.draw_networkx_nodes(self._H, self._pos,
                        node_color = self._cmap, node_size = self._node_size,linewidths=1)
     nx.draw_networkx_edges(self._H, self._pos, arrows=False)
+    nx.draw_networkx_labels(self._H, self._pos,font_size=10,font_color='black')
     if(self._lnodes_edges):
        lcmap=[self._cmap[i] for i in self._lnodes_edges]
        nx.draw_networkx_nodes(self._H,self._pos,node_color = lcmap,
