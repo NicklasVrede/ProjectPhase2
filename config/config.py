@@ -231,27 +231,27 @@ def change_setting(options: Dict[int, Union[str, int]]):
     while True:
         user_input = input('Enter a number: ')
         if user_input == "1":
-            options.update({"gen_method" : None})
+            options["gen_method"] = None
             return gen_method(options)
 
         elif user_input == "2":
-            options.update({"ini_woods" : None})
+            options["ini_woods"] = None
             return ini_woods(options)
         
         elif user_input == "3":
-            options.update({"ini_fires" : None})
+            options["ini_fires"] = None
             return ini_fires(options)
 
         elif user_input == "4":
-            options.update({"firefighter_num" : None})
+            options["firefighter_num"] = None
             return firefighter_num(options)
     
         elif user_input == "5":
-            options.update({"firefighter_level" : None})
+            options["firefighter_level"] = None
             return firefighter_level(options)
 
         elif user_input == "6":
-            options.update({"iter_num" : None})
+            options["iter_num"] = None
             return iter_num(options)
         
         elif user_input == "7":
@@ -263,19 +263,19 @@ def change_setting(options: Dict[int, Union[str, int]]):
             return growth_rate(options)
         
         elif user_input == "9":
-            options.update({"growth_rate" : None})
+            options["growth_rate"] = None
             return growth_rate(options)
 
         elif user_input == "10":
-            options.update({"burn_rate" : None})
+            options["burn_rate"] = None
             return burn_rate(options)
         
         elif user_input == "11":
-            options.update({"new_forrest_probability" : None})
+            options["new_forrest_probability"] = None
             return new_forrest_probability(options)
         
         elif user_input == "12":
-            options.update({"fire_spread_rate" : None})
+            options["fire_spread_rate"] = None
             return fire_spread_rate(options)
         
         elif user_input == "13":
