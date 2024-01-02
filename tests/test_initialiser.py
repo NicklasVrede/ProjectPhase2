@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch, Mock
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
 from land_rep import TreePatch, RockPatch
+import builtins
 import random
 import io
 
@@ -20,14 +21,14 @@ class TestInitialiser(unittest.TestCase):
         # After each test, we restore sys.stdout to its original value. Or it can affect other tests.
         sys.stdout = self.held
 
-    @patch('initialiser.read_edges', return_value=[(1, 2), (2, 3), (3, 1)])
-    def test_generate_edges_read(self, mock_read_edges):
+
+    def test_generate_edges_read(self):
         options = {
             "gen_method": "read",
         }
-        patch('builtins.input', return_value='test_edges.txt').start()
-        
-        edges, positions = generate_edges(options)
+        builtins.input = Mock(return_value='test_edges.txt')
+        with patch('initialiser.read_edges', return_value=[(1, 2), (2, 3), (3, 1)]):
+            edges, positions = generate_edges(options)
 
         self.assertEqual(edges, [(1, 2), (2, 3), (3, 1)])
         self.assertIsNone(positions)
@@ -42,6 +43,8 @@ class TestInitialiser(unittest.TestCase):
         patch('builtins.input', return_value='r').start()
         random.randint = Mock(return_value=5)
         edges, positions = generate_edges(options)
+        
+        print(f'edges: {edges}, positions: {positions}')
 
         self.assertEqual(len(edges), 4)
         self.assertEqual(edges, [(1, 2), (2, 3), (3, 1), (4, 5)])

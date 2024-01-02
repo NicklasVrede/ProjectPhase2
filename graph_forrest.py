@@ -63,7 +63,7 @@ def main(options: Dict[str, int] = dict()) -> None:
     current_simulation = Simulation(graph_info)
 
     for i in range(options.get("iter_num")):  #Move this to simulation.py?
-        if promt_interval >= 2:
+        if promt_interval >= 1.3:
             promt_interval = 0
             print(f"Iteration {i+1} of {options.get('iter_num')}")
     

@@ -45,20 +45,30 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
         if user_input == "back":
             from config.config import read_options_from_file
             return read_options_from_file(options)
+        
         try:
-            options = read_file(user_input)
+            options = read_file("config/" + user_input)
             break
-
+        
         except FileNotFoundError:
             try:
-                options = read_file("config/" + user_input)
+                options = read_file(user_input)
                 break
 
             except FileNotFoundError:
                 print("File not found, please try agian")
+            
+            except SyntaxError:
+                print('File syntax error, use the template "options.txt"')
 
+            except NameError:
+                print('NameError, please check format of the options')
+        
         except SyntaxError:
             print('File syntax error, use the template "options.txt"')
+
+        except NameError:
+                print('NameError, please check format of the options')
 
     return options
 
@@ -119,14 +129,16 @@ def options_validater(options: Dict[int, Union[str, int]]) -> Dict[int, Union[st
     
 
     if "firefighter_num" in options and isinstance(options.get("firefighter_num"), str):
-        num = options.get("firefighter_num")
-        num = num.split("%")[0]
         try:
+            num = options.get("firefighter_num")
+            num = num.split("%")[0]
             num = int(num)
             if num < 0:
-                raise ValueError("Value for firefighter_num must be between 0 and 100")
+                raise ValueError("Value for firefighter_num must be positive")
         except ValueError:
-            raise ValueError("Wrong value for firefighter_num")
+            print(f'Wrong value for firefighter_num: {options.get("firefighter_num")}')
+            print(f'Please reasign in basic config.')
+            options["firefighter_num"] = None
     else:
         if "firefighter_num" in options:
             if options.get("firefighter_num") < 0:
