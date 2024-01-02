@@ -3,6 +3,7 @@ from copy import copy
 from typing import Dict, List, Tuple, Union
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
+import networkx as nx
 import graph_helper
 
 def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int, int]], Dict[int, Tuple[float, float]]]:
@@ -26,12 +27,12 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
             
             try:
                 edges = read_edges("graphs/"+ user_input)
-                positions = None
+                positions = planar_positions(edges)
 
             except FileNotFoundError:
                 try:
                     edges = read_edges(user_input)
-                    positions = None
+                    positions = planar_positions(edges)
 
                 except FileNotFoundError:
                     print("Could not find file, please try again.")
@@ -183,7 +184,25 @@ def check_connections(edges:List[tuple]) -> bool:
         return False
     else:
         return True
+    
+def planar_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, float]]:
+    """
+    Generates positions for a planar graph.
 
+    Parameters:
+    edges (List[Tuple[int, int]]): A list of edges.
+
+    Returns:
+    positions - Dict[int, Tuple[float, float]]: A dictionary of positions. Each key is a patch ID, and each value is a position.
+    """
+    graph = nx.Graph(edges)
+    positions = nx.planar_layout(graph) #This makes it more pretty than spring_layout.
+    #correcting datatype to adhere to visualiser module:
+    #key: array([0.5, 0.5]) -> key: (0.5, 0.5)
+    positions = {key: tuple(value) for key, value in positions.items()}
+
+
+    return positions
 
 def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
     """

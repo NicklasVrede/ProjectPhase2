@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import unittest
 from unittest.mock import patch, Mock
-from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
+from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters, planar_positions
 from land_rep import TreePatch, RockPatch
 import builtins
 import random
@@ -31,7 +31,8 @@ class TestInitialiser(unittest.TestCase):
             edges, positions = generate_edges(options)
 
         self.assertEqual(edges, [(1, 2), (2, 3), (3, 1)])
-        self.assertIsNone(positions)
+        print(f'Positions: {planar_positions(edges)}')
+        self.assertEqual(len(positions), 3)
         
 
     @patch('graph_helper.voronoi_to_edges', return_value=([(1, 2), (2, 3), (3, 1), (4, 5)], {1: (0.1, 0.1), 2: (0.2, 0.2), 3: (0.3, 0.3), 4: (0.4, 0.4)}))
@@ -59,12 +60,22 @@ class TestInitialiser(unittest.TestCase):
         self.assertEqual(edges, [(1, 2), (2, 8), (8, 1)])
         edges = read_edges("graphs/graph5.dat")
 
-
     def test_check_connections(self):
         edges = [(1, 2), (2, 3), (3, 1)]
         self.assertTrue(check_connections(edges))
         edges = [(1, 6), (2, 3), (3, 4), (4, 5)]
         self.assertFalse(check_connections(edges))
+
+    def test_planar_positions(self): #check if the function returns a dictionary with the correct keys and values
+        edges = [(1, 2), (2, 3), (3, 1)]
+        positions = planar_positions(edges)
+        self.assertIsInstance(positions, dict)
+        self.assertEqual(len(positions), 3)
+        for i in range(1, 3):
+            self.assertIn(i, positions)
+            self.assertIsInstance(positions[i], tuple)
+            self.assertIsInstance(positions[i][0], float)
+            self.assertIsInstance(positions[i][1], float)
 
     def test_initialise_patches(self):
         edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)]
@@ -126,6 +137,8 @@ class TestInitialiser(unittest.TestCase):
         self.assertNotIn(6, firefighters)
         self.assertNotIn(7, firefighters)
         self.assertNotIn(8, firefighters)
+
+
 
 
 if __name__ == '__main__':
