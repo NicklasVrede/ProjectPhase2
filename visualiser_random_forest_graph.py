@@ -38,6 +38,8 @@ class Visualiser:
     Colour_map: Dict[int:int]
       Dictionary containing the identity and color of each node
         Colour, expressed as a integer from -256(full-red) to 256(full-green)
+    pos_nodes: Optional[Dict[int:Tuple[float,float]]]={},
+      Dictionary of key:{x,y} positions identifing the location of each node
     node_size: int, default 100
       Control the size of the drawn nodes
     vis_labels: Optional[bool] = False,
