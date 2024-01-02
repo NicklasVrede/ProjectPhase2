@@ -7,10 +7,18 @@ from unittest.mock import patch, Mock
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters
 from land_rep import TreePatch, RockPatch
 import random
+import io
 
 class TestInitialiser(unittest.TestCase):
     def setUp(self) -> None:
-        pass
+        # Before each test, we create a new StringIO object and assign it to sys.stdout.
+        # This means that all print statements in the tests will write to this object instead of the console.
+        self.held = sys.stdout
+        sys.stdout = io.StringIO()
+
+    def tearDown(self) -> None:
+        # After each test, we restore sys.stdout to its original value. Or it can affect other tests.
+        sys.stdout = self.held
 
     @patch('initialiser.read_edges', return_value=[(1, 2), (2, 3), (3, 1)])
     def test_generate_edges_read(self, mock_read_edges):
@@ -24,9 +32,11 @@ class TestInitialiser(unittest.TestCase):
 
         self.assertEqual(edges, [(1, 2), (2, 3), (3, 1)])
         self.assertIsNone(positions)
+        
 
     @patch('graph_helper.voronoi_to_edges', return_value=([(1, 2), (2, 3), (3, 1), (4, 5)], {1: (0.1, 0.1), 2: (0.2, 0.2), 3: (0.3, 0.3), 4: (0.4, 0.4)}))
     def test_generate_edges_random(self, mock_voronoi_to_edges):
+
         options = {
             "gen_method": "random"
         }
