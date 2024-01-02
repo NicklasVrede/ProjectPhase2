@@ -24,7 +24,6 @@ class TestInitialiser(unittest.TestCase):
     def test_generate_edges_read(self, mock_read_edges):
         options = {
             "gen_method": "read",
-            "edges_file": "test_edges.txt"
         }
         patch('builtins.input', return_value='test_edges.txt').start()
         
