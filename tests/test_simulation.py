@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -38,7 +42,7 @@ class TestSimulation(unittest.TestCase):
         self.assertEqual(self.simulation.get_history()[0]["Fire_population"], 1)
 
         # Check if patch methods are called correctly
-        patch1.random_forrest.assert_called_once()
+        patch1.random_forrest.assert_called_once() #special method for mock objects
         patch2.updateland.assert_called_once()
         patch3.updateland.assert_called_once()
 
@@ -50,7 +54,7 @@ class TestSimulation(unittest.TestCase):
         self.simulation.activate_firefighters()
 
         # Check if firefighter methods are called correctly
-        firefighter1.move.assert_called_once()
+        firefighter1.move.assert_called_once() 
         firefighter2.move.assert_called_once()
 
 if __name__ == '__main__':

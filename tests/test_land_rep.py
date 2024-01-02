@@ -2,9 +2,10 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-import unittest
-from unittest.mock import MagicMock, patch
 
+import unittest
+from unittest.mock import Mock, patch
+import random
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
 from graph_forrest import GraphInfo
@@ -42,15 +43,13 @@ class TestTreePatch(unittest.TestCase):
         self.assertTrue(self.patch._burning)
         self.assertEqual(self.patch._firestat, 10)
 
-    def test_spread_fire(self):
-        neighbour_mock = MagicMock()
-        self.patch.get_neighbours = MagicMock(return_value=[neighbour_mock]) #mocking get_neighbours
 
-        #Mock random.randint to 1:  #does this work as intended?
-        with patch('random.randint') as randint_mock:  #patch from unittest.mock!
-            randint_mock.return_value = 1
-            self.patch._spread_fire()
-            self.assertTrue(neighbour_mock._burning)
+    def test_spread_fire(self):
+        neighbour_mock = Mock()
+        self.patch.get_neighbours = Mock(return_value=[neighbour_mock]) #mocking get_neighbours
+        random.randint = Mock(return_value=1) 
+        self.patch._spread_fire()
+        self.assertTrue(neighbour_mock._burning)
 
     def test_evolve_firestat(self):
         self.patch._ignite()
@@ -71,17 +70,21 @@ class TestTreePatch(unittest.TestCase):
         self.assertIsInstance(self.graph_info.get_patch(1), RockPatch)
 
     def test_spread_forrest(self):
-        with patch('random.randint') as randint_mock:
-            randint_mock.return_value = 1
-            self.patch._spread_forrest()
-            self.assertIsInstance(self.graph_info.get_patch(2), TreePatch)
+        random.randint = Mock(return_value=1)
+        self.patch._spread_forrest()
+        self.assertIsInstance(self.graph_info.get_patch(2), TreePatch)
 
-    def test_updateland(self):
+    def test_updateland(self): #mocking the relevant methods, and checking if they are called
+        self.patch._evolve_firestat = Mock()
+        self.patch._evolve_treestat = Mock()
+        self.patch._spread_forrest = Mock()
         self.patch.updateland()
-        self.assertEqual(self.patch._treestat, 110)
+        self.patch._evolve_firestat.assert_not_called()
+        self.patch._evolve_treestat.assert_called_once()
+        self.patch._spread_forrest.assert_called_once()
         self.patch._ignite()
         self.patch.updateland()
-        self.assertEqual(self.patch._treestat, 90)
+        self.patch._evolve_firestat.assert_called_once()
 
     def test_mutate(self):
         self.patch._mutate()
