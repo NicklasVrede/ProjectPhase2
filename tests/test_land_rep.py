@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 import random
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
