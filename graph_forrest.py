@@ -66,7 +66,7 @@ def main(options: Dict[str, int] = dict()) -> None:
         if promt_interval >= 1.3:
             promt_interval = 0
             print(f"Iteration {i+1} of {options.get('iter_num')}")
-    
+
         current_simulation.evolve() #Evolve the simulation
         graph_object.update_node_colours(graph_info.get_color_map()) #Update color map
         graph_object.update_node_edges(list(graph_info.get_firefighter_positions())) #Update fire fighters positions

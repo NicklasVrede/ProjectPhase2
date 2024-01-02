@@ -27,8 +27,6 @@ def growth_rate(options:dict):
         except ValueError:
             print("Enter a whole number")
 
-        print("Wrong input, please try agian")
-            
     options.update({"growth_rate" : choice})
 
     return burn_rate(options)
@@ -57,7 +55,6 @@ def burn_rate(options:dict):
         except ValueError:
             print("Enter a whole number")
 
-        print("Wrong input, please try agian")
             
     options.update({"burn_rate" : choice})
 
@@ -88,7 +85,6 @@ def new_forrest_probability(options:dict):
         except ValueError:
             print("Enter a whole number")
 
-        print("Wrong input, please try agian")
             
     options.update({"new_forrest_probability" : choice})
 
@@ -97,6 +93,7 @@ def new_forrest_probability(options:dict):
 
 def fire_spread_rate(options:dict):
     if options.get("fire_spread_rate"):
+        from config.config import config_final
         return config_final(options)
     print(menu_strings.get("fire_spread_rate"))
 
@@ -119,8 +116,6 @@ def fire_spread_rate(options:dict):
 
         except ValueError:
             print("Enter a whole number")
-
-        print("Wrong input, please try agian")
             
     options.update({"fire_spread_rate" : choice})
     

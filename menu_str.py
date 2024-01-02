@@ -132,7 +132,7 @@ How many iteration steps would you like?
 #advanced options:
      "growth_rate" : line + """
 Enter the growth rate of trees each iteration.
-This rate is an fixed amount added to the tree state each iteration.
+This rate is an fixed amount added to treestat (256 max) each iteration.
 
 d. Default (10)
 
@@ -142,8 +142,8 @@ r. Random number (between 0 and 100)
 
 
     "burn_rate" : line + """
-Enter the growth rate of fires each iteration.
-This rate is an fixed amount added to the fire state each iteration.
+Enter the fires burn rate each iteration.
+If a patch is burning its treestat will be reduced by the burn rate each iteration.
 
 d. Default (20)
 
@@ -155,9 +155,9 @@ r. Random number (between 0 and 100)
 Enter the probability of a new forrest each iteration.
 This probability is a probability in permille, i.e. 100 = 1 %.
 
-d. Default (1 %)
+d. Default (100 (1 %))
 
-r. Random number (between 0 and 10 %)
+r. Random number (between 0 and 1000 (0 - 10 %))
 
 """,
 
@@ -165,9 +165,9 @@ r. Random number (between 0 and 10 %)
 Enter the probability of a fire spreading to a neighbouring patch each iteration.
 This probability is in percent. 
 
-d. Default (30 %)
+d. Default (30 (30 %))
 
-r. Random number (between 0 and 100 %)
+r. Random number (0 to 100 (0 - 100 %))
 
 """,
 
