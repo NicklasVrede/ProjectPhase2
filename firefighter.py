@@ -227,6 +227,5 @@ class Firefighter:
             path.append(current_position.get_id())
 
             #check if we have reached the target:
-            time.sleep(1)
             if current_position.get_id() == target_id:  #__eq__ could be implemented instead of using id.
                 return path
