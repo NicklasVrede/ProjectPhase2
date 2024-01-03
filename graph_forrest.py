@@ -176,11 +176,12 @@ class GraphInfo:
         #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())] 
         
 
-    def get_firefighters(self) -> Dict[int, Firefighter]:
+    def activate_firefighters(self) -> Dict[int, Firefighter]:
         """
         Returns the firefighters dict.
         """
-        return self._firefighters
+        for fighter in list(self._firefighters.values()):
+            fighter.move()
 
 
 #Run the program

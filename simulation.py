@@ -46,21 +46,13 @@ class Simulation:
             else:
                 patch.updateland()
 
-        self.activate_firefighters()
+        self.graphinfo.activate_firefighters()
         
     def get_history(self) -> Dict[int, Dict[str, int]]:
         """
         Returns the simulation history.
         """
         return self.history
-
-    def activate_firefighters(self):
-        """
-        Activates firefighters.
-        """
-        for fighter in list(self.graphinfo.get_firefighters().values()):
-            fighter.move()
-
         
             
 
