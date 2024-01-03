@@ -118,7 +118,7 @@ class GraphInfo:
         """
         Initialises links between objects, and updates rates based on options
         """
-        for patch in list(self._patches.values()): # list() is actually not needed, since we dont need indexes.
+        for patch in self._patches.values():
             patch._graph_info = self
 
         for firefighter in list(self._firefighters.values()):
