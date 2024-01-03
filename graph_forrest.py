@@ -181,7 +181,7 @@ class GraphInfo:
         
     def activate_firefighters(self) -> Dict[int, Firefighter]:
         """
-        Returns the firefighters dict.
+        Activates the firefighters.
         """
         for fighter in list(self._firefighters.values()):
             fighter.move()
