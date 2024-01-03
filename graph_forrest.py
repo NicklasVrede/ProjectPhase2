@@ -157,7 +157,7 @@ class GraphInfo:
 
     def remove_color(self, patch_id: int) -> None:
         """
-        Removes a patch from the color map.
+        Removes a the color of a patch in the color_map.
         """
         del self._color_map[patch_id]
 
