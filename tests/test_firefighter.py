@@ -49,7 +49,7 @@ class TestFirefighter(unittest.TestCase):
         self.graph_info.get_patch(8)._ignite()
         self.firefighter._smart_move(position)
         self.assertEqual(self.firefighter._target.get_id(), 8)
-        self.assertEqual(self.firefighter._path, [4, 8]) #first step is poped imidiatly
+        self.assertEqual(self.firefighter._path, [8, 4]) #first step is poped imidiatly
 
     def test_find_least_steps(self):
         position = self.graph_info.get_patch(1)
@@ -57,10 +57,12 @@ class TestFirefighter(unittest.TestCase):
         steps = self.firefighter._find_least_steps(position, target)
         self.assertEqual(steps, 3)
 
+
     def test_find_path(self):
         target = self.graph_info.get_patch(8)
         path = self.firefighter._find_path(target, 3)
-        self.assertEqual(path, [2, 4, 8])
+        self.assertEqual(path, [8, 4, 2])
+
 
 if __name__ == '__main__':
     unittest.main()

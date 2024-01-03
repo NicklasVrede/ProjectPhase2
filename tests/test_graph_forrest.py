@@ -3,6 +3,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
+from unittest.mock import Mock
 from graph_forrest import GraphInfo
 from firefighter import Firefighter
 from land_rep import TreePatch, RockPatch
@@ -36,7 +37,6 @@ class TestGraphInfo(unittest.TestCase):
         self.assertEqual(updated_patch.get_id(), 3)
         self.assertIsInstance(updated_patch, RockPatch)
 
-
     def test_get_neighbours_ids(self):
         neighbours = self.graph_info.get_neighbours_ids(1)
         self.assertIsInstance(neighbours, list)
@@ -69,12 +69,13 @@ class TestGraphInfo(unittest.TestCase):
         self.assertIn(1, positions)
         self.assertIn(2, positions)
 
-    def test_get_firefighters(self):
-        firefighters = self.graph_info.get_firefighters()
-        self.assertIsInstance(firefighters, dict)
-        self.assertEqual(len(firefighters), 2)
-        self.assertIsInstance(firefighters[1], Firefighter)
-        self.assertIsInstance(firefighters[2], Firefighter)
+    def test_activate_firefighters(self):
+        self.held = Firefighter.move
+        Firefighter.move = Mock(return_value=None)
+        self.graph_info.activate_firefighters()
+        self.assertEqual(Firefighter.move.call_count, len(self.graph_info._firefighters.keys()))
 
+        #undo changes
+        Firefighter.move = self.held
 if __name__ == '__main__':
     unittest.main()

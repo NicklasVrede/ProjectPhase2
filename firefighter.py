@@ -200,7 +200,10 @@ class Firefighter:
         path = []
 
         while True:
+            #add current position to path:
+            path.append(current_position.get_id())
             steps += 1
+
             #Check if we have reached the max distance
             if steps > distance:
                 dead_ends[steps].add(current_position)
@@ -215,6 +218,7 @@ class Firefighter:
                 if neighbour not in dead_ends.get(steps) and neighbour.get_id() not in path and neighbour is not def_position: #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
 
+
             #check for dead end:
             if not neighbours_to_check:
                 dead_ends[steps].add(current_position)
@@ -224,8 +228,9 @@ class Firefighter:
             
             #Pick random neighbour:
             current_position = random.choice(neighbours_to_check)
-            path.append(current_position.get_id())
 
             #check if we have reached the target:
             if current_position.get_id() == target_id:  #__eq__ could be implemented instead of using id.
                 return path
+            
+        
