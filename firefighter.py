@@ -16,6 +16,10 @@ class Firefighter:
     graph_info (GraphInfo): Stores information about the graph.
     path (list): List of patch ids to representing a path.
     target (object): Target patch object on fire.
+
+    Methods:
+    get_position: Returns the position of the firefighter.
+    move: Moves/activates the firefighter based on skill level.
     """
     def __init__(self, id: int, skill_level: int, position: int):
         self._id = id
