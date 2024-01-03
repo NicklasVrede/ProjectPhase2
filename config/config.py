@@ -20,6 +20,9 @@ def read_options_from_file(options: Dict[int, Union[str, int]]):
         user_input = input('Enter "1" or "2": ')
 
         if user_input == "1":
+            options = read_options(options)
+            options = convert_to_int(options)
+            options = options_validater(options)
             break
 
         elif user_input == "2":
@@ -27,11 +30,6 @@ def read_options_from_file(options: Dict[int, Union[str, int]]):
         
         else:
             print("Wrong input, please try agian")
-
-    #Correct and check options
-    options = read_options(options)
-    options = convert_to_int(options)
-    options = options_validater(options)
 
     return gen_method(options)
 
@@ -109,6 +107,9 @@ def ini_fires(options: Dict[int, Union[str, int]]):
             choice = int(user_input)
             if choice < 0:
                 print("Enter a number greater than 0")
+                continue
+            if choice > 100:
+                print("Enter a number less than 100")
                 continue
             break
 
