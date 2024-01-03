@@ -173,7 +173,8 @@ class GraphInfo:
         
         return res
 
-        #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())]
+        #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())] 
+        
 
     def get_firefighters(self) -> Dict[int, Firefighter]:
         """
