@@ -13,6 +13,12 @@ class LandPatch(ABC):
     burning (bool): Variable identifying if the patch is burning.
     graph_info (GraphInfo): Stores information about the graph.
 
+    Methods:
+    get_id: Returns the ID of the patch.
+    is_burning: Returns True if the patch is burning.
+    get_treestat: Returns the treestat of the patch.
+    get_neighbours_ids: Returns a list of IDs of neighbouring patches.
+    get_neighbours: Returns a list the neighbouring patches objects.
     """
     def __init__(self, patch_id: int, treestat: int, burning: bool, graph_info = None):
         self._patch_id = patch_id
