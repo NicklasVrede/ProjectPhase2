@@ -221,7 +221,6 @@ class Firefighter:
                 if neighbour not in dead_ends.get(steps) and neighbour.get_id() not in path and neighbour is not def_position: #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
 
-
             #check for dead end:
             if not neighbours_to_check:
                 dead_ends[steps].add(current_position)
