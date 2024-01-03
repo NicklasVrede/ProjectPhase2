@@ -77,8 +77,8 @@ def new_forrest_probability(options:dict):
 
         try:
             choice = int(user_input)
-            if choice < 0:
-                print("Enter a positive number")
+            if choice < 0 or choice > 10000:
+                print("Enter a number between 0 and 10000")
                 continue
             break
 

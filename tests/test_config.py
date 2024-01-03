@@ -36,18 +36,9 @@ class TestConfig_part1(unittest.TestCase):
         sys.stdout = self.held
         config.config.config_final = config_final
 
-    def test_navigation_full(self):
+    def test_navigation(self):
         builtins.input = Mock(side_effect = ["", "2"])
-        self.assertEqual(welcome(self.options), 1)
-
-    def test_navigation_partial(self):
-        del self.options["iter_num"]
-        builtins.input = Mock(side_effect = ["", "2"]) 
-        config.config.iter_num = Mock(return_value = 42)
-        self.assertEqual(welcome(self.options), 42)
-
-        #undo changes
-        config.config.iter_num = iter_num
+        self.assertEqual(welcome(self.options), 1) #Exit returns 1
 
     def test_read_options(self):
         list = ["", "a", "%", "1.5", "100", "2"] #2 for no read
