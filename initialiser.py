@@ -75,7 +75,7 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
                 if user_input >= 4:
                     break
                 else:
-                    print("Minimum number of sites must be greater than 4")
+                    print("Minimum number of sites must be greater than 3")
                     continue
                 
             except ValueError:
@@ -248,7 +248,8 @@ def initialise_neighbours(edges) -> Dict[int, List[int]]:
     Initializes neighbour_id_register based on the given edges.
 
     Returns:
-    neighbour_id_register - Dict[int, List[int]]: A dictionary mapping each patch to a list of its neighbours.
+    neighbour_id_register - Dict[int, List[int]]: 
+    A dictionary mapping each patch to a list of its neighbours.
     """
     all_patches = set.union(*[set(edge) for edge in edges]) #Merges a new set of nodes
     edges = [set(edge) for edge in edges]
@@ -273,7 +274,8 @@ def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dic
     patches (Dict[int, Union[TreePatch, RockPatch]]): A dictionary of patches.
 
     Returns:
-    color_map - Dict[int, Tuple[int, int, int]]: A color map. Each key is a patch ID, and each value is a color.
+    color_map - Dict[int, Tuple[int, int, int]]: A color map. 
+    Each key is a patch ID, and each value is a color.
     """
     res = {}
     for patch in list(patches.values()):
@@ -289,7 +291,8 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     Initializes firefighters.
 
     Returns:
-    firefighters - Dict[int, Firefighter]: A dictionary of firefighters. Each key is a firefighter ID, and each value is a Firefighter object.
+    firefighters - Dict[int, Firefighter]: A dictionary of firefighters. 
+    Each key is a firefighter ID, and each value is a Firefighter object.
     """
     number = options.get("firefighter_num")
     if isinstance(number, str):
