@@ -77,6 +77,11 @@ class TreePatch(LandPatch):
     growthrate (int): Variable identifying the growth rate of the patch.
     burnrate (int): Variable identifying the burn rate of the patch.
     spread_rate (int): Variable identifying the spread rate of the patch.
+
+    Methods:
+    get_color: Returns a color for the TreePatch.
+    reduce_firestat: Reduces the firestat of the patch.
+    updateland: Initiates the evolution of the patch.
     """
     def __init__(self, patch_id: int, treestat: int, burning: bool=False, graph_info=None):
         super().__init__(patch_id, treestat, burning, graph_info)
@@ -209,6 +214,10 @@ class RockPatch(LandPatch):
     treestat (int): Variable identifying its health status.
     burning (bool): Variable identifying if the patch is burning.
     graph_info (GraphInfo): Stores information about the graph.
+
+    Methods:
+    random_forrest: Calculates probability of new forrest and 
+    mutates the patch if the probability is met.
     """
     def __init__(self, patch_id: int, treestat: int, graph_info=None):
         super().__init__(patch_id, treestat, False, graph_info) #burning = False
