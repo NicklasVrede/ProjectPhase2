@@ -76,7 +76,6 @@ def main(options: Dict[str, int] = dict()) -> None:
 
         time.sleep(sleep_time)
 
-
     print("Simulation finished.")
 
     #10. Initiate reporting - Reporting.py:
