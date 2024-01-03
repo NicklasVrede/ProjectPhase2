@@ -175,7 +175,6 @@ class GraphInfo:
 
         #return [firefighter.position.patch_id for firefighter in list(self.firefighters.values())] 
         
-
     def activate_firefighters(self) -> Dict[int, Firefighter]:
         """
         Returns the firefighters dict.
