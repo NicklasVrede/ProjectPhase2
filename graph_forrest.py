@@ -96,11 +96,15 @@ class GraphInfo:
     firefighters (Dict[int, Firefighter]): A dictionary of firefighters.
 
     Methods:
-    _initialise_links: Initialises links between objects, and updates rates based on options.
-    update_patch: Updates a patch in the patches dict.
-    get_color_map: Returns the color map.
+    get_patch: Returns a patch object.
     get_patches: Returns the patches dict.
+    update_patch: Updates a patch in the patches dict.
+    get_neighbours_ids: Returns a list of neighbouring patches objects.
+    update_color: Updates the color map.
+    remove_color: Removes a patch from the color map.
+    get_color_map: Returns the color map.
     get_firefighter_positions: Returns a list of firefighter positions.
+    activate_firefighters: Returns the firefighters dict.
     """
     def __init__(self, options, patches, color_map, firefighters, neighbour_id_register):
         self.options = options #dict of options
