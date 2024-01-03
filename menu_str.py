@@ -62,10 +62,9 @@ Welcome to the Forest Fire Simulation Program!
 
 In this simulation, you will explore the dynamic evolution of a population 
 of automata in a simulated forest environment. The fate of the landscape 
-is in your hands as you influence the growth of trees, the movement of firefighters, 
-and the spread of wildfires.
+is in your hands as you influence the simulation parameters.
 
-Press [Enter] to embark on this exciting journey and configure the simulation parameters.
+Press [Enter] to start the configuration.
 """,
 
     "read_options_from_file" : line + """
