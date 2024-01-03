@@ -24,9 +24,8 @@ class Simulation:
         Rock_potulation = 0
         Fire_population = 0
 
-        patches = self.graphinfo.get_patches()
-        for i in patches:
-            patch = patches.get(i)
+        patches = self.graphinfo.get_patches().values()
+        for patch in patches:
             if patch.get_treestat() == 0: 
                 Rock_potulation += 1
             elif patch.is_burning():
@@ -39,8 +38,8 @@ class Simulation:
                                             "Fire_population" : Fire_population}
         
         # Update the simulation for a single iteration
-        for i in patches:
-            patch = patches.get(i)
+
+        for patch in patches:
             if patch.get_treestat() == 0:
                 patch.random_forrest()
             else:
