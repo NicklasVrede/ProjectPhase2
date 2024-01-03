@@ -28,17 +28,19 @@ class TestInitialiser(unittest.TestCase):
             "gen_method": "read",
         }
         file_path = f'graphs/test{int(time.time())}.dat' #Ensure unique file name
-        with open(file_path, "w") as file:
-            file.write("0, 1 \n 1, 2 \n 2, 3 \n 3, 0")
-        builtins.input = Mock(return_value=file_path)
-        edges, positions = generate_edges(options)
-        self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
-        self.assertIsNotNone(positions)
-        self.assertEqual(len(positions), 4)
-        self.assertIsInstance(positions[0], tuple)
-        self.assertIsInstance(positions[0][0], float)
-        self.assertIsInstance(positions[0][1], float)
-        os.remove(file_path) #removing the file after the test
+        try:
+            with open(file_path, "w") as file:
+                file.write("0, 1 \n 1, 2 \n 2, 3 \n 3, 0")
+            builtins.input = Mock(return_value=file_path)
+            edges, positions = generate_edges(options)
+            self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
+            self.assertIsNotNone(positions)
+            self.assertEqual(len(positions), 4)
+            self.assertIsInstance(positions[0], tuple)
+            self.assertIsInstance(positions[0][0], float)
+            self.assertIsInstance(positions[0][1], float)
+        finally: #Ensure the file is removed even if the test fails
+            os.remove(file_path) #removing the file after the test
 
     def test_generate_edges_random(self):
         options = {
