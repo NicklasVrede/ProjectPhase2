@@ -5,9 +5,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from unittest.mock import Mock
 from simulation import Simulation
-from graph_forrest import GraphInfo
-
-from simulation import Simulation
 
 class TestSimulation(unittest.TestCase):
     def setUp(self):
