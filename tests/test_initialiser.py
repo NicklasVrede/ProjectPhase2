@@ -23,7 +23,6 @@ class TestInitialiser(unittest.TestCase):
         # After each test, we restore sys.stdout to its original value. Or it can affect other tests.
         sys.stdout = self.held
 
-
     def test_generate_edges_read(self): #Writing a real file is not ideal.
         options = {
             "gen_method": "read",
@@ -31,7 +30,7 @@ class TestInitialiser(unittest.TestCase):
         file_path = f'graphs/test{int(time.time())}.dat' #Ensure unique file name
         with open(file_path, "w") as file:
             file.write("0, 1 \n 1, 2 \n 2, 3 \n 3, 0")
-        builtins.input = Mock(return_value='graphs/test.dat')
+        builtins.input = Mock(return_value=file_path)
         edges, positions = generate_edges(options)
         self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
         self.assertIsNotNone(positions)
@@ -39,8 +38,8 @@ class TestInitialiser(unittest.TestCase):
         self.assertIsInstance(positions[0], tuple)
         self.assertIsInstance(positions[0][0], float)
         self.assertIsInstance(positions[0][1], float)
-        
         os.remove(file_path) #removing the file after the test
+
     def test_generate_edges_random(self):
         options = {
             "gen_method": "random"
@@ -51,7 +50,6 @@ class TestInitialiser(unittest.TestCase):
         graph_helper.edges_planar = Mock(return_value=[(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)])
         self.assertGreaterEqual(len(edges), 9)
         self.assertLessEqual(len(positions), len(edges))
-
 
     def test_read_edges(self):
         edges = read_edges("graphs/graph1.dat")
@@ -98,7 +96,6 @@ class TestInitialiser(unittest.TestCase):
         self.assertTrue(patches.get(3).is_burning())
         self.assertTrue(patches.get(7).is_burning())
 
-
     def test_initialise_neighbours(self):
         edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9)]
         neighbour_id_register = initialise_neighbours(edges)
@@ -116,7 +113,6 @@ class TestInitialiser(unittest.TestCase):
     def test_initialise_color_map(self):
         patches = {1: TreePatch(1, 100, True), 2: TreePatch(2, 100, False), 3: TreePatch(3, 100, False), 4: RockPatch(4, 0), 5: TreePatch(5, 100, False)}
         color_map = initialise_color_map(patches)
-
         self.assertEqual(len(color_map), 4)
         self.assertEqual(color_map.get(1), -25)
         self.assertEqual(color_map.get(2), 100)
@@ -139,8 +135,6 @@ class TestInitialiser(unittest.TestCase):
         self.assertNotIn(6, firefighters)
         self.assertNotIn(7, firefighters)
         self.assertNotIn(8, firefighters)
-
-
 
 
 if __name__ == '__main__':
