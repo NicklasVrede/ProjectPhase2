@@ -8,6 +8,7 @@ from reporting import reporting
 from land_rep import TreePatch, RockPatch
 import time
 
+
 def main(options: Dict[str, int] = dict()) -> None:
     """
     The main function of the program.
