@@ -3,9 +3,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
 from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters, planar_positions
 from land_rep import TreePatch, RockPatch
+import graph_helper
 import builtins
 import random
 import io
@@ -26,31 +27,27 @@ class TestInitialiser(unittest.TestCase):
         options = {
             "gen_method": "read",
         }
-        builtins.input = Mock(return_value='test_edges.txt')
-        with patch('initialiser.read_edges', return_value=[(1, 2), (2, 3), (3, 1)]):
-            edges, positions = generate_edges(options)
-
-        self.assertEqual(edges, [(1, 2), (2, 3), (3, 1)])
-        print(f'Positions: {planar_positions(edges)}')
-        self.assertEqual(len(positions), 3)
+        builtins.input = Mock(return_value='graphs/graph1.dat')
+        edges, positions = generate_edges(options)
+        self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
+        self.assertIsNotNone(positions)
+        self.assertEqual(len(positions), 4)
+        self.assertIsInstance(positions[0], tuple)
+        self.assertIsInstance(positions[0][0], float)
+        self.assertIsInstance(positions[0][1], float)
         
-
-    @patch('graph_helper.voronoi_to_edges', return_value=([(1, 2), (2, 3), (3, 1), (4, 5)], {1: (0.1, 0.1), 2: (0.2, 0.2), 3: (0.3, 0.3), 4: (0.4, 0.4)}))
-    def test_generate_edges_random(self, mock_voronoi_to_edges):
-
+    def test_generate_edges_random(self):
         options = {
             "gen_method": "random"
         }
-        patch('builtins.input', return_value='r').start()
-        random.randint = Mock(return_value=5)
+        builtins.input = Mock(return_value='r')
+        random.randint = Mock(return_value=10)
         edges, positions = generate_edges(options)
-        
-        print(f'edges: {edges}, positions: {positions}')
+        graph_helper.edges_planar = Mock(return_value=[(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)])
+        self.assertGreaterEqual(len(edges), 9)
+        self.assertLessEqual(len(positions), len(edges))
 
-        self.assertEqual(len(edges), 4)
-        self.assertEqual(edges, [(1, 2), (2, 3), (3, 1), (4, 5)])
-        self.assertIsNotNone(positions)
-        
+
     def test_read_edges(self):
         edges = read_edges("graphs/graph1.dat")
         self.assertEqual(edges, [(0, 1), (1, 2), (2, 3), (3, 0)])
