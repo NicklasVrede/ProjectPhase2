@@ -55,6 +55,7 @@ class TestConfig_part1(unittest.TestCase):
         builtins.input = mock_input
 
         read_options_from_file(self.options)
+        #check if all inputs are called
         self.assertEqual(mock_input.call_count, len(list))
 
     def test_gen_method(self):
