@@ -34,7 +34,7 @@ def read_options_from_file(options: Dict[int, Union[str, int]]):
             break
 
         elif user_input == "2":
-            return gen_method(options)
+           break
         
         else:
             print("Wrong input, please try agian")
