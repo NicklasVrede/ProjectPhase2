@@ -1,4 +1,3 @@
-#configuration_advanced.py
 from config.menu_str import menu_strings
 import random
 

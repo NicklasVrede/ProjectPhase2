@@ -58,7 +58,8 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
 
 
     elif options.get("gen_method") == "random":
-        print("Specify the minimal number of patches for the graph (Min. 4). Or type 'back' to go back.")
+        print("Specify the minimal number of patches for the graph (Min. 4). "
+              "Or type 'back' to go back.")
         while True:
             try:
                 user_input = input('Enter a number, "r" (40-120), "d" (80) or "back": ')

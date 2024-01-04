@@ -1,6 +1,3 @@
-"""
-Config Module
-"""
 import random
 from typing import Dict, Union
 

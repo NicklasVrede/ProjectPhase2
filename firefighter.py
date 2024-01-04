@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Set, Union
+from typing import List, Union
 import random
 
 from land_rep import TreePatch, RockPatch

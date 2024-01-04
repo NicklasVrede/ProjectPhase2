@@ -1,4 +1,3 @@
-#options_utilities.py
 from typing import Dict, Union
 
 def read_options(
