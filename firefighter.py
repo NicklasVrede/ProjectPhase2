@@ -23,7 +23,7 @@ class Firefighter:
     """
     def __init__(self, id: int, skill_level: int, position: int):
         self._id = id
-        self._position = position  # Identifies the Firefighter's position patch id
+        self._position = position  # Position patch id
         self._brain = False
         self._graph_info = None
         self._initialise_skill(skill_level)
@@ -33,7 +33,7 @@ class Firefighter:
         Initialises the skill level of the firefighter.
         """
         if skill_level == 1:
-            self._power = 25  # Default value
+            self._power = 25
         if skill_level == 2:
             self._power = 35
         elif skill_level == 3:
@@ -77,7 +77,7 @@ class Firefighter:
         """
         position = self._get_pos_object()
         if position.is_burning():
-            return self._extinguish_fire(position) #If firefighter is at fire, he will fight the fire and not move.
+            return self._extinguish_fire(position) #Fight fire at current position
 
         move_pool = []
         neighbours = self._get_neighbours()
@@ -121,9 +121,9 @@ class Firefighter:
                     self._path = []  #Reset path
                     break
             
-            if self._path:  #More if path is not reset
+            if self._path:  #Move if path is not reset
                 self._position = self._path.pop(-1)
-                return None #important we dont continue.
+                return None
 
 
         #find closest fire:
@@ -143,12 +143,10 @@ class Firefighter:
         #We add this path to the firefighter.
         self._path = shortest_path
         self._target = closest_fire
-        #print(f'Firefighter at {position} moving to {closest_fire} with path {self._path}')
 
         #We move to the first patch in the path:
         if self._path:
             self._position = self._path.pop(-1)
-
 
     def _find_least_steps(
             self, position: Union[TreePatch, RockPatch], 
@@ -184,7 +182,6 @@ class Firefighter:
 
         return steps
     
-
     def _find_path(self, closest_fire:TreePatch, distance:int):
         """
         Returns a short path to a target patch
