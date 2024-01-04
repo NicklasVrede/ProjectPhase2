@@ -41,8 +41,7 @@ def read_options(
     print()
     print("Please note, that the option file is case-sentitive.")
     while True:
-        user_input = input('Enter the path to the file, 
-                           press [Enter] to load "options.txt" or type "back": '
+        user_input = input('Enter the path to the file, press [Enter] to load "options.txt" or type "back": '
                            )
         
         if user_input == "":
@@ -109,7 +108,7 @@ def options_validater(
     options (Dict[int, str]): A dictionary of options.
 
     Returns:
-    bool: True if all options are valid, otherwise raises ValueError.
+    bool: Returns options. If invalid, the option is set to None.
     """
     for option in ["ini_woods", "ini_fires"]:
         if option in options:
@@ -135,10 +134,11 @@ def options_validater(
         options["gen_method"] = None
     
 
-    if "firefighter_level" in options and not 0 < options.get("firefighter_level") < 4:
-        print(f'Wrong value for firefighter_level: {options.get("firefighter_level")}')
-        print(f'Please reasign in basic config.')
-        options["firefighter_level"] = None
+    if "firefighter_level" in options:
+        if not isinstance(options.get("firefighter_level"), int) or not 0 < options.get("firefighter_level") < 4:
+            print(f'Wrong value for firefighter_level: {options.get("firefighter_level")}')
+            print(f'Please reasign in basic config.')
+            options["firefighter_level"] = None
     
 
     if "firefighter_num" in options and isinstance(options.get("firefighter_num"), str):
@@ -146,6 +146,7 @@ def options_validater(
             num = options.get("firefighter_num")
             num = num.split("%")[0]
             num = int(num)
+            print(f'num: {num}')
             if num < 0:
                 raise ValueError("Value for firefighter_num must be positive")
         except ValueError:
