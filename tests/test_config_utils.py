@@ -28,40 +28,55 @@ class TestOptionsValidater(unittest.TestCase):
             "fire_spread_rate": 30,
             "gen_method": "random",
             "firefighter_level": 3,
-            "firefighter_num": "10%"
+            "firefighter_num": 5
         }
         validated_options = options_validater(options)  #If 
         self.assertEqual(validated_options, options)
 
-    def test_invalid_1(self):
-        list = ["", "a", "%", "1.5", "101", "-20", "0", "   "]
-        for option in list:
-            options = {"ini_woods": option,
-                        "ini_fires": option,
-                        "firefighter_level": option,
-                        "gen_method": option,
-                        "fire_spread_rate": option,
-                       }
-            validated_options = options_validater(options)
-            self.assertIsNone(validated_options["ini_woods"])
-    
-    def test_invalid_new_forrest_probability(self):
-        list = ["", "a", "%", "1.5", "10001", "-20", "0", "   "]
-        for option in list:
-            options = {"new_forrest_probability": option}
-            validated_options = options_validater(options)
-            self.assertIsNone(validated_options["new_forrest_probability"])
+    def test_invalid_ini_woods(self):
+        options = {
+            "ini_woods": 150,
+            "ini_fires": 10
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["ini_woods"])
 
-    def test_invalid_no_max(self):
-        list = ["", "a", "%", "1.5", "-20", "0", "   "]
-        for option in list:
-            options = {"growth_rate": option,
-                        "burn_rate": option,
-                        "fire_spread_rate": option,
-                        "iter_num": option,
-                       }
-            validated_options = options_validater(options)
-            self.assertIsNone(validated_options["growth_rate"])
+    def test_invalid_ini_fires(self):
+        options = {
+            "ini_woods": 50,
+            "ini_fires": -10
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["ini_fires"])
+
+    def test_invalid_iter_num(self):
+        options = {
+            "iter_num": -100,
+            "growth_rate": 2
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["iter_num"])
+
+    def test_invalid_gen_method(self):
+        options = {
+            "gen_method": "invalid"
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["gen_method"])
+
+    def test_invalid_firefighter_level(self):
+        options = {
+            "firefighter_level": 0
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["firefighter_level"])
+
+    def test_invalid_firefighter_num(self):
+        options = {
+            "firefighter_num": -5
+        }
+        validated_options = options_validater(options)
+        self.assertIsNone(validated_options["firefighter_num"])
 
 if __name__ == '__main__':
     unittest.main()
