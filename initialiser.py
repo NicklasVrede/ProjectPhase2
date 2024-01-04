@@ -310,10 +310,7 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     if isinstance(number, str):
         number = int(number.split("%")[0]) #we split at % and calculate the final number:
         number = int(number * len(patches) * 0.01)
-        print(
-            f'Scaled the number of firefighters to {number} 
-            based on the number of patches and the firefighter percentage.'
-            )
+        print(f'Number of firefighters: {number}')
     res = {}
     for i in range(number):
         random_id = random.choice(list(patches.keys()))
