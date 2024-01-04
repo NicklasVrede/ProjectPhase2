@@ -1,5 +1,5 @@
 #configuration_advanced.py
-from menu_str import menu_strings
+from config.menu_str import menu_strings
 import random
 
 def growth_rate(options:dict):
