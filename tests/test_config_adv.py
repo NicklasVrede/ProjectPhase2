@@ -7,16 +7,22 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from unittest.mock import Mock
 import builtins
+
 import config.config
-from config.config import growth_rate, burn_rate, new_forrest_probability, fire_spread_rate, config_final
+from config.config import (
+    growth_rate, 
+    burn_rate, 
+    new_forrest_probability, 
+    fire_spread_rate 
+    )
 
 class TestConfig_part1(unittest.TestCase):
     def setUp(self) -> None:
         self.options = {
             "growth_rate" : 10, # Treestat fixed increase
             "burn_rate" : 20, # Fires effect on Treestat fixed.
-            "new_forrest_probability" : 100, # Probability of new forrest in permille ie. 50 = 0,5 %
-            "fire_spread_rate" : 30 # Percentage risk of fire to spread each iterations
+            "new_forrest_probability" : 100, # (1%)
+            "fire_spread_rate" : 30 # (30%)
             }
         
         config.config.config_final = Mock(return_value=1) #Exit for testing

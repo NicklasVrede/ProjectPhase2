@@ -8,8 +8,20 @@ import random
 import unittest
 from unittest.mock import Mock
 import builtins
+
 import config.config
-from config.config import welcome, read_options_from_file, gen_method, ini_woods, ini_fires, firefighter_num, firefighter_level, iter_num, config_final, change_setting
+from config.config import (
+    welcome, 
+    read_options_from_file, 
+    gen_method, 
+    ini_woods, 
+    ini_fires, 
+    firefighter_num, 
+    firefighter_level, 
+    iter_num, 
+    config_final, 
+    change_setting
+    )
 from config.config_utils import advanced_defaults
 
 
