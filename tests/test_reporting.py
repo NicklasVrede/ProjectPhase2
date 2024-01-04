@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from unittest.mock import Mock
 import matplotlib.pyplot as plt
+
 from reporting import reporting
 
 class TestReporting(unittest.TestCase):

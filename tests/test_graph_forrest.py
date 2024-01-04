@@ -15,7 +15,10 @@ class TestGraphInfo(unittest.TestCase):
         color_map = {1: 100, 3: 100}
         firefighters = {1: Firefighter(1, 3, 1), 2: Firefighter(2, 3, 2)}
         neighbour_id_register = {1: [2, 3], 2: [1, 3], 3: [2, 1]}
-        self.graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
+        self.graph_info = GraphInfo(
+            options, patches, color_map, 
+            firefighters, neighbour_id_register
+            )
 
     def test_get_patch(self):
         patch = self.graph_info.get_patch(1)

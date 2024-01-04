@@ -8,7 +8,11 @@ def growth_rate(options:dict):
     print(menu_strings.get("growth_rate"))
 
     while True:
-        user_input = input('Enter a number, or "r" for random (5-50), or "d" for default (10): ')
+        user_input = input('Enter a number, 
+                           or "r" for random (5-50), 
+                           or "d" for default (10): '
+                           )
+        
         if user_input == "r":
             choice = random.randint(5, 50)
             break
@@ -35,8 +39,13 @@ def burn_rate(options:dict):
     if options.get("burn_rate"):
         return new_forrest_probability(options)
     print(menu_strings.get("burn_rate"))
+
     while True:
-        user_input = input('Enter a number, "r" for random (5-50), "d" for default (20): ')
+        user_input = input('Enter a number, 
+                           "r" for random (5-50), 
+                           "d" for default (20): '
+                           )
+        
         if user_input == "r":
             choice = random.randint(5, 50)
             break
@@ -66,7 +75,10 @@ def new_forrest_probability(options:dict):
     print(menu_strings.get("new_forrest_probability"))
 
     while True:
-        user_input = input('Enter a number, "r" for random, or "d" for default (1 %): ')
+        user_input = input('Enter a number, 
+                           "r" for random, 
+                           or "d" for default (1 %): '
+                           )
         if user_input == "r":
             choice = random.randint(1, 100)
             break
@@ -98,7 +110,11 @@ def fire_spread_rate(options:dict):
     print(menu_strings.get("fire_spread_rate"))
 
     while True:
-        user_input = input('Enter a number, "r" for random (1-100) or "d" for default (30): ')
+        user_input = input('Enter a number, 
+                           "r" for random (1-100) 
+                           or "d" for default (30): '
+                           )
+        
         if user_input == "r":
             choice = random.randint(1, 100)
             break

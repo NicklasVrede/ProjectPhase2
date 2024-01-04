@@ -22,10 +22,15 @@ This module provided as material for the phase 2 project for DM857, DS830 (2023)
 import numpy as np
 import networkx as nx
 from scipy.spatial import Voronoi
+
 from typing import List, Optional, Dict,Tuple 
-def voronoi_to_edges(minpoints:int,npoints:Optional[int]=0)->Tuple[List[Tuple[int,int]],Dict[int,Tuple[float,float]]]:
+
+def voronoi_to_edges(
+      minpoints:int,npoints:Optional[int]=0
+      )->Tuple[List[Tuple[int,int]],Dict[int,Tuple[float,float]]]:
   '''
-   Generates a random planar graph containing at least minpoints (based on the Voronoi graph)
+   Generates a random planar graph containing at least minpoints 
+   (based on the Voronoi graph)
 
    Parameters:
    ----------
@@ -35,9 +40,12 @@ def voronoi_to_edges(minpoints:int,npoints:Optional[int]=0)->Tuple[List[Tuple[in
    Return: Tuple[edges,coord_map]
    ----------
    edges: List[(int,int)]
-      List containing the edges (Tuples of 2 vertices) forming the 2D surface for the simulation.
+      List containing the edges (Tuples of 2 vertices) 
+      forming the 2D surface for the simulation.
+
    coord_map: Dict[int:(float,float)]
-      Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1])
+      Dictionary containing the coordinate of each vertex 
+      (expressed as a tuple of float in [0,1]x[0,1])
   '''
   if(minpoints<4):
      raise Exception("voronoi_to_edges, the number of points must be larger than 3")
@@ -50,7 +58,8 @@ def voronoi_to_edges(minpoints:int,npoints:Optional[int]=0)->Tuple[List[Tuple[in
   res=[]
   map={}
   jj=0
-# Add an edge for each ridge in the Voronoi diagram that connects two points in the range [0,1] 
+# Add an edge for each ridge in the Voronoi diagram, 
+# that connects two points in the range [0,1] 
   for simplex in vor.ridge_vertices:
       if -1 not in simplex:
           i, j = simplex

@@ -1,9 +1,12 @@
 #options_utilities.py
 from typing import Dict, Union
 
-def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
+def read_options(
+        options: Dict[int, Union[str, int]]
+        ) -> Dict[int, Union[str, int]]:
     """
-    Prompts the user to enter the path to a file, and reads the options from the file.
+    Prompts the user to enter the path to a file, 
+    and reads the options from the file.
 
     Parameters:
     options (Dict[int, str]): A dictionary of options.
@@ -38,7 +41,10 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
     print()
     print("Please note, that the option file is case-sentitive.")
     while True:
-        user_input = input('Enter the path to the file, press [Enter] to load "options.txt" or type "back": ')
+        user_input = input('Enter the path to the file, 
+                           press [Enter] to load "options.txt" or type "back": '
+                           )
+        
         if user_input == "":
             user_input = "options.txt"
 
@@ -72,7 +78,9 @@ def read_options(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, in
 
     return options
 
-def convert_to_int(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
+def convert_to_int(
+                    options: Dict[int, Union[str, int]]
+                    ) -> Dict[int, Union[str, int]]:
     """
     Converts the values of the options to int, if possible.
 
@@ -90,7 +98,9 @@ def convert_to_int(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, 
 
     return options
 
-def options_validater(options: Dict[int, Union[str, int]]) -> Dict[int, Union[str, int]]:
+def options_validater(
+                        options: Dict[int, Union[str, int]]
+                        ) -> Dict[int, Union[str, int]]:
     """
     Checks if the options are valid
     Only checks, if the option is defined.
@@ -109,7 +119,10 @@ def options_validater(options: Dict[int, Union[str, int]]) -> Dict[int, Union[st
                 options[option] = None #Reset, so user must pick in basic config
 
 
-    for option in ["iter_num", "growth_rate", "burn_rate", "new_forrest_probability", "fire_spread_rate"]:
+    for option in [
+        "iter_num", "growth_rate", "burn_rate", 
+        "new_forrest_probability", "fire_spread_rate"
+        ]:
         if option in options:
             if not isinstance(options.get(option), int) or options.get(option) < 0:
                 print(f'Value for {option}, must be positive')

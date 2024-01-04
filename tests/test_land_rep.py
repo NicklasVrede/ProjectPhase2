@@ -6,19 +6,26 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from unittest.mock import Mock
 import random
+
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
 from graph_forrest import GraphInfo
 
 class TestTreePatch(unittest.TestCase):
     def setUp(self):
-        options = {"growth_rate": 10, "burn_rate": 20, "fire_spread_rate": 30, "new_forrest_probability": 100}
+        options = {
+            "growth_rate": 10, "burn_rate": 20, 
+            "fire_spread_rate": 30, "new_forrest_probability": 100
+            }
         self.patch = TreePatch(1, 100)
         patches = {1: self.patch, 2: RockPatch(2, 0), 3: TreePatch(3, 100)}
         color_map = {1: 100, 3: 100}
         firefighters = {1: Firefighter(1, 3, 1), 2: Firefighter(2, 3, 2)}
         neighbour_id_register = {1: [2, 3], 2: [1, 3], 3: [2, 1]}
-        self.graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
+        self.graph_info = GraphInfo(
+            options, patches, color_map, 
+            firefighters, neighbour_id_register
+            )
         
 
     def test_get_color(self):

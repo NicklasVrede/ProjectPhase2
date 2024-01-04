@@ -16,9 +16,18 @@ def reporting(history):
 
     # Create plot
     plt.figure(figsize=(10, 6))
-    plt.plot(iterations, rock_populations, label='Rock Population', color='grey', lw=2.0)
-    plt.plot(iterations, fire_populations, label='Fire Population', color='red', lw=2.0)
-    plt.plot(iterations, tree_populations, label='Tree Population', color='green', lw=2.0)
+    plt.plot(
+        iterations, rock_populations, 
+        label='Rock Population', color='grey', lw=2.0
+        )
+    plt.plot(
+        iterations, fire_populations, 
+        label='Fire Population', color='red', lw=2.0
+        )
+    plt.plot(
+        iterations, tree_populations, 
+        label='Tree Population', color='green', lw=2.0
+        )
 
     # Add details
     plt.xlabel('Iterations')

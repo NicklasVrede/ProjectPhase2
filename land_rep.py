@@ -20,7 +20,10 @@ class LandPatch(ABC):
     get_neighbours_ids: Returns a list of IDs of neighbouring patches.
     get_neighbours: Returns a list the neighbouring patches objects.
     """
-    def __init__(self, patch_id: int, treestat: int, burning: bool, graph_info = None):
+    def __init__(
+            self, patch_id: int, treestat: int, 
+            burning: bool, graph_info = None
+            ):
         self._patch_id = patch_id
         self._treestat = treestat
         self._burning = burning 
@@ -89,7 +92,10 @@ class TreePatch(LandPatch):
     reduce_firestat: Reduces the firestat of the patch.
     updateland: Initiates the evolution of the patch.
     """
-    def __init__(self, patch_id: int, treestat: int, burning: bool=False, graph_info=None):
+    def __init__(
+            self, patch_id: int, treestat: int, 
+            burning: bool=False, graph_info=None
+            ):
         super().__init__(patch_id, treestat, burning, graph_info)
 
         if self._burning:
@@ -180,7 +186,8 @@ class TreePatch(LandPatch):
 
     def _spread_forrest(self) -> None:
         """
-        Spreads forrest to neighbouring patches with variable probability based on treestat
+        Spreads forrest to neighbouring patches 
+        with variable probability based on treestat.
         """
         neighbours = self.get_neighbours()
         for neighbour in neighbours:
@@ -246,7 +253,8 @@ class RockPatch(LandPatch):
     
     def random_forrest(self) -> TreePatch: #used from simulation class
         """
-        Calculates probability of new forrest and mutates the patch if the probability is met.
+        Calculates probability of new forrest 
+        and mutates the patch if the probability is met.
         """
         probability = self._graph_info.options.get("new_forrest_probability")
         random_num = random.randint(0, 10000)  #Making the probability act as permille.

@@ -3,24 +3,35 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
-from unittest.mock import Mock
-from initialiser import generate_edges, read_edges, check_connections, initialise_patches, initialise_neighbours, initialise_color_map, initialise_firefighters, planar_positions
-from land_rep import TreePatch, RockPatch
-import graph_helper
 import builtins
 import random
 import time
 import io
 
+from unittest.mock import Mock
+from initialiser import (
+    generate_edges, 
+    read_edges, 
+    check_connections, 
+    initialise_patches, 
+    initialise_neighbours, 
+    initialise_color_map, 
+    initialise_firefighters, 
+    planar_positions
+    )
+from land_rep import TreePatch, RockPatch
+import graph_helper
+
+
 class TestInitialiser(unittest.TestCase):
     def setUp(self) -> None:
-        # Before each test, we create a new StringIO object and assign it to sys.stdout.
-        # This means that all print statements in the tests will write to this object instead of the console.
+        # Before tests, we assign a new StringIO object to sys.stdout.
+        # Test print statements will write to this object, not the console.
         self.held = sys.stdout
         sys.stdout = io.StringIO()
 
     def tearDown(self) -> None:
-        # After each test, we restore sys.stdout to its original value. Or it can affect other tests.
+        # We restore sys.stdout after each test to avoid affecting other tests.
         sys.stdout = self.held
 
     def test_generate_edges_read(self): #Writing a real file is not ideal.
@@ -49,7 +60,10 @@ class TestInitialiser(unittest.TestCase):
         builtins.input = Mock(return_value='r')
         random.randint = Mock(return_value=10)
         edges, positions = generate_edges(options)
-        graph_helper.edges_planar = Mock(return_value=[(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)])
+        graph_helper.edges_planar = Mock(return_value=[
+                (1, 2), (2, 3), (3, 1), (4, 5), (5, 6), 
+                (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)
+                ])
         self.assertGreaterEqual(len(edges), 9)
         self.assertLessEqual(len(positions), len(edges))
 
@@ -68,7 +82,7 @@ class TestInitialiser(unittest.TestCase):
         edges = [(1, 6), (2, 3), (3, 4), (4, 5)]
         self.assertFalse(check_connections(edges))
 
-    def test_planar_positions(self): #check if the function returns a dictionary with the correct keys and values
+    def test_planar_positions(self): #Check if function returns correct dictionary keys and values.
         edges = [(1, 2), (2, 3), (3, 1)]
         positions = planar_positions(edges)
         self.assertIsInstance(positions, dict)
@@ -80,7 +94,10 @@ class TestInitialiser(unittest.TestCase):
             self.assertIsInstance(positions[i][1], float)
 
     def test_initialise_patches(self):
-        edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)]
+        edges = [
+            (1, 2), (2, 3), (3, 1), (4, 5), (5, 6), 
+            (6, 4), (6, 7), (7, 8), (8, 9), (9, 10)
+            ]
         positions = None
         options = {
             "ini_woods": 80,
@@ -99,7 +116,10 @@ class TestInitialiser(unittest.TestCase):
         self.assertTrue(patches.get(7).is_burning())
 
     def test_initialise_neighbours(self):
-        edges = [(1, 2), (2, 3), (3, 1), (4, 5), (5, 6), (6, 4), (6, 7), (7, 8), (8, 9)]
+        edges = [
+            (1, 2), (2, 3), (3, 1), (4, 5), (5, 6), 
+            (6, 4), (6, 7), (7, 8), (8, 9)
+            ]
         neighbour_id_register = initialise_neighbours(edges)
         self.assertEqual(len(neighbour_id_register), 9)
         self.assertEqual(neighbour_id_register[1], [2, 3])
@@ -113,7 +133,11 @@ class TestInitialiser(unittest.TestCase):
         self.assertEqual(neighbour_id_register[9], [8])
 
     def test_initialise_color_map(self):
-        patches = {1: TreePatch(1, 100, True), 2: TreePatch(2, 100, False), 3: TreePatch(3, 100, False), 4: RockPatch(4, 0), 5: TreePatch(5, 100, False)}
+        patches = {
+            1: TreePatch(1, 100, True), 2: TreePatch(2, 100, False), 
+            3: TreePatch(3, 100, False), 4: RockPatch(4, 0), 
+            5: TreePatch(5, 100, False)
+            }
         color_map = initialise_color_map(patches)
         self.assertEqual(len(color_map), 4)
         self.assertEqual(color_map.get(1), -25)
@@ -127,7 +151,10 @@ class TestInitialiser(unittest.TestCase):
             "firefighter_level": 3,
             "firefighter_num": 5
         }
-        patches = {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None}  #We dont need patch obects
+        patches = {
+            1: None, 2: None, 3: None, 4: None, 
+            5: None, 6: None, 7: None, 8: None
+            }  #We dont need patch objects
         random.sample = Mock(return_value=[1, 2, 3, 4, 5])
         firefighters = initialise_firefighters(patches, options)
         self.assertEqual(len(firefighters), 5)

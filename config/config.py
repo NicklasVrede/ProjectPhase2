@@ -260,7 +260,12 @@ def change_setting(options: Dict[int, Union[str, int]]):
             return welcome(options)
         
         elif user_input == "8":
-            options.update({"growth_rate" : None, "burn_rate" : None, "new_forrest_probability" : None, "fire_spread_rate" : None})
+            options.update(
+                            {"growth_rate" : None, 
+                             "burn_rate" : None, 
+                             "new_forrest_probability" : None, 
+                             "fire_spread_rate" : None}
+                             )
             return growth_rate(options)
         
         elif user_input == "9":

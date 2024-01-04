@@ -1,7 +1,13 @@
 from typing import List, Dict, Union
 from config import config
 from firefighter import Firefighter
-from initialiser import generate_edges, initialise_patches, initialise_color_map, initialise_firefighters, initialise_neighbours
+from initialiser import (
+    generate_edges, 
+    initialise_patches, 
+    initialise_color_map, 
+    initialise_firefighters, 
+    initialise_neighbours
+    )
 import visualiser_random_forest_graph
 from simulation import Simulation
 from reporting import reporting
@@ -51,10 +57,16 @@ def main(options: Dict[str, int] = dict()) -> None:
     firefighters = initialise_firefighters(patches, options)
 
     #7. Initialise graph info object - Graph_forrest.py:
-    graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
+    graph_info = GraphInfo(
+        options, patches, color_map, 
+        firefighters, neighbour_id_register
+        )
     
     #8. Initialise graph object - Visualiser_random_forest_graph.py:
-    graph_object = visualiser_random_forest_graph.Visualiser(edges,Colour_map=graph_info.get_color_map(), pos_nodes=positions,node_size=200, vis_labels=True)
+    graph_object = visualiser_random_forest_graph.Visualiser(
+        edges,Colour_map=graph_info.get_color_map(), 
+        pos_nodes=positions,node_size=200, vis_labels=True
+        )
     graph_object.update_node_edges(graph_info.get_firefighter_positions())  #Update initial fire fighters positions
 
 

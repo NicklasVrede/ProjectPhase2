@@ -1,5 +1,7 @@
 """
-This module provides Visualiser, a class for displaying the status of a collection of edges and sites forming the graph of a simulation.
+This module provides Visualiser, 
+a class for displaying the status of a collection of edges and 
+sites forming the graph of a simulation.
 
 Requirements
 ------------
@@ -20,7 +22,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 class Visualiser:
-  """Each instance of this class maintains a window where it displays the status of a given collection of edges and sites forming the graph of a simulation."""
+  """Each instance of this class maintains a window 
+  where it displays the status of a given collection of edges and 
+  sites forming the graph of a simulation."""
   colour_map={0:plt.cm.Greens,1:plt.cm.Reds}
   no_colour=plt.cm.Greys(100)
   def __init__(self:Visualiser, 
@@ -34,16 +38,22 @@ class Visualiser:
     Parameters
     ----------
     edges: List[(int,int)]
-      List containing the edges (Tuples of 2 vertices) forming the 2D surface for the simulation.
+      List containing the edges (Tuples of 2 vertices) 
+      forming the 2D surface for the simulation.
+
     Colour_map: Dict[int:int]
       Dictionary containing the identity and color of each node
         Colour, expressed as a integer from -256(full-red) to 256(full-green)
+
     pos_nodes: Optional[Dict[int:Tuple[float,float]]]={},
       Dictionary of key:{x,y} positions identifing the location of each node
+
     node_size: int, default 100
       Control the size of the drawn nodes
+
     vis_labels: Optional[bool] = False,
       switch to visualize/hide the labels (used to track the species)
+
     window_title : Optional[str], default = None
       The title of the window.
     """
@@ -112,13 +122,19 @@ class Visualiser:
   def _replot(self:Visualiser) -> None:
     '''Plotting facility'''
     plt.clf()
-    nx.draw_networkx_nodes(self._H, self._pos,
-                       node_color = self._cmap, node_size = self._node_size,linewidths=1)
+    nx.draw_networkx_nodes(
+      self._H, self._pos,
+      node_color = self._cmap, 
+      node_size = self._node_size, linewidths=1
+      )
     nx.draw_networkx_edges(self._H, self._pos, arrows=False)
     if(self._lnodes_edges):
        lcmap=[self._cmap[i] for i in self._lnodes_edges]
-       nx.draw_networkx_nodes(self._H,self._pos,node_color = lcmap,
-                              nodelist=self._lnodes_edges, node_size = self._node_size, edgecolors="blue",linewidths=2)
+       nx.draw_networkx_nodes(
+         self._H, self._pos, node_color = lcmap,
+         nodelist=self._lnodes_edges, node_size = self._node_size,
+         edgecolors="blue",linewidths=2
+         )
     self._fig.canvas.draw()
     self._fig.canvas.flush_events()
     plt.show(block=False)

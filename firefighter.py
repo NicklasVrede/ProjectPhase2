@@ -1,6 +1,7 @@
 from typing import List, Dict, Tuple, Set, Union
-from land_rep import TreePatch, RockPatch
 import random
+
+from land_rep import TreePatch, RockPatch
 
 
 class Firefighter:
@@ -149,7 +150,10 @@ class Firefighter:
             self._position = self._path.pop(-1)
 
 
-    def _find_least_steps(self, position: Union[TreePatch, RockPatch], target: TreePatch):
+    def _find_least_steps(
+            self, position: Union[TreePatch, RockPatch], 
+            target: TreePatch
+            ):
         """
         Returns the least steps to a target patch
 
@@ -218,7 +222,9 @@ class Firefighter:
             neighbours = current_position.get_neighbours()
             neighbours_to_check = []
             for neighbour in neighbours:
-                if neighbour not in dead_ends.get(steps) and neighbour.get_id() not in path and neighbour is not def_position: #Avoid dead ends and backtracking
+                if (neighbour not in dead_ends.get(steps) and 
+                neighbour.get_id() not in path and 
+                neighbour is not def_position): #Avoid dead ends and backtracking
                     neighbours_to_check.append(neighbour)
 
             #check for dead end:

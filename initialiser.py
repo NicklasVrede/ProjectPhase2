@@ -204,7 +204,11 @@ def planar_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, flo
 
     return positions
 
-def initialise_patches(edges: List[Tuple[int, int]], positions: Union[None, Dict[int, Tuple[float, float]]], options: Dict[str, int]) -> Dict[int, Union[TreePatch, RockPatch]]:
+def initialise_patches(
+        edges: List[Tuple[int, int]], 
+        positions: Union[None, Dict[int, Tuple[float, float]]], 
+        options: Dict[str, int]
+        ) -> Dict[int, Union[TreePatch, RockPatch]]:
     """
     Initializes patches based on the given edges, positions, and options.
 
@@ -266,7 +270,9 @@ def initialise_neighbours(edges) -> Dict[int, List[int]]:
 
     return res
 
-def initialise_color_map(patches: Dict[int, Union[TreePatch, RockPatch]]) -> Dict[int, int]:
+def initialise_color_map(
+        patches: Dict[int, Union[TreePatch, RockPatch]]
+        ) -> Dict[int, int]:
     """
     Initializes a color map based on the given patches.
 
@@ -298,7 +304,10 @@ def initialise_firefighters(patches, options) -> Dict[int, Firefighter]:
     if isinstance(number, str):
         number = int(number.split("%")[0]) #we split at % and calculate the final number:
         number = int(number * len(patches) * 0.01)
-        print(f'Scaled the number of firefighters to {number} based on the number of patches and the firefighter percentage.')
+        print(
+            f'Scaled the number of firefighters to {number} 
+            based on the number of patches and the firefighter percentage.'
+            )
     res = {}
     for i in range(number):
         random_id = random.choice(list(patches.keys()))

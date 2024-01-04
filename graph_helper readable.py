@@ -3,9 +3,12 @@ import networkx as nx
 from scipy.spatial import Voronoi
 from typing import List, Optional, Dict, Tuple 
 
-def voronoi_to_edges(minimum_points:int, voronoi_points:Optional[int]=0)->Tuple[List[Tuple[int,int]],Dict[int,Tuple[float,float]]]:
+def voronoi_to_edges(
+      minimum_points:int, voronoi_points:Optional[int]=0
+      ) -> Tuple[List[Tuple[int,int]],Dict[int,Tuple[float,float]]]:
   '''
-   Generates a random planar graph containing at least minimum_points (based on the Voronoi graph)
+   Generates a random planar graph containing at least minimum_points 
+   (based on the Voronoi graph)
 
    Parameters:
    ----------
@@ -15,9 +18,12 @@ def voronoi_to_edges(minimum_points:int, voronoi_points:Optional[int]=0)->Tuple[
    Return: Tuple[edges,coord_map]
    ----------
    edges: List[(int,int)]
-      List containing the edges (Tuples of 2 vertices) forming the 2D surface for the simulation.
+      List containing the edges (Tuples of 2 vertices) 
+      forming the 2D surface for the simulation.
+      
    coord_map: Dict[int:(float,float)]
-      Dictionary containing the coordinate of each vertex (expressed as a tuple of float in [0,1]x[0,1])
+      Dictionary containing the coordinate of each vertex 
+      (expressed as a tuple of float in [0,1]x[0,1])
   '''
   # Ensure minimum_points is at least 4
   if(minimum_points<4):
@@ -49,7 +55,12 @@ def voronoi_to_edges(minimum_points:int, voronoi_points:Optional[int]=0)->Tuple[
           vertex_coordinates_2 = voronoi_diagram.vertices[vertex_index_2]
           
           # Check if coordinates are within unit square
-          if 0 <= vertex_coordinates_1[0] <= 1 and 0 <= vertex_coordinates_1[1] <= 1 and 0 <= vertex_coordinates_2[0] <= 1 and 0 <= vertex_coordinates_2[1] <= 1:
+          if (
+             0 <= vertex_coordinates_1[0] <= 1 and 
+             0 <= vertex_coordinates_1[1] <= 1 and
+             0 <= vertex_coordinates_2[0] <= 1 and 
+             0 <= vertex_coordinates_2[1] <= 1
+             ):
               
               # Add coordinates to map if not already present
               if tuple(vertex_coordinates_1) not in coordinate_map:
@@ -60,7 +71,10 @@ def voronoi_to_edges(minimum_points:int, voronoi_points:Optional[int]=0)->Tuple[
                  index+=1
               
               # Add edge to list
-              edge_list.append((tuple(vertex_coordinates_1), tuple(vertex_coordinates_2)))
+              edge_list.append(
+                 (tuple(vertex_coordinates_1), 
+                  tuple(vertex_coordinates_2))
+                  )
   
   # If not enough points, recursively call function with more Voronoi points
   if len(coordinate_map) < minimum_points:
@@ -68,7 +82,10 @@ def voronoi_to_edges(minimum_points:int, voronoi_points:Optional[int]=0)->Tuple[
   
   # If enough points, return edge list and coordinate map
   else:
-   return [(coordinate_map[edge[0]],coordinate_map[edge[1]]) for edge in edge_list],{v: k for k, v in coordinate_map.items()}
+   return ([
+      (coordinate_map[edge[0]],coordinate_map[edge[1]]) for edge in edge_list],
+      {v: k for k, v in coordinate_map.items()}
+      )
   
 
 def is_graph_planar(edges:List[Tuple[int,int]])-> bool:

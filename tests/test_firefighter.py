@@ -6,20 +6,30 @@ import unittest
 from firefighter import Firefighter
 from land_rep import TreePatch
 from graph_forrest import GraphInfo
-from initialiser import initialise_patches, initialise_neighbours, initialise_color_map
+from initialiser import (
+    initialise_patches, 
+    initialise_neighbours, 
+    initialise_color_map
+    )
 
 class TestFirefighter(unittest.TestCase):
     def setUp(self):
         self.firefighter = Firefighter(1, 3, 1) # id, power, position
         firefighters = {1: self.firefighter}
 
-        options = {"ini_woods" : 100, "ini_fires" : 0, "firefighter_num" : 0, "firefighter_level" : 3}
+        options = {
+            "ini_woods" : 100, "ini_fires" : 0, 
+            "firefighter_num" : 0, "firefighter_level" : 3
+            }
         edges = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (2, 4), (4, 8)]
         patches =  initialise_patches(edges, None, options)
         color_map = initialise_color_map(patches)
         neighbour_id_register = initialise_neighbours(edges)
 
-        self.graph_info = GraphInfo(options, patches, color_map, firefighters, neighbour_id_register)
+        self.graph_info = GraphInfo(
+            options, patches, color_map, 
+            firefighters, neighbour_id_register
+            )
 
     def test_initialisation(self):
         self.assertEqual(self.firefighter._id, 1)
