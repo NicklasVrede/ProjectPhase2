@@ -1,5 +1,6 @@
 from typing import Dict, Union
 
+
 def read_options(
         options: Dict[int, Union[str, int]]
         ) -> Dict[int, Union[str, int]]:
@@ -40,8 +41,10 @@ def read_options(
     print()
     print("Please note, that the option file is case-sentitive.")
     while True:
-        user_input = input('Enter the path to the file, press [Enter] to load "options.txt" or type "back": '
-                           )
+        user_input = input(
+            'Enter the path to the file, 
+            press [Enter] to load "options.txt" or type "back": '
+            ) # LOOK HERE!!!!!!!!!!
         
         if user_input == "":
             user_input = "options.txt"
@@ -134,7 +137,10 @@ def options_validater(
     
 
     if "firefighter_level" in options:
-        if not isinstance(options.get("firefighter_level"), int) or not 0 < options.get("firefighter_level") < 4:
+        if (
+            not isinstance(options.get("firefighter_level"), int) or not
+            0 < options.get("firefighter_level") < 4
+            ):
             print(f'Wrong value for firefighter_level: {options.get("firefighter_level")}')
             print(f'Please reasign in basic config.')
             options["firefighter_level"] = None

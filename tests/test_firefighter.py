@@ -3,6 +3,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import unittest
+
 from firefighter import Firefighter
 from land_rep import TreePatch
 from graph_forrest import GraphInfo
@@ -11,6 +12,7 @@ from initialiser import (
     initialise_neighbours, 
     initialise_color_map
     )
+
 
 class TestFirefighter(unittest.TestCase):
     def setUp(self):

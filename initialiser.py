@@ -1,13 +1,17 @@
+import networkx as nx
+
 import random
 from copy import copy
 from typing import Dict, List, Tuple, Union
+
+import graph_helper
 from land_rep import TreePatch, RockPatch
 from firefighter import Firefighter
-import networkx as nx
-import graph_helper
 
 
-def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int, int]], Dict[int, Tuple[float, float]]]:
+def generate_edges(
+        options: Dict[str, Union[str, int]]
+        ) -> Tuple[List[Tuple[int, int]], Dict[int, Tuple[float, float]]]:
     """
     Generates edges and positions based on the provided options.
 
