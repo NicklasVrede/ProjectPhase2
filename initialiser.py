@@ -6,6 +6,7 @@ from firefighter import Firefighter
 import networkx as nx
 import graph_helper
 
+
 def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int, int]], Dict[int, Tuple[float, float]]]:
     """
     Generates edges and positions based on the provided options.
@@ -14,8 +15,11 @@ def generate_edges(options: Dict[str, Union[str, int]]) -> Tuple[List[Tuple[int,
     options (Dict[str, Union[str, int]]): A dictionary containing generation options. 
  
     Returns:
-    edges - Tuple[List[Tuple[int, int]]: A tuple containing a list of edges and a dictionary of positions.
-    positions - Dict[int, Tuple[float, float]]]: Each edge is a tuple of two integers, and each position is a tuple of two floats.
+    edges - Tuple[List[Tuple[int, int]]: A tuple containing a list of 
+    edges and a dictionary of positions.
+
+    positions - Dict[int, Tuple[float, float]]]: Each edge is a tuple of two integers, 
+    and each position is a tuple of two floats.
     """
     if options.get("gen_method") == "read":
         while True:
@@ -193,7 +197,8 @@ def planar_positions(edges: List[Tuple[int, int]]) -> Dict[int, Tuple[float, flo
     edges (List[Tuple[int, int]]): A list of edges.
 
     Returns:
-    positions - Dict[int, Tuple[float, float]]: A dictionary of positions. Each key is a patch ID, and each value is a position.
+    positions - Dict[int, Tuple[float, float]]: A dictionary of positions. 
+    Each key is a patch ID, and each value is a position.
     """
     graph = nx.Graph(edges)
     positions = nx.planar_layout(graph) #This makes it more pretty than spring_layout.
