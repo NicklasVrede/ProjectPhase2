@@ -1,11 +1,11 @@
 {"gen_method" : "random", #Generation method for patches. "random" or "read"
 "ini_woods" : 80, # Percentage of forrests in the graph, rest = rocks
-"firefighter_num" : 1, # Number of firefighters a percentage have to be in quotation marks like "20%"
+"firefighter_num" : "10%", # Percent must be in quotations.
 "firefighter_level" : 3, # 1 (low), 2 (medium) or 3 (high)
 "ini_fires" : 20, # Percentage of fires in forrests
-"iter_num" : 25, # Number of sumulation iterations
+"iter_num" : 40, # Number of sumulation iterations
 "growth_rate" : 10, # Treestat fixed increase
 "burn_rate" : 20, # Fires effect on Treestat fixed.
-"new_forrest_probability" : 100, # Probability of new forrest in permille ie. 50 = 0,5 %
+"new_forrest_probability" : 100, # 100 = 1 %
 "fire_spread_rate" : 30 # Percentage risk of fire to spread each iterations
 }
