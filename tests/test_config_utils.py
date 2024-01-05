@@ -14,6 +14,7 @@ class TestOptionsValidater(unittest.TestCase):
     def tearDown(self) -> None:
         # We restore sys.stdout after each test to avoid affecting other tests.
         sys.stdout = self.held
+
     def test_valid_options(self):
         options = {
             "ini_woods": 80,
@@ -26,21 +27,45 @@ class TestOptionsValidater(unittest.TestCase):
             "gen_method": "random",
             "firefighter_level": 3,
             "firefighter_num": "10%"
-        }
+            }
         validated_options = options_validater(options)  #If 
         self.assertEqual(validated_options, options)
 
     def test_invalid_1(self):
-        list = ["", "a", "%", "1.5", "101", "-20", "0", "   "]
-        for option in list:
-            options = {"ini_woods": option,
-                        "ini_fires": option,
-                        "firefighter_level": option,
-                        "gen_method": option,
-                        "fire_spread_rate": option,
-                       }
+        list = ["", "a", "%", 101, -20, "   "] #convert to int will ensure no floats.
+        for input in list:
+            options = {
+                "ini_woods": input,
+                "ini_fires": input,
+                "fire_spread_rate": input,
+                }
+            options = options_validater(options)
+            print(options)
+            for option in options.values():
+                self.assertIsNone(option)
+
+        print(f'ini_woods: {options.get("ini_woods")}, type: {type(options.get("ini_woods"))}')
+
+    def test_invalid_2(self):
+        list = ["", "a", "%", 0, -20, "   "]
+        for input in list:
+            options = {
+                "firefighter_level": input,
+                "iter_num": input,
+                "gen_method": input,
+                "growth_rate": input,
+                "burn_rate": input,
+                }
+            options = options_validater(options)
+            for option in options.values():
+                self.assertIsNone(option)
+
+    def test_invalid_num_firefighters(self):
+        list = ["", "a", "%", -20, "   "] 
+        for input in list:
+            options = {"firefighter_num": input}
             validated_options = options_validater(options)
-            self.assertIsNone(validated_options["ini_woods"])
+            self.assertIsNone(validated_options["firefighter_num"])
 
     def test_invalid_new_forrest_probability(self):
         list = ["", "a", "%", "1.5", "10001", "-20", "0", "   "]
@@ -49,16 +74,6 @@ class TestOptionsValidater(unittest.TestCase):
             validated_options = options_validater(options)
             self.assertIsNone(validated_options["new_forrest_probability"])
 
-    def test_invalid_no_max(self):
-        list = ["", "a", "%", "1.5", "-20", "0", "   "]
-        for option in list:
-            options = {"growth_rate": option,
-                        "burn_rate": option,
-                        "fire_spread_rate": option,
-                        "iter_num": option,
-                       }
-            validated_options = options_validater(options)
-            self.assertIsNone(validated_options["growth_rate"])
 
 if __name__ == '__main__':
     unittest.main()

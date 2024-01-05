@@ -91,6 +91,8 @@ def convert_to_int(
     """
     for key, value in options.items():
         try:
+            if isinstance(value, float):
+                print(f'Converted {key}: {value} to {int(value)}')
             options[key] = int(value)
         except ValueError:
             continue  #Do nothing if the value is not an int
@@ -110,20 +112,20 @@ def options_validater(
     Returns:
     bool: Returns options. If invalid, the option is set to None.
     """
-    for option in ["ini_woods", "ini_fires"]:
+    for option in ["ini_woods", "ini_fires", "fire_spread_rate"]:
         if option in options:
-            if not isinstance(options.get(option), int) or not 0 <= options.get(option) <= 100:
+            if (
+                not isinstance(options.get(option), int) or 
+                (0 > options.get(option) or options.get(option) > 100)
+                ):
                 print(f'Wrong value for {option}: {options.get(option)}')
                 print(f'Please reasign in basic config.')
                 options[option] = None #Reset, so user must pick in basic config
+    
 
-
-    for option in [
-        "iter_num", "growth_rate", "burn_rate", 
-        "new_forrest_probability", "fire_spread_rate"
-        ]:
+    for option in ["iter_num", "growth_rate", "burn_rate"]:
         if option in options:
-            if not isinstance(options.get(option), int) or options.get(option) < 0:
+            if not isinstance(options.get(option), int) or options.get(option) <= 0:
                 print(f'Value for {option}, must be positive')
                 print(f'Please reasign or use default')
                 options[option] = None
@@ -156,12 +158,19 @@ def options_validater(
             print(f'Wrong value for firefighter_num: {options.get("firefighter_num")}')
             print(f'Please reasign in basic config.')
             options["firefighter_num"] = None
+
     else:
         if "firefighter_num" in options:
             if options.get("firefighter_num") < 0:
                 print(f'Value for "firefighter_num must be positive')
                 print(f'Please reasign in basic config.')
                 options["firefighter_num"] = None
+
+    if "new_forrest_probability" in options:
+        if not isinstance(options.get("new_forrest_probability"), int) or not 0 <= options.get("new_forrest_probability") <= 10000:
+            print(f'Wrong value for new_forrest_probability: {options.get("new_forrest_probability")}')
+            print(f'Please reasign in basic config.')
+            options["new_forrest_probability"] = None
 
     return options
 
@@ -184,5 +193,6 @@ def advanced_defaults(options: Dict[int, str]) -> Dict[int, str]:
         options["new_forrest_probability"] = 100
     if "fire_spread_rate" not in options:
         options["fire_spread_rate"] = 30
+
 
     return options

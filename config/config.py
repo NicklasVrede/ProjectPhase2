@@ -43,7 +43,7 @@ def read_options_from_file(options: Dict[int, Union[str, int]]):
     return gen_method(options)
 
 def gen_method(options: Dict[int, Union[str, int]]):
-    if options.get("gen_method"):
+    if options.get("gen_method") is not None:
         return ini_woods(options)
 
     print(menu_strings.get("gen_method"))
@@ -67,7 +67,7 @@ def gen_method(options: Dict[int, Union[str, int]]):
 
 
 def ini_woods(options: Dict[int, Union[str, int]]):
-    if options.get("ini_woods"):
+    if options.get("ini_woods") is not None:
         return ini_fires(options)
     print(menu_strings.get("ini_woods"))
 
@@ -97,7 +97,7 @@ def ini_woods(options: Dict[int, Union[str, int]]):
     return ini_fires(options)
     
 def ini_fires(options: Dict[int, Union[str, int]]):
-    if options.get("ini_fires"):
+    if options.get("ini_fires") is not None:
         return firefighter_num(options)
     print(menu_strings.get("ini_fires"))
 
@@ -133,7 +133,7 @@ def ini_fires(options: Dict[int, Union[str, int]]):
 
 
 def firefighter_num(options: Dict[int, Union[str, int]]):
-    if options.get("firefighter_num"):
+    if options.get("firefighter_num") is not None:
         return firefighter_level(options)
     print(menu_strings.get("firefigter_num"))
 
@@ -178,7 +178,7 @@ def firefighter_num(options: Dict[int, Union[str, int]]):
     return firefighter_level(options)
 
 def firefighter_level(options: Dict[int, Union[str, int]]):
-    if options.get("firefighter_level"):
+    if options.get("firefighter_level") is not None:
         return iter_num(options)
     print(menu_strings.get("firefigter_level"))
 
@@ -208,7 +208,7 @@ def firefighter_level(options: Dict[int, Union[str, int]]):
     return iter_num(options)
 
 def iter_num(options: Dict[int, Union[str, int]]):
-    if options.get("iter_num"):
+    if options.get("iter_num") is not None:
         return config_final(options)
     print(menu_strings.get("iter_num"))
 
@@ -223,7 +223,7 @@ def iter_num(options: Dict[int, Union[str, int]]):
 
         try:
             choice = int(user_input)
-            if choice < 1:
+            if choice < 0:
                 print("Enter a number greater than 0")
                 continue
             break

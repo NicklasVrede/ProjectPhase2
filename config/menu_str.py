@@ -124,6 +124,7 @@ Can navigate to the nearest fire.
 
     "iter_num" : line + """
 How many iteration steps would you like?
+Must be greater than 0, and a whole number.
 """,
 
     "change_setting" : change_setting,
@@ -135,6 +136,7 @@ How many iteration steps would you like?
      "growth_rate" : line + """
 Enter the growth rate of trees each iteration.
 This rate is an fixed amount added to treestat (256 max) each iteration.
+Must be greater than 0, and a whole number.
 
 d. Default (10)
 
@@ -146,6 +148,7 @@ r. Random number (between 0 and 100)
     "burn_rate" : line + """
 Enter the fires burn rate each iteration.
 If a patch is burning its treestat will be reduced by the burn rate each iteration.
+Must be greater than 0, and a whole number.
 
 d. Default (20)
 
