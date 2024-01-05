@@ -40,12 +40,10 @@ def read_options(
 
     print()
     print("Please note, that the option file is case-sentitive.")
+    
+    string = "Enter the path to the file, press [Enter] to load 'options.txt' or type 'back':"
     while True:
-        user_input = input(
-            'Enter the path to the file, 
-            press [Enter] to load "options.txt" or type "back": '
-            ) # LOOK HERE!!!!!!!!!!
-        
+        user_input = input(string) 
         if user_input == "":
             user_input = "options.txt"
 

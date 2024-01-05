@@ -11,7 +11,7 @@ def growth_rate(options:dict):
     string = 'Enter a number, "r" for random (5-50), or "d" for default (10): '
     while True:
         user_input = input(string)
-        
+
         if user_input == "r":
             choice = random.randint(5, 50)
             break
