@@ -77,7 +77,10 @@ class TestGraphInfo(unittest.TestCase):
         self.held = Firefighter.move
         Firefighter.move = Mock(return_value=None)
         self.graph_info.activate_firefighters()
-        self.assertEqual(Firefighter.move.call_count, len(self.graph_info._firefighters.keys()))
+        self.assertEqual(
+            Firefighter.move.call_count, 
+            len(self.graph_info._firefighters.keys())
+            )
 
         #undo changes
         Firefighter.move = self.held

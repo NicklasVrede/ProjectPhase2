@@ -15,6 +15,7 @@ from config.config_adv import (
     fire_spread_rate
     )
 
+
 def welcome(options: Dict[int, Union[str, int]] = dict()):
     options = advanced_defaults(options)
     print(menu_strings.get("welcome"))
@@ -147,7 +148,7 @@ def firefighter_num(options: Dict[int, Union[str, int]]):
                 if number < 0:
                     print("Enter a number greater than 0")
                     continue
-                if len(user_input.split("%")) > 2: #check if there is more than one %
+                if len(user_input.split("%")) > 2: #checks if there is more than one %
                     print("Wrong % format, please try agian")
                     continue
                 choice = user_input

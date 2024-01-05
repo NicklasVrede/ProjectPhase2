@@ -1,4 +1,6 @@
 from typing import List, Dict, Union
+import time
+
 from config import config
 from firefighter import Firefighter
 from initialiser import (
@@ -12,7 +14,7 @@ import visualiser_random_forest_graph
 from simulation import Simulation
 from reporting import reporting
 from land_rep import TreePatch, RockPatch
-import time
+
 
 
 def main(options: Dict[str, int] = dict()) -> None:

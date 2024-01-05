@@ -7,8 +7,8 @@ import builtins
 import random
 import time
 import io
-
 from unittest.mock import Mock
+
 from initialiser import (
     generate_edges, 
     read_edges, 

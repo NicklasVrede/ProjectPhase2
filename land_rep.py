@@ -3,6 +3,7 @@ from typing import List, Union
 import random
 # land_representation.py
 
+
 class LandPatch(ABC):
     """
     Base class for patches, TreePatch and RockPatch.
@@ -115,7 +116,7 @@ class TreePatch(LandPatch):
         Return a color for the TreePatch.
         """
         if self.is_burning():
-            color = -int(self._firestat * 2.56)  #int is important. otherwise visualiser fucks up the color
+            color = -int(self._firestat * 2.56)  #int is important. Otherwise visualiser fucks up the color
             return color
         else:
             return self._treestat

@@ -1,5 +1,7 @@
-from config.menu_str import menu_strings
 import random
+
+from config.menu_str import menu_strings
+
 
 def growth_rate(options:dict):
     if options.get("growth_rate"):

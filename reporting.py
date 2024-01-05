@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def reporting(history):
     """
     Displays a plot of the population over iterations.

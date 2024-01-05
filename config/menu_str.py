@@ -1,6 +1,7 @@
 options = {} #defined to express f-strings in menu_strings
 line =  "\n"*3 + "-" * 40 + "\n"*3
 
+
 def change_setting(options):
     """
     Returns the change setting menu string
