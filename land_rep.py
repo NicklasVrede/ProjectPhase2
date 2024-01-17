@@ -116,7 +116,7 @@ class TreePatch(LandPatch):
         Return a color for the TreePatch.
         """
         if self.is_burning():
-            color = -int(self._firestat * 2.56)  #int is important. Otherwise visualiser messes up the color
+            color = -int(self._firestat * 2.56)  #int is important. Otherwise the visualizer misinterprets the color.
             return color
         else:
             return self._treestat
