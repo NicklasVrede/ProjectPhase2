@@ -208,6 +208,16 @@ class TreePatch(LandPatch):
 
         self._evolve_treestat()
         self._spread_forrest()
+
+    def random_fire(self) -> None: #used in simulation
+        """
+        Initiates fire based on probability.
+        """
+        probability = self._graph_info.options.get("random_fire_probability")
+        random_num = random.randint(0, 10000)  #Making the probability act as permille.
+        if random_num < probability:
+            print(f'Lightning struck at {self}!')
+            self._ignite()
         
     def _mutate(self) -> 'RockPatch':
         """
@@ -260,7 +270,7 @@ class RockPatch(LandPatch):
         probability = self._graph_info.options.get("new_forrest_probability")
         random_num = random.randint(0, 10000)  #Making the probability act as permille.
         if random_num < probability:  #Newforrest
-            print(f'Random forrest appeared at {self}!') #For testing
+            print(f'Random forrest appeared at {self}!')
             self._mutate()
     
     def _mutate(self) -> 'TreePatch':

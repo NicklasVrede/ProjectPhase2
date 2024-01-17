@@ -35,12 +35,10 @@ def generate_edges(
             
             try:
                 edges = read_edges("graphs/"+ user_input)
-                positions = planar_positions(edges)
 
             except FileNotFoundError:
                 try:
                     edges = read_edges(user_input)
-                    positions = planar_positions(edges)
 
                 except FileNotFoundError:
                     print("Could not find file, please try again.")
@@ -55,6 +53,7 @@ def generate_edges(
 
             if graph_helper.edges_planar(edges):
                 if check_connections(edges):
+                    positions = planar_positions(edges)
                     break
                 print("The graph is not connected, please try an other file.")
             else:

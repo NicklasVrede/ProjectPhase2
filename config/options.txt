@@ -7,5 +7,6 @@
 "growth_rate" : 10, # Treestat fixed increase
 "burn_rate" : 20, # Fires effect on Treestat fixed.
 "new_forrest_probability" : 100, # 100 = 1 %
+"random_fire_probability" : 100, # 100 = 1 %
 "fire_spread_rate" : 30 # Percentage risk of fire to spread each iterations
 }

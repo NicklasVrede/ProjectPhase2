@@ -45,6 +45,7 @@ class Simulation:
                 patch.random_forrest()
             else:
                 patch.updateland()
+                patch.random_fire()
 
         self.graphinfo.activate_firefighters()
         

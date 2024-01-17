@@ -22,10 +22,11 @@ Advanced options:
 9. Tree growth (+{options.get("growth_rate")})
 10. Burn rate (-{options.get("burn_rate")})
 11. New random forrest probability ({options.get("new_forrest_probability")/100} %)
-12. Fire spread rate ({options.get("fire_spread_rate")} %)
+12. Random fire probability ({options.get("random_fire_probability")/100} %)
+13. Fire spread rate ({options.get("fire_spread_rate")} %)
 
 Proceed:
-13. Proceed with graph generation
+14. Proceed with graph generation
 
 """
 
@@ -47,6 +48,7 @@ Iteration steps: {options.get("iter_num")}
 Tree growth: +{options.get("growth_rate")} treestat
 burn rate: -{options.get("burn_rate")} treestat
 New random forrest probability: {options.get("new_forrest_probability")/100} %
+Random fire probability: {options.get("random_fire_probability")/100} %
 Fire spread rate: {options.get("fire_spread_rate")} %
 
 How would you like to proceed?
@@ -158,6 +160,16 @@ r. Random number (between 0 and 100)
 
     "new_forrest_probability" : line + """
 Enter the probability of a new forrest each iteration.
+This probability is a probability in permille, i.e. 100 = 1 %.
+
+d. Default (100 (1 %))
+
+r. Random number (between 0 and 1000 (0 - 10 %))
+
+""", 
+
+    "random_fire_probability" : line + """
+Enter the probability of a random fire each iteration.
 This probability is a probability in permille, i.e. 100 = 1 %.
 
 d. Default (100 (1 %))

@@ -12,6 +12,7 @@ from config.config_adv import (
     growth_rate, 
     burn_rate, 
     new_forrest_probability, 
+    random_fire_probability,
     fire_spread_rate
     )
 
@@ -290,10 +291,14 @@ def change_setting(options: Dict[int, Union[str, int]]):
             return new_forrest_probability(options)
         
         elif user_input == "12":
+            options["random_fire_probability"] = None
+            return random_fire_probability(options)
+        
+        elif user_input == "13":
             options["fire_spread_rate"] = None
             return fire_spread_rate(options)
         
-        elif user_input == "13":
+        elif user_input == "14":
             return config_final(options)
         
         else:

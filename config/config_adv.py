@@ -90,10 +90,37 @@ def new_forrest_probability(options:dict):
         except ValueError:
             print("Enter a whole number")
             
-    options.update({"new_forrest_probability" : choice})
+    options.update({"random_fire_probability" : choice})
+    return random_fire_probability(options)
+
+def random_fire_probability(options:dict):
+    if options.get("random_fire"):
+        return fire_spread_rate(options)
+    print(menu_strings.get("random_fire_probability"))
+
+    string = 'Enter a number, "r" for random, or "d" for default (1 %): '
+    while True:
+        user_input = input(string)
+        if user_input == "r":
+            choice = random.randint(1, 100)
+            break
+
+        if user_input == "d":
+            choice = 100
+            break
+
+        try:
+            choice = int(user_input)
+            if choice < 0 or choice > 10000:
+                print("Enter a number between 0 and 10000")
+                continue
+            break
+
+        except ValueError:
+            print("Enter a whole number")
+
+    options.update({"random_fire_probability" : choice})
     return fire_spread_rate(options)
-
-
 def fire_spread_rate(options:dict):
     if options.get("fire_spread_rate"):
         from config.config import config_final
