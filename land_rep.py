@@ -184,6 +184,7 @@ class TreePatch(LandPatch):
             if self._treestat >= 256:
                 self._treestat = 256
             self._update_color()
+            self._random_fire()
 
     def _spread_forrest(self) -> None:
         """
@@ -209,7 +210,7 @@ class TreePatch(LandPatch):
         self._evolve_treestat()
         self._spread_forrest()
 
-    def random_fire(self) -> None: #used in simulation
+    def _random_fire(self) -> None: #used in simulation
         """
         Initiates fire based on probability.
         """
